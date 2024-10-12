@@ -51,13 +51,13 @@ final lightTheme = ThemeData(
   textTheme: _textTheme,
   filledButtonTheme: const FilledButtonThemeData(
     style: ButtonStyle(
-      minimumSize: MaterialStatePropertyAll(
+      minimumSize: WidgetStatePropertyAll(
         Size(120, 48),
       ),
-      maximumSize: MaterialStatePropertyAll(
+      maximumSize: WidgetStatePropertyAll(
         Size(double.infinity, 48),
       ),
-      shape: MaterialStatePropertyAll(
+      shape: WidgetStatePropertyAll(
         RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(10)),
         ),

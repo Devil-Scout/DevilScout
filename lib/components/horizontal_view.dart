@@ -55,18 +55,18 @@ abstract class HorizontalPageViewState<T, H extends HorizontalPageView<T>>
                 IconButton(
                   onPressed: currentPage == 0 ? null : _previousPage,
                   style: ButtonStyle(
-                    minimumSize: const MaterialStatePropertyAll(
+                    minimumSize: const WidgetStatePropertyAll(
                       Size(80, 48),
                     ),
-                    maximumSize: const MaterialStatePropertyAll(
+                    maximumSize: const WidgetStatePropertyAll(
                       Size(double.infinity, 48),
                     ),
-                    shape: const MaterialStatePropertyAll(
+                    shape: const WidgetStatePropertyAll(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                       ),
                     ),
-                    backgroundColor: MaterialStatePropertyAll(
+                    backgroundColor: WidgetStatePropertyAll(
                       Theme.of(context).colorScheme.surface,
                     ),
                   ),

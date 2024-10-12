@@ -287,7 +287,7 @@ class _RosterPanelState extends State<RosterPanel> {
           ),
           FilledButton(
             style: const ButtonStyle(
-              shape: MaterialStatePropertyAll(
+              shape: WidgetStatePropertyAll(
                 RoundedRectangleBorder(
                   borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(8),

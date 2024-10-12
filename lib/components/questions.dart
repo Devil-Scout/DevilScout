@@ -339,7 +339,7 @@ class _BooleanQuestionState
   Widget build(BuildContext context) {
     return SegmentedButton(
       style: ButtonStyle(
-        textStyle: MaterialStatePropertyAll(
+        textStyle: WidgetStatePropertyAll(
           Theme.of(context).textTheme.titleSmall,
         ),
       ),
@@ -549,7 +549,7 @@ class _RangeQuestionState extends QuestionWidgetState<int?, RangeQuestion> {
   Widget build(BuildContext context) {
     return SegmentedButton(
       style: ButtonStyle(
-        textStyle: MaterialStatePropertyAll(
+        textStyle: WidgetStatePropertyAll(
           Theme.of(context).textTheme.titleSmall,
         ),
       ),
