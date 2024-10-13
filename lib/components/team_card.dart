@@ -4,14 +4,14 @@ import '/server/events.dart';
 
 class TeamCard extends StatelessWidget {
   final int teamNum;
-  final Color? allianceColor;
+  final Color? color;
   final String? label;
   final void Function()? onTap;
 
   const TeamCard({
     super.key,
     required this.teamNum,
-    this.allianceColor,
+    this.color,
     this.label,
     this.onTap,
   });
@@ -21,9 +21,8 @@ class TeamCard extends StatelessWidget {
     FrcTeam? team = FrcTeam.currentEventTeams
         .where((team) => team.number == teamNum)
         .firstOrNull;
-    final Color backgroundColor = allianceColor ?? Theme.of(context).colorScheme.surfaceContainerHighest;
     return Card(
-      color: backgroundColor,
+      color: color ?? Theme.of(context).colorScheme.surfaceContainerHighest,
       child: ListTile(
         minLeadingWidth: 10,
         leading: label == null
