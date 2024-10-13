@@ -298,7 +298,7 @@ class PieChartStatisticWidget extends StatisticWidget<PieChartStatistic> {
       chartLegendSpacing: 24,
       legendOptions: const LegendOptions(legendPosition: LegendPosition.bottom),
       chartValuesOptions: ChartValuesOptions(
-        chartValueBackgroundColor: Theme.of(context).colorScheme.surface,
+        chartValueBackgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
         chartValueStyle:
             Theme.of(context).textTheme.titleSmall ?? defaultChartValueStyle,
         decimalPlaces: 0,
@@ -323,8 +323,8 @@ class RadarStatisticWidget extends StatisticWidget<RadarStatistic> {
             .toList(growable: false),
         graphColor: Theme.of(context).colorScheme.primary.withOpacity(0.4),
         graphStrokeColor: Theme.of(context).colorScheme.primary,
-        axisColor: Theme.of(context).colorScheme.onBackground,
-        tickColor: Theme.of(context).colorScheme.onBackground,
+        axisColor: Theme.of(context).colorScheme.onSurface,
+        tickColor: Theme.of(context).colorScheme.onSurface,
         labelTextStyle: Theme.of(context).textTheme.titleSmall,
         tickSize: 5,
       ),

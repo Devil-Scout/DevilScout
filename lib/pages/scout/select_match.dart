@@ -147,7 +147,7 @@ class TeamSelectDialog extends StatelessWidget {
           for (int i = 0; i < match.red.length; i++)
             TeamCard(
               teamNum: match.red[i],
-              color: Theme.of(context).colorScheme.frcRed,
+              allianceColor: Theme.of(context).colorScheme.frcRed,
               label: (i + 1).toString(),
               onTap: () => Navigator.pushReplacement(
                 context,
@@ -162,7 +162,7 @@ class TeamSelectDialog extends StatelessWidget {
           for (int i = 0; i < match.blue.length; i++)
             TeamCard(
               teamNum: match.blue[i],
-              color: Theme.of(context).colorScheme.frcBlue,
+              allianceColor: Theme.of(context).colorScheme.frcBlue,
               label: (i + 1).toString(),
               onTap: () => Navigator.pushReplacement(
                 context,

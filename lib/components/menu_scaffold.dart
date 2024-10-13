@@ -342,7 +342,7 @@ class _MenuBottom extends StatelessWidget {
                   ),
                 ),
                 backgroundColor: WidgetStatePropertyAll(
-                  Theme.of(context).colorScheme.surface,
+                  Theme.of(context).colorScheme.surfaceContainerHighest,
                 ),
               ),
               onPressed: onSettingsPressed,

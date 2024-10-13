@@ -26,6 +26,7 @@ class MatchCard extends StatelessWidget {
       child: Opacity(
         opacity: transparency && match.completed ? 0.5 : 1,
         child: Card(
+          color: Theme.of(context).colorScheme.surfaceContainerHighest,
           child: Column(
             children: [
               ListTile(

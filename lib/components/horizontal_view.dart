@@ -31,7 +31,7 @@ abstract class HorizontalPageViewState<T, H extends HorizontalPageView<T>>
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                color: Theme.of(context).colorScheme.onBackground,
+                color: Theme.of(context).colorScheme.onSurface,
                 height: .1,
               ),
               Expanded(
@@ -67,7 +67,7 @@ abstract class HorizontalPageViewState<T, H extends HorizontalPageView<T>>
                       ),
                     ),
                     backgroundColor: WidgetStatePropertyAll(
-                      Theme.of(context).colorScheme.surface,
+                      Theme.of(context).colorScheme.surfaceContainerHighest,
                     ),
                   ),
                   icon: const Icon(Icons.navigate_before_rounded, size: 32),

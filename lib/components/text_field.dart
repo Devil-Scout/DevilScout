@@ -59,14 +59,14 @@ class TextFieldDecoration extends InputDecoration {
   }) : super(
           enabledBorder: enabledBorder ??
               TextFieldBorder(
-                borderColor: colorScheme?.onBackground ?? Colors.transparent,
+                borderColor: colorScheme?.onSurface ?? Colors.transparent,
               ),
           focusedBorder: focusedBorder ??
               TextFieldBorder(
                 borderColor: colorScheme?.primary ?? Colors.transparent,
                 borderWidth: 2,
               ),
-          fillColor: fillColor ?? colorScheme?.background,
+          fillColor: fillColor ?? colorScheme?.surface,
         );
 }
 
