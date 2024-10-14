@@ -34,6 +34,7 @@ class ManagementPage extends StatelessWidget {
                   ),
                 ).then((event) {
                   if (event == null) return;
+                  if (!context.mounted) return;
 
                   showDialog(
                     context: context,

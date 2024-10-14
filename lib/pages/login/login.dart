@@ -209,6 +209,7 @@ class _UsernameInputState extends State<UsernameInput> {
         team: int.parse(widget.teamNumController.text),
         username: widget.usernameController.text,
       ).then((response) {
+        BuildContext context = this.context;
         if (!context.mounted) return;
 
         LoadingOverlay.of(context).hide();
@@ -294,6 +295,9 @@ class _PasswordInputState extends State<PasswordInput> {
       serverAuthenticate(
         password: widget.passwordController.text,
       ).then((response) {
+        BuildContext context = this.context;
+        if (!context.mounted) return;
+
         LoadingOverlay.of(context).hide();
 
         if (response.success) {
