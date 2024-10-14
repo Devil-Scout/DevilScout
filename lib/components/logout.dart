@@ -28,7 +28,10 @@ void logoutDialog(BuildContext context) {
         ),
       ],
     ),
-  ).whenComplete(() => pushLoginPage(context));
+  ).whenComplete(() {
+    if (!context.mounted) return;
+    pushLoginPage(context);
+  });
 }
 
 bool _delayedLogout = false;

@@ -339,7 +339,7 @@ class _BooleanQuestionState
   Widget build(BuildContext context) {
     return SegmentedButton(
       style: ButtonStyle(
-        textStyle: MaterialStatePropertyAll(
+        textStyle: WidgetStatePropertyAll(
           Theme.of(context).textTheme.titleSmall,
         ),
       ),
@@ -549,7 +549,7 @@ class _RangeQuestionState extends QuestionWidgetState<int?, RangeQuestion> {
   Widget build(BuildContext context) {
     return SegmentedButton(
       style: ButtonStyle(
-        textStyle: MaterialStatePropertyAll(
+        textStyle: WidgetStatePropertyAll(
           Theme.of(context).textTheme.titleSmall,
         ),
       ),
@@ -615,12 +615,12 @@ class _SequenceQuestionState
                   width: double.infinity,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    color: Theme.of(context).colorScheme.surface,
+                    color: Theme.of(context).colorScheme.surfaceContainerHighest,
                   ),
                   padding:
                       const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   child: DropdownButton(
-                    dropdownColor: Theme.of(context).colorScheme.surface,
+                    dropdownColor: Theme.of(context).colorScheme.surfaceContainerHighest,
                     isExpanded: true,
                     underline: const SizedBox(),
                     hint: const Text('End of sequence'),
@@ -672,7 +672,7 @@ class _SingleChoiceQuestionState
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10.0),
           border: Border.all(
-              color: Theme.of(context).colorScheme.onBackground, width: 2),
+              color: Theme.of(context).colorScheme.onSurface, width: 2),
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(8.0),
@@ -685,7 +685,7 @@ class _SingleChoiceQuestionState
                   if (idx != 0)
                     Divider(
                       height: 2.0,
-                      color: Theme.of(context).colorScheme.onBackground,
+                      color: Theme.of(context).colorScheme.onSurface,
                       thickness: 2,
                     ),
                   InkWell(

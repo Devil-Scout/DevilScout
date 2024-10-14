@@ -18,6 +18,9 @@ class _LoadSessionPageState extends State<LoadSessionPage> {
   void initState() {
     super.initState();
     loadCachedSession().then((success) {
+      BuildContext context = this.context;
+      if (!context.mounted) return;
+
       if (!success) {
         pushLoginPage(context);
         return;
@@ -27,6 +30,7 @@ class _LoadSessionPageState extends State<LoadSessionPage> {
         serverGetCurrentUser(),
         serverGetCurrentTeam(),
       ]).whenComplete(() {
+        if (!context.mounted) return;
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const MatchSelectPage()),

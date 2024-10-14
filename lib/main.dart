@@ -48,7 +48,7 @@ class MainAppState extends State<MainApp> {
         systemNavigationBarColor:
             (ThemeModeHelper.isDarkMode ? darkTheme : lightTheme)
                 .colorScheme
-                .background,
+                .surface,
       ));
 
   @override
@@ -60,7 +60,7 @@ class MainAppState extends State<MainApp> {
       systemNavigationBarColor:
           (ThemeModeHelper.isDarkMode ? darkTheme : lightTheme)
               .colorScheme
-              .background,
+              .surface,
     ));
     return InAppNotification(
       child: MaterialApp(

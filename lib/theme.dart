@@ -32,10 +32,9 @@ final lightTheme = ThemeData(
     onSecondary: Colors.black,
     error: Color(0xFFF44336),
     onError: Colors.white,
-    background: Color(0xFFFAFAFA),
-    onBackground: Color(0xFF494949),
-    surface: Color(0xFFEBEBEB),
+    surface: Color(0xFFFAFAFA),
     onSurface: Colors.black,
+    surfaceContainerHighest: Color(0xFFEBEBEB),
     surfaceTint: Colors.transparent,
   ),
   appBarTheme: const AppBarTheme(
@@ -51,13 +50,13 @@ final lightTheme = ThemeData(
   textTheme: _textTheme,
   filledButtonTheme: const FilledButtonThemeData(
     style: ButtonStyle(
-      minimumSize: MaterialStatePropertyAll(
+      minimumSize: WidgetStatePropertyAll(
         Size(120, 48),
       ),
-      maximumSize: MaterialStatePropertyAll(
+      maximumSize: WidgetStatePropertyAll(
         Size(double.infinity, 48),
       ),
-      shape: MaterialStatePropertyAll(
+      shape: WidgetStatePropertyAll(
         RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
@@ -79,10 +78,9 @@ final darkTheme = ThemeData(
     onSecondary: Colors.white,
     error: Color(0xFFB71C1C),
     onError: Colors.white,
-    background: Color(0xFF262626),
-    onBackground: Color(0xFFDDDDDD),
-    surface: Color(0xFF404040),
+    surface: Color(0xFF262626),
     onSurface: Color(0xFFDDDDDD),
+    surfaceContainerHighest: Color(0xFF404040),
     surfaceTint: Colors.transparent,
   ),
   appBarTheme: lightTheme.appBarTheme.copyWith(

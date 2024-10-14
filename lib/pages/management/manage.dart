@@ -34,6 +34,7 @@ class ManagementPage extends StatelessWidget {
                   ),
                 ).then((event) {
                   if (event == null) return;
+                  if (!context.mounted) return;
 
                   showDialog(
                     context: context,
@@ -52,6 +53,7 @@ class ManagementPage extends StatelessWidget {
                   );
                 }),
                 child: Card(
+                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
                   child: ListTile(
                     title: Text(
                       Event.current?.name ?? 'No Event Selected',
@@ -261,7 +263,7 @@ class _RosterPanelState extends State<RosterPanel> {
     return Container(
       decoration: BoxDecoration(
         border: Border.all(
-          color: Theme.of(context).colorScheme.onBackground,
+          color: Theme.of(context).colorScheme.onSurface,
           width: 2,
         ),
         borderRadius: BorderRadius.circular(10),
@@ -287,7 +289,7 @@ class _RosterPanelState extends State<RosterPanel> {
           ),
           FilledButton(
             style: const ButtonStyle(
-              shape: MaterialStatePropertyAll(
+              shape: WidgetStatePropertyAll(
                 RoundedRectangleBorder(
                   borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(8),
@@ -317,6 +319,7 @@ class _RosterPanelState extends State<RosterPanel> {
 
   Card _userCard(User user, BuildContext context) {
     return Card(
+      color: Theme.of(context).colorScheme.surfaceContainerHighest,
       child: ListTile(
         title: Text(
           user.fullName,

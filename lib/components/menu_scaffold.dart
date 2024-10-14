@@ -330,19 +330,19 @@ class _MenuBottom extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.settings),
               style: ButtonStyle(
-                minimumSize: const MaterialStatePropertyAll(
+                minimumSize: const WidgetStatePropertyAll(
                   Size(80, 48),
                 ),
-                maximumSize: const MaterialStatePropertyAll(
+                maximumSize: const WidgetStatePropertyAll(
                   Size(double.infinity, 48),
                 ),
-                shape: const MaterialStatePropertyAll(
+                shape: const WidgetStatePropertyAll(
                   RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(10)),
                   ),
                 ),
-                backgroundColor: MaterialStatePropertyAll(
-                  Theme.of(context).colorScheme.surface,
+                backgroundColor: WidgetStatePropertyAll(
+                  Theme.of(context).colorScheme.surfaceContainerHighest,
                 ),
               ),
               onPressed: onSettingsPressed,
@@ -353,7 +353,7 @@ class _MenuBottom extends StatelessWidget {
                 icon: const Icon(Icons.logout),
                 label: const Text('Log Out'),
                 style: ButtonStyle(
-                  backgroundColor: MaterialStatePropertyAll(
+                  backgroundColor: WidgetStatePropertyAll(
                     Theme.of(context).colorScheme.error,
                   ),
                 ),

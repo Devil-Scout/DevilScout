@@ -22,7 +22,7 @@ class TeamCard extends StatelessWidget {
         .where((team) => team.number == teamNum)
         .firstOrNull;
     return Card(
-      color: color,
+      color: color ?? Theme.of(context).colorScheme.surfaceContainerHighest,
       child: ListTile(
         minLeadingWidth: 10,
         leading: label == null

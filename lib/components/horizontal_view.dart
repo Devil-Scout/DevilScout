@@ -31,7 +31,7 @@ abstract class HorizontalPageViewState<T, H extends HorizontalPageView<T>>
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                color: Theme.of(context).colorScheme.onBackground,
+                color: Theme.of(context).colorScheme.onSurface,
                 height: .1,
               ),
               Expanded(
@@ -55,19 +55,19 @@ abstract class HorizontalPageViewState<T, H extends HorizontalPageView<T>>
                 IconButton(
                   onPressed: currentPage == 0 ? null : _previousPage,
                   style: ButtonStyle(
-                    minimumSize: const MaterialStatePropertyAll(
+                    minimumSize: const WidgetStatePropertyAll(
                       Size(80, 48),
                     ),
-                    maximumSize: const MaterialStatePropertyAll(
+                    maximumSize: const WidgetStatePropertyAll(
                       Size(double.infinity, 48),
                     ),
-                    shape: const MaterialStatePropertyAll(
+                    shape: const WidgetStatePropertyAll(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                       ),
                     ),
-                    backgroundColor: MaterialStatePropertyAll(
-                      Theme.of(context).colorScheme.surface,
+                    backgroundColor: WidgetStatePropertyAll(
+                      Theme.of(context).colorScheme.surfaceContainerHighest,
                     ),
                   ),
                   icon: const Icon(Icons.navigate_before_rounded, size: 32),
