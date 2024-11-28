@@ -6,8 +6,14 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: Center(
-        child: Text("This is the login page"),
+      body: SafeArea(
+        minimum: EdgeInsets.all(32.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text("This is a Column"),
+          ],
+        ),
       ),
     );
   }
