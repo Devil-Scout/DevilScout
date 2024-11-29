@@ -29,7 +29,7 @@ class LoginPage extends StatelessWidget {
                     ),
                     Text(
                       "Choose your sign in method below",
-                      style: Theme.of(context).textTheme.bodyMedium,
+                      style: Theme.of(context).textTheme.bodyLarge,
                     )
                   ],
                 ),
@@ -66,6 +66,32 @@ class LoginPage extends StatelessWidget {
                 ],
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 32.0),
+              child: Row(
+                children: [
+                  const Expanded(child: Divider()),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Text(
+                      "or",
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ),
+                  const Expanded(child: Divider())
+                ],
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {},
+              child: Text(
+                "Sign in",
+                style: Theme.of(context)
+                    .textTheme
+                    .displaySmall!
+                    .copyWith(color: Theme.of(context).colorScheme.onPrimary),
+              ),
+            )
           ],
         ),
       ),
