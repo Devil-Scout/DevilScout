@@ -9,7 +9,7 @@ const _errorColorLight = Color(0xFFF44336);
 const _onErrorColorLight = Colors.white;
 const _surfaceColorLight = Colors.white;
 const _onSurfaceColorLight = Colors.black;
-const _outlineBorderColorLight = Color.fromARGB(20, 0, 0, 0);
+const _outlineBorderColorLight = Color.fromARGB(25, 0, 0, 0);
 
 const _displayFontFamily = 'Montserrat';
 const _bodyFontFamily = 'Work Sans';
@@ -25,57 +25,76 @@ const _textTheme = TextTheme(
   ),
   displaySmall: TextStyle(
     fontFamily: _displayFontFamily,
-    fontSize: 24.0,
+    fontSize: 20.0,
   ),
   bodyLarge: TextStyle(
-    fontFamily: _bodyFontFamily,
-    fontSize: 22.0,
-    height: 1.3,
-  ),
-  bodyMedium: TextStyle(
     fontFamily: _bodyFontFamily,
     fontSize: 18.0,
     height: 1.3,
   ),
-  bodySmall: TextStyle(
+  bodyMedium: TextStyle(
     fontFamily: _bodyFontFamily,
     fontSize: 16.0,
+    height: 1.3,
+  ),
+  bodySmall: TextStyle(
+    fontFamily: _bodyFontFamily,
+    fontSize: 12.0,
     height: 1.3,
   ),
 );
 
 final ThemeData lightTheme = ThemeData(
-  textTheme: _textTheme,
-  colorScheme: const ColorScheme(
-    brightness: Brightness.light,
-    primary: _primaryColor,
-    onPrimary: _onPrimaryColor,
-    secondary: _secondaryColorLight,
-    onSecondary: _onSecondaryColorLight,
-    error: _errorColorLight,
-    onError: _onErrorColorLight,
-    surface: _surfaceColorLight,
-    onSurface: _onSurfaceColorLight,
-    surfaceTint: Colors.transparent,
-  ),
-  outlinedButtonTheme: OutlinedButtonThemeData(
-    style: ButtonStyle(
-      textStyle: WidgetStatePropertyAll(_textTheme.bodyMedium),
-      backgroundColor: const WidgetStatePropertyAll(_surfaceColorLight),
-      foregroundColor: const WidgetStatePropertyAll(_onSurfaceColorLight),
-      side: const WidgetStatePropertyAll(
-        BorderSide(
-          color: _outlineBorderColorLight,
-          width: 1.07,
-        ),
-      ),
-      shape: const WidgetStatePropertyAll(
-        RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10.7)),
-        ),
-      ),
-      minimumSize: const WidgetStatePropertyAll(Size.fromHeight(70.0)),
-      alignment: Alignment.center,
+    textTheme: _textTheme,
+    colorScheme: const ColorScheme(
+      brightness: Brightness.light,
+      primary: _primaryColor,
+      onPrimary: _onPrimaryColor,
+      secondary: _secondaryColorLight,
+      onSecondary: _onSecondaryColorLight,
+      error: _errorColorLight,
+      onError: _onErrorColorLight,
+      surface: _surfaceColorLight,
+      onSurface: _onSurfaceColorLight,
+      surfaceTint: Colors.transparent,
     ),
-  ),
-);
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: ButtonStyle(
+        textStyle: WidgetStatePropertyAll(_textTheme.bodyLarge),
+        backgroundColor: const WidgetStatePropertyAll(_surfaceColorLight),
+        foregroundColor: const WidgetStatePropertyAll(_onSurfaceColorLight),
+        side: const WidgetStatePropertyAll(
+          BorderSide(
+            color: _outlineBorderColorLight,
+            width: 1.07,
+          ),
+        ),
+        shape: const WidgetStatePropertyAll(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10.7)),
+          ),
+        ),
+        minimumSize: const WidgetStatePropertyAll(Size.fromHeight(70.0)),
+        alignment: Alignment.center,
+      ),
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ButtonStyle(
+        textStyle: WidgetStatePropertyAll(_textTheme.bodyLarge),
+        backgroundColor: const WidgetStatePropertyAll(_primaryColor),
+        foregroundColor: const WidgetStatePropertyAll(_onPrimaryColor),
+        side: const WidgetStatePropertyAll(BorderSide.none),
+        shape: const WidgetStatePropertyAll(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10.7)),
+          ),
+        ),
+        minimumSize: const WidgetStatePropertyAll(Size.fromHeight(70.0)),
+        alignment: Alignment.center,
+        elevation: const WidgetStatePropertyAll(0.0),
+      ),
+    ),
+    dividerTheme: const DividerThemeData(
+      color: _outlineBorderColorLight,
+      thickness: 1.5,
+    ));
