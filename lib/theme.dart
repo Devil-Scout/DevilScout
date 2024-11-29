@@ -58,22 +58,23 @@ final ThemeData lightTheme = ThemeData(
     onSurface: _onSurfaceColorLight,
     surfaceTint: Colors.transparent,
   ),
-  outlinedButtonTheme: const OutlinedButtonThemeData(
+  outlinedButtonTheme: OutlinedButtonThemeData(
     style: ButtonStyle(
-      backgroundColor: WidgetStatePropertyAll(_surfaceColorLight),
-      foregroundColor: WidgetStatePropertyAll(_onSurfaceColorLight),
-      side: WidgetStatePropertyAll(
+      textStyle: WidgetStatePropertyAll(_textTheme.bodyMedium),
+      backgroundColor: const WidgetStatePropertyAll(_surfaceColorLight),
+      foregroundColor: const WidgetStatePropertyAll(_onSurfaceColorLight),
+      side: const WidgetStatePropertyAll(
         BorderSide(
           color: _outlineBorderColorLight,
           width: 1.07,
         ),
       ),
-      shape: WidgetStatePropertyAll(
+      shape: const WidgetStatePropertyAll(
         RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(10.7)),
         ),
       ),
-      minimumSize: WidgetStatePropertyAll(Size.fromHeight(70.0)),
+      minimumSize: const WidgetStatePropertyAll(Size.fromHeight(70.0)),
       alignment: Alignment.center,
     ),
   ),
