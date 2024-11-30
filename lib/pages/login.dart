@@ -62,11 +62,11 @@ class _SignInWithEmail extends StatelessWidget {
         child: const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Padding(
-              padding: EdgeInsets.only(right: 12.0),
-              child: FaIcon(FontAwesomeIcons.envelope),
+            FaIcon(FontAwesomeIcons.envelope),
+            SizedBox(width: 12.0),
+            Text(
+              "Sign in with email",
             ),
-            Text("Sign in with email"),
           ],
         ),
       ),
@@ -173,7 +173,7 @@ class _SignInWithApple extends StatelessWidget {
               height: 24.0,
             ),
           ),
-          const Text("Sign in with Apple"),
+          const Text("Continue with Apple"),
         ],
       ),
     );
@@ -198,7 +198,7 @@ class _SignInWithGoogle extends StatelessWidget {
               height: 24.0,
             ),
           ),
-          const Text("Sign in with Google"),
+          const Text("Continue with Google"),
         ],
       ),
     );
@@ -218,7 +218,7 @@ class _WelcomeText extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(bottom: 6.0),
               child: Text(
-                "Welcome! 👋",
+                "Welcome!",
                 style: Theme.of(context).textTheme.displayMedium,
               ),
             ),
