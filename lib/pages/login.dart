@@ -37,7 +37,7 @@ class _WelcomeText extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 40.0),
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 300.0),
+        constraints: const BoxConstraints(maxWidth: 256.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

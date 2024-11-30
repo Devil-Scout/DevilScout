@@ -26,6 +26,6 @@ flutter:
     fonts:
       - asset: assets/fonts/Montserrat-Bold.ttf
         weight: 700
-  - family: Work Sans
+  - family: Noto Sans
     fonts:
-      - asset: assets/fonts/WorkSans-Regular.ttf
+      - asset: assets/fonts/NotoSans-Regular.ttf

@@ -12,7 +12,7 @@ const _onSurfaceColorLight = Colors.black;
 const _outlineBorderColorLight = Color.fromARGB(25, 0, 0, 0);
 
 const _displayFontFamily = 'Montserrat';
-const _bodyFontFamily = 'Work Sans';
+const _bodyFontFamily = 'Noto Sans';
 
 const _textTheme = TextTheme(
   displayLarge: TextStyle(
@@ -29,12 +29,12 @@ const _textTheme = TextTheme(
   ),
   bodyLarge: TextStyle(
     fontFamily: _bodyFontFamily,
-    fontSize: 18.0,
+    fontSize: 16.0,
     height: 1.3,
   ),
   bodyMedium: TextStyle(
     fontFamily: _bodyFontFamily,
-    fontSize: 16.0,
+    fontSize: 14.0,
     height: 1.3,
   ),
   bodySmall: TextStyle(
