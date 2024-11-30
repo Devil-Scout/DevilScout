@@ -90,6 +90,17 @@ class _PasswordField extends StatelessWidget {
           obscureText: true,
           enableSuggestions: false,
         ),
+        const SizedBox(height: 14.0),
+        Text(
+          "Verify Password",
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
+        const SizedBox(height: 8.0),
+        const TextField(
+          autocorrect: false,
+          obscureText: true,
+          enableSuggestions: false,
+        ),
       ],
     );
   }
