@@ -10,24 +10,21 @@ class LoginPage extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         minimum: const EdgeInsets.symmetric(horizontal: 32.0),
-        child: Center(
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _WelcomeText(),
-                _ContinueWithGoogle(),
-                const SizedBox(height: 14.0),
-                _ContinueWithApple(),
-                _SignInDivider(),
-                // _EmailField(),
-                // _PasswordField(),
-                _SignInWithEmail(),
-                const SizedBox(height: 40.0),
-                _CreateAccountText()
-              ],
-            ),
-          ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _WelcomeText(),
+            _ContinueWithGoogle(),
+            const SizedBox(height: 14.0),
+            _ContinueWithApple(),
+            _SignInDivider(),
+            // _EmailField(),
+            // _PasswordField(),
+            _SignInWithEmail(),
+            const SizedBox(height: 40.0),
+            _CreateAccountText()
+          ],
         ),
       ),
     );
