@@ -15,15 +15,14 @@ class LoginPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _WelcomeText(),
-            _ContinueWithGoogle(),
+            _SignInWithGoogle(),
             const SizedBox(height: 14.0),
-            _ContinueWithApple(),
+            _SignInWithApple(),
             _SignInDivider(),
             // _EmailField(),
             // _PasswordField(),
-            _SignInWithEmail(),
-            const SizedBox(height: 40.0),
-            _CreateAccountText()
+            _ContinueWithEmail(),
+            // _CreateAccountText()
           ],
         ),
       ),
@@ -44,12 +43,12 @@ class _WelcomeText extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(bottom: 6.0),
               child: Text(
-                "Welcome!",
+                "Ready to scout?",
                 style: Theme.of(context).textTheme.displayMedium,
               ),
             ),
             Text(
-              "Choose your sign in method below",
+              "Choose your sign in method below to get started",
               style: Theme.of(context).textTheme.bodyLarge,
             )
           ],
@@ -59,7 +58,7 @@ class _WelcomeText extends StatelessWidget {
   }
 }
 
-class _ContinueWithGoogle extends StatelessWidget {
+class _SignInWithGoogle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OutlinedButton.icon(
@@ -71,13 +70,13 @@ class _ContinueWithGoogle extends StatelessWidget {
       ),
       label: const Padding(
         padding: EdgeInsets.only(left: 4.0),
-        child: Text("Continue with Google"),
+        child: Text("Sign in with Google"),
       ),
     );
   }
 }
 
-class _ContinueWithApple extends StatelessWidget {
+class _SignInWithApple extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OutlinedButton.icon(
@@ -89,7 +88,7 @@ class _ContinueWithApple extends StatelessWidget {
       ),
       label: const Padding(
         padding: EdgeInsets.only(left: 4.0),
-        child: Text("Continue with Apple"),
+        child: Text("Sign in with Apple"),
       ),
     );
   }
@@ -176,7 +175,7 @@ class _PasswordField extends StatelessWidget {
   }
 }
 
-class _SignInWithEmail extends StatelessWidget {
+class _ContinueWithEmail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton.icon(
@@ -184,7 +183,7 @@ class _SignInWithEmail extends StatelessWidget {
       icon: const FaIcon(FontAwesomeIcons.envelope),
       label: const Padding(
         padding: EdgeInsets.only(left: 4.0),
-        child: Text("Sign in with email"),
+        child: Text("Continue with email"),
       ),
     );
   }
