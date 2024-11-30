@@ -1,9 +1,9 @@
-import 'package:devil_scout/pages/auth/email_signup.dart';
+import 'package:devil_scout/pages/auth/login_select.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class EmailLoginPage extends StatelessWidget {
-  const EmailLoginPage({super.key});
+class EmailSignUpPage extends StatelessWidget {
+  const EmailSignUpPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +20,9 @@ class EmailLoginPage extends StatelessWidget {
             const SizedBox(height: 14.0),
             _PasswordField(),
             const SizedBox(height: 40.0),
-            _EmailSignInFunctions(),
-            const SizedBox(height: 32.0),
-            _CreateAccountText(),
+            _SignUpButton(),
+            const SizedBox(height: 14.0),
+            _CancelSignUnButton(),
           ],
         ),
       ),
@@ -39,12 +39,12 @@ class _InfoText extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Ready to scout?",
+            "Welcome!",
             style: Theme.of(context).textTheme.displayMedium,
           ),
           const SizedBox(height: 6.0),
           Text(
-            "Enter your information to access your account",
+            "Level up your scouting with the DevilScout platform",
             style: Theme.of(context).textTheme.bodyLarge,
           )
         ],
@@ -90,32 +90,20 @@ class _PasswordField extends StatelessWidget {
           obscureText: true,
           enableSuggestions: false,
         ),
-        const SizedBox(height: 14.0),
-        TextButton(
-          onPressed: () {},
-          child: const Text("Forgot password?"),
-        ),
       ],
     );
   }
 }
 
-class _EmailSignInFunctions extends StatelessWidget {
+class _SignUpButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        OutlinedButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: const FaIcon(FontAwesomeIcons.arrowLeft),
-        ),
-        const SizedBox(width: 10.0),
         Expanded(
           child: ElevatedButton(
             onPressed: () {},
-            child: const Text("Sign In"),
+            child: const Text("Sign Up"),
           ),
         )
       ],
@@ -123,24 +111,28 @@ class _EmailSignInFunctions extends StatelessWidget {
   }
 }
 
-class _CreateAccountText extends StatelessWidget {
+class _CancelSignUnButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text(
-          "Don't have an account?",
-          style: Theme.of(context).textTheme.bodyMedium,
-        ),
-        const SizedBox(width: 6.0),
-        TextButton(
-          onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const EmailSignUpPage()),
-            );
-          },
-          child: const Text("Create one"),
+        Expanded(
+          child: OutlinedButton.icon(
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const LoginSelectPage(),
+                ),
+              );
+            },
+            icon: const FaIcon(FontAwesomeIcons.rightFromBracket),
+            iconAlignment: IconAlignment.start,
+            label: const Padding(
+              padding: EdgeInsets.only(left: 4.0),
+              child: Text("Return to Sign In"),
+            ),
+          ),
         )
       ],
     );

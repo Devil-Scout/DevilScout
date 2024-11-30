@@ -80,7 +80,9 @@ final ThemeData lightTheme = ThemeData(
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
-        textStyle: WidgetStatePropertyAll(_textTheme.bodyLarge),
+        textStyle: WidgetStatePropertyAll(_textTheme.bodyLarge!.copyWith(
+          fontWeight: FontWeight.bold,
+        )),
         backgroundColor: const WidgetStatePropertyAll(_primaryColor),
         foregroundColor: const WidgetStatePropertyAll(_onPrimaryColor),
         side: const WidgetStatePropertyAll(BorderSide.none),

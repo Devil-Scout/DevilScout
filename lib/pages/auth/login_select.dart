@@ -140,7 +140,7 @@ class _ContinueWithEmail extends StatelessWidget {
             icon: const FaIcon(FontAwesomeIcons.envelope),
             label: const Padding(
               padding: EdgeInsets.only(left: 4.0),
-              child: Text("Continue with email"),
+              child: Text("Continue with Email"),
             ),
           ),
         ),
