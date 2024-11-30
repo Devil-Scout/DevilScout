@@ -15,14 +15,14 @@ class LoginSelectPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _WelcomeText(),
+            const SizedBox(height: 40.0),
             _SignInWithGoogle(),
             const SizedBox(height: 14.0),
             _SignInWithApple(),
             _SignInDivider(),
-            // _EmailField(),
-            // _PasswordField(),
             _ContinueWithEmail(),
-            // _CreateAccountText()
+            const SizedBox(height: 16.0),
+            _SignInInfo()
           ],
         ),
       ),
@@ -33,26 +33,21 @@ class LoginSelectPage extends StatelessWidget {
 class _WelcomeText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 40.0),
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 256.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 6.0),
-              child: Text(
-                "Ready to scout?",
-                style: Theme.of(context).textTheme.displayMedium,
-              ),
-            ),
-            Text(
-              "Choose your sign in method below to get started",
-              style: Theme.of(context).textTheme.bodyLarge,
-            )
-          ],
-        ),
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 256.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Ready to scout?",
+            style: Theme.of(context).textTheme.displayMedium,
+          ),
+          const SizedBox(height: 6.0),
+          Text(
+            "Choose your sign in method below to get started",
+            style: Theme.of(context).textTheme.bodyLarge,
+          )
+        ],
       ),
     );
   }
@@ -184,6 +179,29 @@ class _ContinueWithEmail extends StatelessWidget {
       label: const Padding(
         padding: EdgeInsets.only(left: 4.0),
         child: Text("Continue with email"),
+      ),
+    );
+  }
+}
+
+class _SignInInfo extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: TextButton.icon(
+        onPressed: () {},
+        icon: const FaIcon(FontAwesomeIcons.circleQuestion),
+        label: const Text("Why do I need to sign in?"),
+        style: Theme.of(context).textButtonTheme.style!.copyWith(
+              foregroundColor: WidgetStatePropertyAll(Colors.grey[600]),
+              overlayColor: WidgetStatePropertyAll(Colors.grey[200]),
+              textStyle: const WidgetStatePropertyAll(
+                TextStyle(decoration: TextDecoration.none),
+              ),
+              tapTargetSize: MaterialTapTargetSize.padded,
+              visualDensity: VisualDensity.standard,
+              padding: const WidgetStatePropertyAll(EdgeInsets.all(12.0)),
+            ),
       ),
     );
   }
