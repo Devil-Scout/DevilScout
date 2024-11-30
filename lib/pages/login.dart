@@ -16,13 +16,14 @@ class LoginPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _WelcomeText(),
-                _SignInWithGoogle(),
+                _ContinueWithGoogle(),
                 const SizedBox(height: 14.0),
-                _SignInWithApple(),
+                _ContinueWithApple(),
                 _SignInDivider(),
                 // _EmailField(),
                 // _PasswordField(),
                 _SignInWithEmail(),
+                const SizedBox(height: 40.0),
                 _CreateAccountText()
               ],
             ),
@@ -33,43 +34,114 @@ class LoginPage extends StatelessWidget {
   }
 }
 
-class _CreateAccountText extends StatelessWidget {
+class _WelcomeText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Text(
-          "Don't have an account?",
-          style: Theme.of(context).textTheme.bodyMedium,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 40.0),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 300.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 6.0),
+              child: Text(
+                "Welcome!",
+                style: Theme.of(context).textTheme.displayMedium,
+              ),
+            ),
+            Text(
+              "Choose your sign in method below",
+              style: Theme.of(context).textTheme.bodyLarge,
+            )
+          ],
         ),
-        const SizedBox(width: 6.0),
-        TextButton(
-          onPressed: () {},
-          child: const Text("Create one"),
-        )
-      ],
+      ),
     );
   }
 }
 
-class _SignInWithEmail extends StatelessWidget {
+class _ContinueWithGoogle extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return OutlinedButton.icon(
+      onPressed: () {},
+      icon: SvgPicture.asset(
+        "assets/images/logos/g-logo.svg",
+        width: 24.0,
+        height: 24.0,
+      ),
+      label: const Padding(
+        padding: EdgeInsets.only(left: 4.0),
+        child: Text("Continue with Google"),
+      ),
+    );
+  }
+}
+
+class _ContinueWithApple extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return OutlinedButton.icon(
+      onPressed: () {},
+      icon: SvgPicture.asset(
+        "assets/images/logos/apple-logo.svg",
+        width: 24.0,
+        height: 24.0,
+      ),
+      label: const Padding(
+        padding: EdgeInsets.only(left: 4.0),
+        child: Text("Continue with Apple"),
+      ),
+    );
+  }
+}
+
+class _SignInDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 32.0),
-      child: ElevatedButton(
-        onPressed: () {},
-        child: const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            FaIcon(FontAwesomeIcons.envelope),
-            SizedBox(width: 12.0),
-            Text(
-              "Sign in with email",
+      padding: const EdgeInsets.symmetric(vertical: 32.0),
+      child: Row(
+        children: [
+          const Expanded(child: Divider()),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Text(
+              "or",
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
-          ],
-        ),
+          ),
+          const Expanded(child: Divider())
+        ],
       ),
+    );
+  }
+}
+
+class _EmailField extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8.0),
+          child: Text(
+            "Email",
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+        ),
+        const Padding(
+          padding: EdgeInsets.only(bottom: 14.0),
+          child: TextField(
+            autocorrect: false,
+            keyboardType: TextInputType.emailAddress,
+            enableSuggestions: false,
+          ),
+        ),
+      ],
     );
   }
 }
@@ -107,128 +179,35 @@ class _PasswordField extends StatelessWidget {
   }
 }
 
-class _EmailField extends StatelessWidget {
+class _SignInWithEmail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return ElevatedButton.icon(
+      onPressed: () {},
+      icon: const FaIcon(FontAwesomeIcons.envelope),
+      label: const Padding(
+        padding: EdgeInsets.only(left: 4.0),
+        child: Text("Sign in with email"),
+      ),
+    );
+  }
+}
+
+class _CreateAccountText extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
       children: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 8.0),
-          child: Text(
-            "Email",
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
+        Text(
+          "Don't have an account?",
+          style: Theme.of(context).textTheme.bodyMedium,
         ),
-        const Padding(
-          padding: EdgeInsets.only(bottom: 14.0),
-          child: TextField(
-            autocorrect: false,
-            keyboardType: TextInputType.emailAddress,
-            enableSuggestions: false,
-          ),
-        ),
+        const SizedBox(width: 6.0),
+        TextButton(
+          onPressed: () {},
+          child: const Text("Create one"),
+        )
       ],
-    );
-  }
-}
-
-class _SignInDivider extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 32.0),
-      child: Row(
-        children: [
-          const Expanded(child: Divider()),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Text(
-              "or",
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-          ),
-          const Expanded(child: Divider())
-        ],
-      ),
-    );
-  }
-}
-
-class _SignInWithApple extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return OutlinedButton(
-      // Sign in with Apple
-      onPressed: () {},
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(right: 12.0),
-            child: SvgPicture.asset(
-              "assets/images/logos/apple-logo.svg",
-              width: 24.0,
-              height: 24.0,
-            ),
-          ),
-          const Text("Continue with Apple"),
-        ],
-      ),
-    );
-  }
-}
-
-class _SignInWithGoogle extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return OutlinedButton(
-      // Sign in with Google
-      onPressed: () {},
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(right: 12.0),
-            child: SvgPicture.asset(
-              "assets/images/logos/g-logo.svg",
-              width: 24.0,
-              height: 24.0,
-            ),
-          ),
-          const Text("Continue with Google"),
-        ],
-      ),
-    );
-  }
-}
-
-class _WelcomeText extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 40.0),
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 300.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 6.0),
-              child: Text(
-                "Welcome!",
-                style: Theme.of(context).textTheme.displayMedium,
-              ),
-            ),
-            Text(
-              "Choose your sign in method below",
-              style: Theme.of(context).textTheme.bodyLarge,
-            )
-          ],
-        ),
-      ),
     );
   }
 }
