@@ -85,6 +85,8 @@ final ThemeData lightTheme = ThemeData(
         )),
         backgroundColor: const WidgetStatePropertyAll(_primaryColor),
         foregroundColor: const WidgetStatePropertyAll(_onPrimaryColor),
+        overlayColor:
+            WidgetStatePropertyAll(_secondaryColorLight.withOpacity(0.1)),
         side: const WidgetStatePropertyAll(BorderSide.none),
         shape: const WidgetStatePropertyAll(
           RoundedRectangleBorder(
