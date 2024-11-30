@@ -8,7 +8,7 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        minimum: const EdgeInsets.all(32.0),
+        minimum: const EdgeInsets.symmetric(horizontal: 32.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -16,7 +16,7 @@ class LoginPage extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(bottom: 40.0),
               child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 256.0),
+                constraints: const BoxConstraints(maxWidth: 300.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -82,15 +82,68 @@ class LoginPage extends StatelessWidget {
                 ],
               ),
             ),
-            ElevatedButton(
-              onPressed: () {},
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
               child: Text(
-                "Sign in",
-                style: Theme.of(context)
-                    .textTheme
-                    .displaySmall!
-                    .copyWith(color: Theme.of(context).colorScheme.onPrimary),
+                "Email",
+                style: Theme.of(context).textTheme.bodyLarge,
               ),
+            ),
+            const Padding(
+              padding: EdgeInsets.only(bottom: 14.0),
+              child: TextField(
+                autocorrect: false,
+                keyboardType: TextInputType.emailAddress,
+                enableSuggestions: false,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Text(
+                "Password",
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.only(bottom: 14.0),
+              child: TextField(
+                autocorrect: false,
+                obscureText: true,
+                enableSuggestions: false,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 40.0),
+              child: TextButton(
+                onPressed: () {},
+                child: const Text("Forgot password?"),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 32.0),
+              child: ElevatedButton(
+                onPressed: () {},
+                child: Text(
+                  "Sign in",
+                  style: Theme.of(context)
+                      .textTheme
+                      .displaySmall!
+                      .copyWith(color: Theme.of(context).colorScheme.onPrimary),
+                ),
+              ),
+            ),
+            Row(
+              children: [
+                Text(
+                  "Don't have an account?",
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                const SizedBox(width: 6.0),
+                TextButton(
+                  onPressed: () {},
+                  child: const Text("Create one"),
+                )
+              ],
             )
           ],
         ),

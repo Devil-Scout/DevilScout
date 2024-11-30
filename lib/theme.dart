@@ -94,6 +94,31 @@ final ThemeData lightTheme = ThemeData(
         elevation: const WidgetStatePropertyAll(0.0),
       ),
     ),
+    textButtonTheme: TextButtonThemeData(
+      style: ButtonStyle(
+        textStyle: WidgetStatePropertyAll(_textTheme.bodyMedium!.copyWith(
+          color: _primaryColor,
+          decoration: TextDecoration.underline,
+        )),
+        padding: const WidgetStatePropertyAll(EdgeInsets.zero),
+        minimumSize: const WidgetStatePropertyAll(Size(0.0, 0.0)),
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        visualDensity: VisualDensity.compact,
+        overlayColor: const WidgetStatePropertyAll(Colors.transparent),
+      ),
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      filled: false,
+      enabledBorder: const OutlineInputBorder(
+        borderSide: BorderSide(color: _outlineBorderColorLight),
+        borderRadius: BorderRadius.all(Radius.circular(10.7)),
+      ),
+      focusedBorder: const OutlineInputBorder(
+        borderSide: BorderSide(color: _primaryColor),
+        borderRadius: BorderRadius.all(Radius.circular(10.7)),
+      ),
+      labelStyle: _textTheme.bodyMedium,
+    ),
     dividerTheme: const DividerThemeData(
       color: _outlineBorderColorLight,
       thickness: 1.5,
