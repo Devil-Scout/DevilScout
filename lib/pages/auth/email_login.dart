@@ -34,7 +34,7 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
               label: "Email",
               inputType: TextInputType.emailAddress,
               controller: _emailController,
-              onChanged: _validateLogin,
+              onChanged: _validateForm,
             ),
             const SizedBox(height: 14.0),
             LabeledTextField(
@@ -42,7 +42,7 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
               inputType: TextInputType.text,
               obscureText: true,
               controller: _passwordController,
-              onChanged: _validateLogin,
+              onChanged: _validateForm,
             ),
             const SizedBox(height: 14.0),
             _forgotPasswordButton(context),
@@ -125,7 +125,7 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
     );
   }
 
-  void _validateLogin([String? _]) {
+  void _validateForm([String? _]) {
     setState(() {
       _loginButtonActive = EmailValidator.validate(_emailController.text) &&
           _passwordController.text.isNotEmpty;
@@ -135,9 +135,9 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
   void _loginWithEmail() async {
     final supabase = Supabase.instance.client;
 
-    final AuthResponse authResponse;
+    final AuthResponse loginResponse;
     try {
-      authResponse = await supabase.auth.signInWithPassword(
+      loginResponse = await supabase.auth.signInWithPassword(
         email: _emailController.text,
         password: _passwordController.text,
       );
@@ -150,7 +150,7 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
       return;
     }
 
-    if (authResponse.session != null) {
+    if (loginResponse.session != null) {
       // TODO: clear nav stack and push home page
       print('email login succeeded');
     }
