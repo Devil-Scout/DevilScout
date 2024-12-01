@@ -1,3 +1,4 @@
+import 'package:devil_scout/components/data_collection_field.dart';
 import 'package:devil_scout/pages/auth/login_select.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -18,11 +19,27 @@ class EmailSignUpPage extends StatelessWidget {
               children: [
                 _InfoText(),
                 const SizedBox(height: 40.0),
-                _NameField(),
+                const DataCollectionField(
+                  label: "Full Name",
+                  inputType: TextInputType.name,
+                ),
                 const SizedBox(height: 14.0),
-                _EmailField(),
+                const DataCollectionField(
+                  label: "Email",
+                  inputType: TextInputType.emailAddress,
+                ),
                 const SizedBox(height: 14.0),
-                _PasswordField(),
+                const DataCollectionField(
+                  label: "Password",
+                  inputType: TextInputType.text,
+                  obscureText: true,
+                ),
+                const SizedBox(height: 14.0),
+                const DataCollectionField(
+                  label: "Verify Password",
+                  inputType: TextInputType.text,
+                  obscureText: true,
+                ),
                 const SizedBox(height: 40.0),
                 _SignUpButton(),
                 const SizedBox(height: 14.0),
@@ -55,80 +72,6 @@ class _InfoText extends StatelessWidget {
           )
         ],
       ),
-    );
-  }
-}
-
-class _NameField extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "Full Name",
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
-        const SizedBox(height: 8.0),
-        const TextField(
-          autocorrect: false,
-          keyboardType: TextInputType.name,
-          enableSuggestions: false,
-        ),
-      ],
-    );
-  }
-}
-
-class _EmailField extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "Email",
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
-        const SizedBox(height: 8.0),
-        const TextField(
-          autocorrect: false,
-          keyboardType: TextInputType.emailAddress,
-          enableSuggestions: false,
-        ),
-      ],
-    );
-  }
-}
-
-class _PasswordField extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "Password",
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
-        const SizedBox(height: 8.0),
-        const TextField(
-          autocorrect: false,
-          obscureText: true,
-          enableSuggestions: false,
-        ),
-        const SizedBox(height: 14.0),
-        Text(
-          "Verify Password",
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
-        const SizedBox(height: 8.0),
-        const TextField(
-          autocorrect: false,
-          obscureText: true,
-          enableSuggestions: false,
-        ),
-      ],
     );
   }
 }

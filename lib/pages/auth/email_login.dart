@@ -1,3 +1,4 @@
+import 'package:devil_scout/components/data_collection_field.dart';
 import 'package:devil_scout/pages/auth/email_signup.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -16,9 +17,16 @@ class EmailLoginPage extends StatelessWidget {
           children: [
             _InfoText(),
             const SizedBox(height: 40.0),
-            _EmailField(),
+            const DataCollectionField(
+              label: "Email",
+              inputType: TextInputType.emailAddress,
+            ),
             const SizedBox(height: 14.0),
-            _PasswordField(),
+            const DataCollectionField(
+              label: "Password",
+              inputType: TextInputType.text,
+              obscureText: true,
+            ),
             const SizedBox(height: 40.0),
             _EmailSignInFunctions(),
             const SizedBox(height: 32.0),
@@ -49,53 +57,6 @@ class _InfoText extends StatelessWidget {
           )
         ],
       ),
-    );
-  }
-}
-
-class _EmailField extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "Email",
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
-        const SizedBox(height: 8.0),
-        const TextField(
-          autocorrect: false,
-          keyboardType: TextInputType.emailAddress,
-          enableSuggestions: false,
-        ),
-      ],
-    );
-  }
-}
-
-class _PasswordField extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "Password",
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
-        const SizedBox(height: 8.0),
-        const TextField(
-          autocorrect: false,
-          obscureText: true,
-          enableSuggestions: false,
-        ),
-        const SizedBox(height: 14.0),
-        TextButton(
-          onPressed: () {},
-          child: const Text("Forgot password?"),
-        ),
-      ],
     );
   }
 }
