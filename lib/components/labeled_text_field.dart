@@ -6,12 +6,17 @@ class LabeledTextField extends StatelessWidget {
   final bool obscureText;
   final TextInputType inputType;
 
+  final TextEditingController? controller;
+  final void Function(String)? onChanged;
+
   const LabeledTextField({
     super.key,
     required this.label,
     this.autocorrect = false,
     this.obscureText = false,
     required this.inputType,
+    this.controller,
+    this.onChanged,
   });
 
   @override
@@ -29,6 +34,8 @@ class LabeledTextField extends StatelessWidget {
           keyboardType: inputType,
           enableSuggestions: autocorrect,
           obscureText: obscureText,
+          controller: controller,
+          onChanged: onChanged,
         ),
       ],
     );
