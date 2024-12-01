@@ -7,10 +7,12 @@ environment:
   sdk: ^3.5.4
 
 dependencies:
+  email_validator: ^3.0.0
   flutter:
     sdk: flutter
   flutter_svg: ^2.0.16
   font_awesome_flutter: ^10.8.0
+  supabase_flutter: ^2.8.1
 
 dev_dependencies:
   flutter_test:
