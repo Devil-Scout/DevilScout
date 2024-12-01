@@ -41,9 +41,7 @@ class EmailSignUpPage extends StatelessWidget {
                   obscureText: true,
                 ),
                 const SizedBox(height: 40.0),
-                _SignUpButton(),
-                const SizedBox(height: 14.0),
-                _CancelSignUnButton(),
+                _EmailSignUpFunctions(),
               ],
             ),
           ),
@@ -76,43 +74,22 @@ class _InfoText extends StatelessWidget {
   }
 }
 
-class _SignUpButton extends StatelessWidget {
+class _EmailSignUpFunctions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
+        OutlinedButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: const FaIcon(FontAwesomeIcons.arrowLeft),
+        ),
+        const SizedBox(width: 10.0),
         Expanded(
           child: ElevatedButton(
             onPressed: () {},
             child: const Text("Sign Up"),
-          ),
-        )
-      ],
-    );
-  }
-}
-
-class _CancelSignUnButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: OutlinedButton.icon(
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const LoginSelectPage(),
-                ),
-              );
-            },
-            icon: const FaIcon(FontAwesomeIcons.rightFromBracket),
-            iconAlignment: IconAlignment.start,
-            label: const Padding(
-              padding: EdgeInsets.only(left: 4.0),
-              child: Text("Return to Sign In"),
-            ),
           ),
         )
       ],

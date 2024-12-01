@@ -101,7 +101,7 @@ class _CreateAccountText extends StatelessWidget {
         const SizedBox(width: 6.0),
         TextButton(
           onPressed: () {
-            Navigator.pushReplacement(
+            Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const EmailSignUpPage()),
             );
