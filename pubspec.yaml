@@ -7,11 +7,14 @@ environment:
   sdk: ^3.5.4
 
 dependencies:
+  crypto: ^3.0.6
   email_validator: ^3.0.0
   flutter:
     sdk: flutter
   flutter_svg: ^2.0.16
   font_awesome_flutter: ^10.8.0
+  google_sign_in: ^6.2.2
+  sign_in_with_apple: ^6.1.3
   supabase_flutter: ^2.8.1
 
 dev_dependencies:
