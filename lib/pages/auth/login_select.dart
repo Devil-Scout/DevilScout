@@ -1,6 +1,12 @@
+import 'dart:convert';
+
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'email_login.dart';
 
@@ -59,7 +65,7 @@ class LoginSelectPage extends StatelessWidget {
       children: [
         Expanded(
           child: OutlinedButton.icon(
-            onPressed: () {},
+            onPressed: () => _loginWithSso(provider),
             icon: SvgPicture.asset(
               provider.iconPath,
               width: 24.0,
@@ -135,6 +141,29 @@ class LoginSelectPage extends StatelessWidget {
       ),
     );
   }
+
+  void _loginWithSso(_SsoProvider provider) async {
+    final AuthResponse loginResponse;
+    try {
+      loginResponse = switch (provider) {
+        _SsoProvider.apple => await _loginWithApple(),
+        _SsoProvider.google => await _loginWithGoogle(),
+      };
+    } on AuthException catch (e) {
+      // TODO: notify user of the error in the UI
+      // https://supabase.com/docs/guides/auth/debugging/error-codes#auth-error-codes-table
+      print('email login failed');
+      print(e.code);
+      print(e.message);
+      return;
+    } catch (e) {
+      // other exceptions
+      print(e);
+      return;
+    }
+
+    print(loginResponse);
+  }
 }
 
 enum _SsoProvider {
@@ -154,4 +183,68 @@ enum _SsoProvider {
     required this.name,
     required this.iconPath,
   });
+}
+
+Future<AuthResponse> _loginWithGoogle() async {
+  final supabase = Supabase.instance.client;
+
+  const webClientId = ''; // FIXME
+  const iosClientId = ''; // FIXME
+
+  final googleSignIn = GoogleSignIn(
+    clientId: iosClientId,
+    serverClientId: webClientId,
+  );
+
+  final googleUser = await googleSignIn.signIn();
+  if (googleUser == null) {
+    throw 'Error';
+  }
+
+  final googleAuth = await googleUser.authentication;
+  final accessToken = googleAuth.accessToken;
+  final idToken = googleAuth.idToken;
+
+  if (accessToken == null || idToken == null) {
+    throw 'Error';
+  }
+
+  return await supabase.auth.signInWithIdToken(
+    provider: OAuthProvider.google,
+    idToken: idToken,
+    accessToken: accessToken,
+  );
+}
+
+Future<AuthResponse> _loginWithApple() async {
+  final supabase = Supabase.instance.client;
+
+  const clientId = ''; // FIXME
+  const redirectUri = ''; // FIXME
+
+  final rawNonce = supabase.auth.generateRawNonce();
+  final hashedNonce = sha256.convert(utf8.encode(rawNonce)).toString();
+
+  final credential = await SignInWithApple.getAppleIDCredential(
+    scopes: [
+      AppleIDAuthorizationScopes.email,
+      AppleIDAuthorizationScopes.fullName,
+    ],
+    webAuthenticationOptions: WebAuthenticationOptions(
+      clientId: clientId,
+      redirectUri: Uri.parse(redirectUri),
+    ),
+    nonce: hashedNonce,
+  );
+
+  final idToken = credential.identityToken;
+  if (idToken == null) {
+    throw 'Error';
+  }
+
+  return await supabase.auth.signInWithIdToken(
+    provider: OAuthProvider.apple,
+    idToken: idToken,
+    nonce: rawNonce,
+  );
 }
