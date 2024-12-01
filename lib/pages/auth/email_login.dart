@@ -27,6 +27,11 @@ class EmailLoginPage extends StatelessWidget {
               inputType: TextInputType.text,
               obscureText: true,
             ),
+            const SizedBox(height: 14.0),
+            TextButton(
+              onPressed: () {},
+              child: const Text("Forgot password?"),
+            ),
             const SizedBox(height: 40.0),
             _EmailSignInFunctions(),
             const SizedBox(height: 32.0),
