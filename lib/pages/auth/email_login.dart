@@ -1,7 +1,8 @@
-import 'package:devil_scout/components/data_collection_field.dart';
-import 'package:devil_scout/pages/auth/email_signup.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import '../../components/labeled_text_field.dart';
+import '../../pages/auth/email_signup.dart';
 
 class EmailLoginPage extends StatelessWidget {
   const EmailLoginPage({super.key});
@@ -15,14 +16,14 @@ class EmailLoginPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _InfoText(),
+            _headerText(context),
             const SizedBox(height: 40.0),
-            const DataCollectionField(
+            const LabeledTextField(
               label: "Email",
               inputType: TextInputType.emailAddress,
             ),
             const SizedBox(height: 14.0),
-            const DataCollectionField(
+            const LabeledTextField(
               label: "Password",
               inputType: TextInputType.text,
               obscureText: true,
@@ -33,19 +34,16 @@ class EmailLoginPage extends StatelessWidget {
               child: const Text("Forgot password?"),
             ),
             const SizedBox(height: 40.0),
-            _EmailSignInFunctions(),
+            _bottomButtons(context),
             const SizedBox(height: 32.0),
-            _CreateAccountText(),
+            _createAccountText(context),
           ],
         ),
       ),
     );
   }
-}
 
-class _InfoText extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
+  Widget _headerText(BuildContext context) {
     return ConstrainedBox(
       constraints: const BoxConstraints(maxWidth: 256.0),
       child: Column(
@@ -64,11 +62,8 @@ class _InfoText extends StatelessWidget {
       ),
     );
   }
-}
 
-class _EmailSignInFunctions extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
+  Widget _bottomButtons(BuildContext context) {
     return Row(
       children: [
         OutlinedButton(
@@ -87,11 +82,8 @@ class _EmailSignInFunctions extends StatelessWidget {
       ],
     );
   }
-}
 
-class _CreateAccountText extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
+  Widget _createAccountText(BuildContext context) {
     return Row(
       children: [
         Text(

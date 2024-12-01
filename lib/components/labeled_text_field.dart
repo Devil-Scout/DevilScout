@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class DataCollectionField extends StatelessWidget {
+class LabeledTextField extends StatelessWidget {
   final String label;
   final bool autocorrect;
   final bool obscureText;
   final TextInputType inputType;
 
-  const DataCollectionField({
+  const LabeledTextField({
     super.key,
     required this.label,
     this.autocorrect = false,

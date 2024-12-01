@@ -1,7 +1,8 @@
-import 'package:devil_scout/pages/auth/email_login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import 'email_login.dart';
 
 class LoginSelectPage extends StatelessWidget {
   const LoginSelectPage({super.key});
@@ -15,25 +16,22 @@ class LoginSelectPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _WelcomeText(),
+            _headerText(context),
             const SizedBox(height: 40.0),
-            _SignInWithGoogle(),
+            _ssoButton(context, provider: _SsoProvider.google),
             const SizedBox(height: 14.0),
-            _SignInWithApple(),
-            _SignInDivider(),
-            _ContinueWithEmail(),
+            _ssoButton(context, provider: _SsoProvider.apple),
+            _divider(context),
+            _emailButton(context),
             const SizedBox(height: 16.0),
-            _SignInInfo()
+            _signInInfo(context),
           ],
         ),
       ),
     );
   }
-}
 
-class _WelcomeText extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
+  Widget _headerText(BuildContext context) {
     return ConstrainedBox(
       constraints: const BoxConstraints(maxWidth: 256.0),
       child: Column(
@@ -52,59 +50,32 @@ class _WelcomeText extends StatelessWidget {
       ),
     );
   }
-}
 
-class _SignInWithGoogle extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
+  Widget _ssoButton(
+    BuildContext context, {
+    required _SsoProvider provider,
+  }) {
     return Row(
       children: [
         Expanded(
           child: OutlinedButton.icon(
             onPressed: () {},
             icon: SvgPicture.asset(
-              "assets/images/logos/g-logo.svg",
+              provider.iconPath,
               width: 24.0,
               height: 24.0,
             ),
-            label: const Padding(
+            label: Padding(
               padding: EdgeInsets.only(left: 4.0),
-              child: Text("Sign in with Google"),
+              child: Text('Sign in with ${provider.name}'),
             ),
           ),
         ),
       ],
     );
   }
-}
 
-class _SignInWithApple extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: OutlinedButton.icon(
-            onPressed: () {},
-            icon: SvgPicture.asset(
-              "assets/images/logos/apple-logo.svg",
-              width: 24.0,
-              height: 24.0,
-            ),
-            label: const Padding(
-              padding: EdgeInsets.only(left: 4.0),
-              child: Text("Sign in with Apple"),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _SignInDivider extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
+  Widget _divider(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 32.0),
       child: Row(
@@ -122,11 +93,8 @@ class _SignInDivider extends StatelessWidget {
       ),
     );
   }
-}
 
-class _ContinueWithEmail extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
+  Widget _emailButton(BuildContext context) {
     return Row(
       children: [
         Expanded(
@@ -147,11 +115,8 @@ class _ContinueWithEmail extends StatelessWidget {
       ],
     );
   }
-}
 
-class _SignInInfo extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
+  Widget _signInInfo(BuildContext context) {
     return Center(
       child: TextButton.icon(
         onPressed: () {},
@@ -170,4 +135,23 @@ class _SignInInfo extends StatelessWidget {
       ),
     );
   }
+}
+
+enum _SsoProvider {
+  apple(
+    name: 'Apple',
+    iconPath: "assets/images/logos/apple-logo.svg",
+  ),
+  google(
+    name: 'Google',
+    iconPath: "assets/images/logos/g-logo.svg",
+  );
+
+  final String name;
+  final String iconPath;
+
+  const _SsoProvider({
+    required this.name,
+    required this.iconPath,
+  });
 }
