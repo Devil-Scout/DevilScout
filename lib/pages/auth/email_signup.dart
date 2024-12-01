@@ -10,20 +10,26 @@ class EmailSignUpPage extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         minimum: const EdgeInsets.symmetric(horizontal: 32.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _InfoText(),
-            const SizedBox(height: 40.0),
-            _EmailField(),
-            const SizedBox(height: 14.0),
-            _PasswordField(),
-            const SizedBox(height: 40.0),
-            _SignUpButton(),
-            const SizedBox(height: 14.0),
-            _CancelSignUnButton(),
-          ],
+        child: Center(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _InfoText(),
+                const SizedBox(height: 40.0),
+                _NameField(),
+                const SizedBox(height: 14.0),
+                _EmailField(),
+                const SizedBox(height: 14.0),
+                _PasswordField(),
+                const SizedBox(height: 40.0),
+                _SignUpButton(),
+                const SizedBox(height: 14.0),
+                _CancelSignUnButton(),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -49,6 +55,27 @@ class _InfoText extends StatelessWidget {
           )
         ],
       ),
+    );
+  }
+}
+
+class _NameField extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Full Name",
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
+        const SizedBox(height: 8.0),
+        const TextField(
+          autocorrect: false,
+          keyboardType: TextInputType.name,
+          enableSuggestions: false,
+        ),
+      ],
     );
   }
 }
