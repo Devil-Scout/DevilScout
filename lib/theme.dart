@@ -45,85 +45,79 @@ const _textTheme = TextTheme(
 );
 
 final ThemeData lightTheme = ThemeData(
-    textTheme: _textTheme,
-    colorScheme: const ColorScheme(
-      brightness: Brightness.light,
-      primary: _primaryColor,
-      onPrimary: _onPrimaryColor,
-      secondary: _secondaryColorLight,
-      onSecondary: _onSecondaryColorLight,
-      error: _errorColorLight,
-      onError: _onErrorColorLight,
-      surface: _surfaceColorLight,
-      onSurface: _onSurfaceColorLight,
-      surfaceTint: Colors.transparent,
-    ),
-    outlinedButtonTheme: OutlinedButtonThemeData(
-      style: ButtonStyle(
-        textStyle: WidgetStatePropertyAll(_textTheme.bodyLarge),
-        backgroundColor: const WidgetStatePropertyAll(_surfaceColorLight),
-        foregroundColor: const WidgetStatePropertyAll(_onSurfaceColorLight),
-        side: const WidgetStatePropertyAll(
-          BorderSide(
-            color: _outlineBorderColorLight,
-            width: 1.07,
-          ),
-        ),
-        shape: const WidgetStatePropertyAll(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10.7)),
-          ),
-        ),
-        minimumSize: const WidgetStatePropertyAll(Size.square(70.0)),
-        alignment: Alignment.center,
+  textTheme: _textTheme,
+  colorScheme: const ColorScheme(
+    brightness: Brightness.light,
+    primary: _primaryColor,
+    onPrimary: _onPrimaryColor,
+    secondary: _secondaryColorLight,
+    onSecondary: _onSecondaryColorLight,
+    error: _errorColorLight,
+    onError: _onErrorColorLight,
+    surface: _surfaceColorLight,
+    onSurface: _onSurfaceColorLight,
+    surfaceTint: Colors.transparent,
+  ),
+  outlinedButtonTheme: OutlinedButtonThemeData(
+    style: OutlinedButton.styleFrom(
+      textStyle: _textTheme.bodyLarge,
+      backgroundColor: _surfaceColorLight,
+      foregroundColor: _onSurfaceColorLight,
+      side: BorderSide(
+        color: _outlineBorderColorLight,
+        width: 1.07,
       ),
-    ),
-    elevatedButtonTheme: ElevatedButtonThemeData(
-      style: ButtonStyle(
-        textStyle: WidgetStatePropertyAll(_textTheme.bodyLarge!.copyWith(
-          fontWeight: FontWeight.bold,
-        )),
-        backgroundColor: const WidgetStatePropertyAll(_primaryColor),
-        foregroundColor: const WidgetStatePropertyAll(_onPrimaryColor),
-        overlayColor:
-            WidgetStatePropertyAll(_secondaryColorLight.withOpacity(0.1)),
-        side: const WidgetStatePropertyAll(BorderSide.none),
-        shape: const WidgetStatePropertyAll(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10.7)),
-          ),
-        ),
-        minimumSize: const WidgetStatePropertyAll(Size.square(70.0)),
-        alignment: Alignment.center,
-        elevation: const WidgetStatePropertyAll(0.0),
-      ),
-    ),
-    textButtonTheme: TextButtonThemeData(
-      style: ButtonStyle(
-        textStyle: WidgetStatePropertyAll(_textTheme.bodyMedium!.copyWith(
-          color: _primaryColor,
-          decoration: TextDecoration.underline,
-        )),
-        padding: const WidgetStatePropertyAll(EdgeInsets.zero),
-        minimumSize: const WidgetStatePropertyAll(Size(0.0, 0.0)),
-        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        visualDensity: VisualDensity.compact,
-        overlayColor: const WidgetStatePropertyAll(Colors.transparent),
-      ),
-    ),
-    inputDecorationTheme: InputDecorationTheme(
-      filled: false,
-      enabledBorder: const OutlineInputBorder(
-        borderSide: BorderSide(color: _outlineBorderColorLight),
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(10.7)),
       ),
-      focusedBorder: const OutlineInputBorder(
-        borderSide: BorderSide(color: _primaryColor),
+      minimumSize: Size.square(70.0),
+      alignment: Alignment.center,
+    ),
+  ),
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: ElevatedButton.styleFrom(
+      textStyle: _textTheme.bodyLarge!.copyWith(
+        fontWeight: FontWeight.bold,
+      ),
+      backgroundColor: _primaryColor,
+      foregroundColor: _onPrimaryColor,
+      overlayColor: _secondaryColorLight.withOpacity(0.1),
+      side: BorderSide.none,
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(10.7)),
       ),
-      labelStyle: _textTheme.bodyMedium,
+      minimumSize: Size.square(70.0),
+      alignment: Alignment.center,
+      elevation: 0.0,
     ),
-    dividerTheme: const DividerThemeData(
-      color: _outlineBorderColorLight,
-      thickness: 1.5,
-    ));
+  ),
+  textButtonTheme: TextButtonThemeData(
+    style: TextButton.styleFrom(
+      textStyle: _textTheme.bodyMedium!.copyWith(
+        color: _primaryColor,
+        decoration: TextDecoration.underline,
+      ),
+      padding: EdgeInsets.zero,
+      minimumSize: Size(0.0, 0.0),
+      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      visualDensity: VisualDensity.compact,
+      overlayColor: Colors.transparent,
+    ),
+  ),
+  inputDecorationTheme: InputDecorationTheme(
+    filled: false,
+    enabledBorder: const OutlineInputBorder(
+      borderSide: BorderSide(color: _outlineBorderColorLight),
+      borderRadius: BorderRadius.all(Radius.circular(10.7)),
+    ),
+    focusedBorder: const OutlineInputBorder(
+      borderSide: BorderSide(color: _primaryColor),
+      borderRadius: BorderRadius.all(Radius.circular(10.7)),
+    ),
+    labelStyle: _textTheme.bodyMedium,
+  ),
+  dividerTheme: const DividerThemeData(
+    color: _outlineBorderColorLight,
+    thickness: 1.5,
+  ),
+);
