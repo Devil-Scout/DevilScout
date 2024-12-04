@@ -1,10 +1,23 @@
-import 'package:devil_scout/components/data_collection_field.dart';
-import 'package:devil_scout/pages/auth/email_signup.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-class EmailLoginPage extends StatelessWidget {
+import '../../components/labeled_text_field.dart';
+import '../../pages/auth/email_signup.dart';
+
+class EmailLoginPage extends StatefulWidget {
   const EmailLoginPage({super.key});
+
+  @override
+  State<EmailLoginPage> createState() => _EmailLoginPageState();
+}
+
+class _EmailLoginPageState extends State<EmailLoginPage> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  bool _loginButtonActive = false;
 
   @override
   Widget build(BuildContext context) {
@@ -15,37 +28,35 @@ class EmailLoginPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _InfoText(),
+            _headerText(context),
             const SizedBox(height: 40.0),
-            const DataCollectionField(
+            LabeledTextField(
               label: "Email",
               inputType: TextInputType.emailAddress,
+              controller: _emailController,
+              onChanged: _validateForm,
             ),
             const SizedBox(height: 14.0),
-            const DataCollectionField(
+            LabeledTextField(
               label: "Password",
               inputType: TextInputType.text,
               obscureText: true,
+              controller: _passwordController,
+              onChanged: _validateForm,
             ),
             const SizedBox(height: 14.0),
-            TextButton(
-              onPressed: () {},
-              child: const Text("Forgot password?"),
-            ),
+            _forgotPasswordButton(context),
             const SizedBox(height: 40.0),
-            _EmailSignInFunctions(),
+            _bottomButtons(context),
             const SizedBox(height: 32.0),
-            _CreateAccountText(),
+            _createAccountText(context),
           ],
         ),
       ),
     );
   }
-}
 
-class _InfoText extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
+  Widget _headerText(BuildContext context) {
     return ConstrainedBox(
       constraints: const BoxConstraints(maxWidth: 256.0),
       child: Column(
@@ -64,11 +75,15 @@ class _InfoText extends StatelessWidget {
       ),
     );
   }
-}
 
-class _EmailSignInFunctions extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
+  Widget _forgotPasswordButton(BuildContext context) {
+    return TextButton(
+      onPressed: () {},
+      child: const Text("Forgot password?"),
+    );
+  }
+
+  Widget _bottomButtons(BuildContext context) {
     return Row(
       children: [
         OutlinedButton(
@@ -80,18 +95,16 @@ class _EmailSignInFunctions extends StatelessWidget {
         const SizedBox(width: 10.0),
         Expanded(
           child: ElevatedButton(
-            onPressed: () {},
+            // TODO: style button when inactive using MaterialState.disabled
+            onPressed: _loginButtonActive ? _loginWithEmail : null,
             child: const Text("Sign In"),
           ),
         )
       ],
     );
   }
-}
 
-class _CreateAccountText extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
+  Widget _createAccountText(BuildContext context) {
     return Row(
       children: [
         Text(
@@ -110,5 +123,36 @@ class _CreateAccountText extends StatelessWidget {
         )
       ],
     );
+  }
+
+  void _validateForm([String? _]) {
+    setState(() {
+      _loginButtonActive = EmailValidator.validate(_emailController.text) &&
+          _passwordController.text.isNotEmpty;
+    });
+  }
+
+  void _loginWithEmail() async {
+    final supabase = Supabase.instance.client;
+
+    final AuthResponse loginResponse;
+    try {
+      loginResponse = await supabase.auth.signInWithPassword(
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
+    } on AuthException catch (e) {
+      // TODO: notify user of the error in the UI
+      // https://supabase.com/docs/guides/auth/debugging/error-codes#auth-error-codes-table
+      print('email login failed');
+      print(e.code);
+      print(e.message);
+      return;
+    }
+
+    if (loginResponse.session != null) {
+      // TODO: clear nav stack and push home page
+      print('email login succeeded');
+    }
   }
 }
