@@ -1,5 +1,4 @@
 import 'package:devil_scout/components/data_collection_field.dart';
-import 'package:devil_scout/pages/auth/login_select.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
