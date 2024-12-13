@@ -68,7 +68,7 @@ class _SignInWithGoogle extends StatelessWidget {
               height: 24.0,
             ),
             label: const Padding(
-              padding: EdgeInsets.only(left: 4.0),
+              padding: EdgeInsets.only(left: 6.0),
               child: Text("Sign in with Google"),
             ),
           ),
@@ -92,7 +92,7 @@ class _SignInWithApple extends StatelessWidget {
               height: 24.0,
             ),
             label: const Padding(
-              padding: EdgeInsets.only(left: 4.0),
+              padding: EdgeInsets.only(left: 6.0),
               child: Text("Sign in with Apple"),
             ),
           ),
@@ -139,7 +139,7 @@ class _ContinueWithEmail extends StatelessWidget {
             },
             icon: const FaIcon(FontAwesomeIcons.envelope),
             label: const Padding(
-              padding: EdgeInsets.only(left: 4.0),
+              padding: EdgeInsets.only(left: 6.0),
               child: Text("Continue with Email"),
             ),
           ),
@@ -160,6 +160,7 @@ class _SignInInfo extends StatelessWidget {
         style: Theme.of(context).textButtonTheme.style!.copyWith(
               foregroundColor: WidgetStatePropertyAll(Colors.grey[600]),
               overlayColor: WidgetStatePropertyAll(Colors.grey[200]),
+              iconColor: WidgetStatePropertyAll(Colors.grey[600]),
               textStyle: const WidgetStatePropertyAll(
                 TextStyle(decoration: TextDecoration.none),
               ),

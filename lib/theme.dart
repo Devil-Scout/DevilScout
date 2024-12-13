@@ -63,6 +63,7 @@ final ThemeData lightTheme = ThemeData(
       textStyle: _textTheme.bodyLarge,
       backgroundColor: _surfaceColorLight,
       foregroundColor: _onSurfaceColorLight,
+      iconColor: _onSurfaceColorLight,
       side: BorderSide(
         color: _outlineBorderColorLight,
         width: 1.07,
@@ -81,7 +82,9 @@ final ThemeData lightTheme = ThemeData(
       ),
       backgroundColor: _primaryColor,
       foregroundColor: _onPrimaryColor,
-      overlayColor: _secondaryColorLight.withOpacity(0.1),
+      overlayColor: _secondaryColorLight.withValues(alpha: 0.1),
+      iconColor: _onPrimaryColor,
+      iconSize: 24.0,
       side: BorderSide.none,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(10.7)),
