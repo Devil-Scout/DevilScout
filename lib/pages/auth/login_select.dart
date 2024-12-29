@@ -1,13 +1,8 @@
-import 'dart:convert';
-
-import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../supabase.dart';
 import 'email_login.dart';
 
 class LoginSelectPage extends StatelessWidget {
@@ -24,9 +19,9 @@ class LoginSelectPage extends StatelessWidget {
           children: [
             _headerText(context),
             const SizedBox(height: 40.0),
-            _ssoButton(context, provider: _SsoProvider.google),
+            _ssoButton(context, provider: SsoProvider.google),
             const SizedBox(height: 14.0),
-            _ssoButton(context, provider: _SsoProvider.apple),
+            _ssoButton(context, provider: SsoProvider.apple),
             _divider(context),
             _emailButton(context),
             const SizedBox(height: 16.0),
@@ -59,13 +54,13 @@ class LoginSelectPage extends StatelessWidget {
 
   Widget _ssoButton(
     BuildContext context, {
-    required _SsoProvider provider,
+    required SsoProvider provider,
   }) {
     return Row(
       children: [
         Expanded(
           child: OutlinedButton.icon(
-            onPressed: () => _loginWithSso(provider),
+            onPressed: () => supabaseLoginWithSso(provider),
             icon: SvgPicture.asset(
               provider.iconPath,
               width: 24.0,
@@ -141,121 +136,4 @@ class LoginSelectPage extends StatelessWidget {
       ),
     );
   }
-
-  void _loginWithSso(_SsoProvider provider) async {
-    final AuthResponse? loginResponse;
-    try {
-      loginResponse = switch (provider) {
-        _SsoProvider.apple => await _loginWithApple(),
-        _SsoProvider.google => await _loginWithGoogle(),
-      };
-    } on AuthException catch (e) {
-      // TODO: notify user of the error in the UI
-      // https://supabase.com/docs/guides/auth/debugging/error-codes#auth-error-codes-table
-      print('sso login failed');
-      print(e.code);
-      print(e.message);
-      return;
-    } catch (e) {
-      // other exceptions
-      print('sso login failed');
-      print(e);
-      return;
-    }
-
-    if (loginResponse == null) {
-      print('sso login aborted');
-      return;
-    }
-
-    print(loginResponse);
-    print(loginResponse.user?.identities);
-  }
-}
-
-enum _SsoProvider {
-  apple(
-    name: 'Apple',
-    iconPath: "assets/images/logos/apple-logo.svg",
-  ),
-  google(
-    name: 'Google',
-    iconPath: "assets/images/logos/g-logo.svg",
-  );
-
-  final String name;
-  final String iconPath;
-
-  const _SsoProvider({
-    required this.name,
-    required this.iconPath,
-  });
-}
-
-Future<AuthResponse?> _loginWithGoogle() async {
-  // from https://console.cloud.google.com/apis/credentials
-  const webClientId =
-      '609606147453-l9aepfbrr7bc3c8qgf3sp6mjlrguo6un.apps.googleusercontent.com';
-  const iosClientId =
-      '609606147453-at5j8nhgv2j52ogh7rn1nfij7vpn8h2v.apps.googleusercontent.com';
-
-  final supabase = Supabase.instance.client;
-
-  final googleSignIn = GoogleSignIn(
-    clientId: iosClientId,
-    serverClientId: webClientId,
-  );
-
-  final googleUser = await googleSignIn.signIn();
-  if (googleUser == null) {
-    // login was aborted
-    return null;
-  }
-
-  final googleAuth = await googleUser.authentication;
-  final accessToken = googleAuth.accessToken;
-  final idToken = googleAuth.idToken;
-
-  if (accessToken == null || idToken == null) {
-    throw 'Error';
-  }
-
-  return await supabase.auth.signInWithIdToken(
-    provider: OAuthProvider.google,
-    idToken: idToken,
-    accessToken: accessToken,
-  );
-}
-
-Future<AuthResponse> _loginWithApple() async {
-  final supabase = Supabase.instance.client;
-
-  const clientId = ''; // FIXME
-  const redirectUri = ''; // FIXME
-
-  final rawNonce = supabase.auth.generateRawNonce();
-  final hashedNonce = sha256.convert(utf8.encode(rawNonce)).toString();
-
-  final credential = await SignInWithApple.getAppleIDCredential(
-    scopes: [
-      AppleIDAuthorizationScopes.email,
-      AppleIDAuthorizationScopes.fullName,
-    ],
-    webAuthenticationOptions: WebAuthenticationOptions(
-      clientId: clientId,
-      redirectUri: Uri.parse(redirectUri),
-    ),
-    nonce: hashedNonce,
-  );
-
-  final idToken = credential.identityToken;
-  if (idToken == null) {
-    throw 'Error';
-  }
-
-  return await supabase.auth.signInWithIdToken(
-    provider: OAuthProvider.apple,
-    idToken: idToken,
-    nonce: rawNonce,
-  );
 }
