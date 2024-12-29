@@ -143,7 +143,7 @@ class LoginSelectPage extends StatelessWidget {
   }
 
   void _loginWithSso(_SsoProvider provider) async {
-    final AuthResponse loginResponse;
+    final AuthResponse? loginResponse;
     try {
       loginResponse = switch (provider) {
         _SsoProvider.apple => await _loginWithApple(),
@@ -152,17 +152,24 @@ class LoginSelectPage extends StatelessWidget {
     } on AuthException catch (e) {
       // TODO: notify user of the error in the UI
       // https://supabase.com/docs/guides/auth/debugging/error-codes#auth-error-codes-table
-      print('email login failed');
+      print('sso login failed');
       print(e.code);
       print(e.message);
       return;
     } catch (e) {
       // other exceptions
+      print('sso login failed');
       print(e);
       return;
     }
 
+    if (loginResponse == null) {
+      print('sso login aborted');
+      return;
+    }
+
     print(loginResponse);
+    print(loginResponse.user?.identities);
   }
 }
 
@@ -185,11 +192,14 @@ enum _SsoProvider {
   });
 }
 
-Future<AuthResponse> _loginWithGoogle() async {
-  final supabase = Supabase.instance.client;
+Future<AuthResponse?> _loginWithGoogle() async {
+  // from https://console.cloud.google.com/apis/credentials
+  const webClientId =
+      '609606147453-l9aepfbrr7bc3c8qgf3sp6mjlrguo6un.apps.googleusercontent.com';
+  const iosClientId =
+      '609606147453-at5j8nhgv2j52ogh7rn1nfij7vpn8h2v.apps.googleusercontent.com';
 
-  const webClientId = ''; // FIXME
-  const iosClientId = ''; // FIXME
+  final supabase = Supabase.instance.client;
 
   final googleSignIn = GoogleSignIn(
     clientId: iosClientId,
@@ -198,7 +208,8 @@ Future<AuthResponse> _loginWithGoogle() async {
 
   final googleUser = await googleSignIn.signIn();
   if (googleUser == null) {
-    throw 'Error';
+    // login was aborted
+    return null;
   }
 
   final googleAuth = await googleUser.authentication;
