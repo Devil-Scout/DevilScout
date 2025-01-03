@@ -74,7 +74,9 @@ class _EmailSignInFunctions extends StatelessWidget {
           onPressed: () {
             Navigator.pop(context);
           },
-          child: const Icon(Icons.arrow_back),
+          child: const Icon(
+            Icons.arrow_back,
+          ),
         ),
         const SizedBox(width: 10.0),
         Expanded(

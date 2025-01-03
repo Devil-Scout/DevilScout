@@ -154,7 +154,7 @@ class _SignInInfo extends StatelessWidget {
     return Center(
       child: TextButton.icon(
         onPressed: () {},
-        icon: Icon(Icons.help_outline),
+        icon: Icon(Icons.help_outline, size: 22.0),
         label: const Text("Why do I need to sign in?"),
         style: Theme.of(context).textButtonTheme.style!.copyWith(
               foregroundColor: WidgetStatePropertyAll(Colors.grey[600]),
