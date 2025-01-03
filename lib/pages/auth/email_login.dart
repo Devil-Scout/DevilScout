@@ -1,7 +1,6 @@
 import 'package:devil_scout/components/data_collection_field.dart';
 import 'package:devil_scout/pages/auth/email_signup.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class EmailLoginPage extends StatelessWidget {
   const EmailLoginPage({super.key});
@@ -75,7 +74,9 @@ class _EmailSignInFunctions extends StatelessWidget {
           onPressed: () {
             Navigator.pop(context);
           },
-          child: const FaIcon(FontAwesomeIcons.arrowLeft),
+          child: const Icon(
+            Icons.arrow_back,
+          ),
         ),
         const SizedBox(width: 10.0),
         Expanded(

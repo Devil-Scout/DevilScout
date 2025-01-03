@@ -1,6 +1,5 @@
 import 'package:devil_scout/components/data_collection_field.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class EmailSignUpPage extends StatelessWidget {
   const EmailSignUpPage({super.key});
@@ -82,7 +81,7 @@ class _EmailSignUpFunctions extends StatelessWidget {
           onPressed: () {
             Navigator.pop(context);
           },
-          child: const FaIcon(FontAwesomeIcons.arrowLeft),
+          child: Icon(Icons.arrow_back),
         ),
         const SizedBox(width: 10.0),
         Expanded(

@@ -58,12 +58,31 @@ final ThemeData lightTheme = ThemeData(
     onSurface: _onSurfaceColorLight,
     surfaceTint: Colors.transparent,
   ),
+  navigationBarTheme: NavigationBarThemeData(
+    height: 70.0,
+    elevation: 4.0,
+    backgroundColor: _surfaceColorLight,
+    shadowColor: _onSurfaceColorLight.withValues(alpha: 0.1),
+    indicatorColor: Colors.transparent,
+    labelTextStyle: WidgetStateProperty.resolveWith(
+      (states) => states.contains(WidgetState.selected)
+          ? _textTheme.bodyMedium?.copyWith(
+              color: _primaryColor,
+              fontWeight: FontWeight.bold,
+            )
+          : _textTheme.bodyMedium,
+    ),
+    iconTheme: WidgetStateProperty.fromMap(const {
+      WidgetState.selected: IconThemeData(color: _primaryColor),
+    }),
+  ),
   outlinedButtonTheme: OutlinedButtonThemeData(
     style: OutlinedButton.styleFrom(
       textStyle: _textTheme.bodyLarge,
       backgroundColor: _surfaceColorLight,
       foregroundColor: _onSurfaceColorLight,
       iconColor: _onSurfaceColorLight,
+      iconSize: 22.0,
       side: BorderSide(
         color: _outlineBorderColorLight,
         width: 1.07,
@@ -84,7 +103,7 @@ final ThemeData lightTheme = ThemeData(
       foregroundColor: _onPrimaryColor,
       overlayColor: _secondaryColorLight.withValues(alpha: 0.1),
       iconColor: _onPrimaryColor,
-      iconSize: 24.0,
+      iconSize: 28.0,
       side: BorderSide.none,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(10.7)),

@@ -1,3 +1,4 @@
+import 'package:devil_scout/appwrapper.dart';
 import 'package:flutter/material.dart';
 
 import 'package:devil_scout/pages/auth/login_select.dart';
@@ -14,7 +15,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const LoginSelectPage(),
+      home: const AppWrapper(),
       theme: lightTheme,
     );
   }
