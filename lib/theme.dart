@@ -63,11 +63,18 @@ final ThemeData lightTheme = ThemeData(
     elevation: 4.0,
     backgroundColor: _surfaceColorLight,
     shadowColor: _onSurfaceColorLight.withValues(alpha: 0.1),
-    indicatorColor: _secondaryColorLight,
-    indicatorShape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(10.7),
+    indicatorColor: Colors.transparent,
+    labelTextStyle: WidgetStateProperty.resolveWith(
+      (states) => states.contains(WidgetState.selected)
+          ? _textTheme.bodyMedium?.copyWith(
+              color: _primaryColor,
+              fontWeight: FontWeight.bold,
+            )
+          : _textTheme.bodyMedium,
     ),
-    labelTextStyle: WidgetStatePropertyAll(_textTheme.bodySmall),
+    iconTheme: WidgetStateProperty.fromMap(const {
+      WidgetState.selected: IconThemeData(color: _primaryColor),
+    }),
   ),
   outlinedButtonTheme: OutlinedButtonThemeData(
     style: OutlinedButton.styleFrom(
