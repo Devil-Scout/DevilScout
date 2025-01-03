@@ -15,7 +15,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const AppWrapper(),
+      home: const LoginSelectPage(),
       theme: lightTheme,
     );
   }

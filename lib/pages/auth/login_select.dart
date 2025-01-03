@@ -1,7 +1,6 @@
 import 'package:devil_scout/pages/auth/email_login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class LoginSelectPage extends StatelessWidget {
   const LoginSelectPage({super.key});
@@ -137,7 +136,7 @@ class _ContinueWithEmail extends StatelessWidget {
                 MaterialPageRoute(builder: (context) => const EmailLoginPage()),
               );
             },
-            icon: const FaIcon(FontAwesomeIcons.envelope),
+            icon: Icon(Icons.mail_outline),
             label: const Padding(
               padding: EdgeInsets.only(left: 6.0),
               child: Text("Continue with Email"),
@@ -155,7 +154,7 @@ class _SignInInfo extends StatelessWidget {
     return Center(
       child: TextButton.icon(
         onPressed: () {},
-        icon: const FaIcon(FontAwesomeIcons.circleQuestion),
+        icon: Icon(Icons.help_outline),
         label: const Text("Why do I need to sign in?"),
         style: Theme.of(context).textButtonTheme.style!.copyWith(
               foregroundColor: WidgetStatePropertyAll(Colors.grey[600]),
