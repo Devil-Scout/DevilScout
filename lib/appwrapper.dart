@@ -1,3 +1,7 @@
+import 'package:devil_scout/navigation/analyze_page_nav.dart';
+import 'package:devil_scout/navigation/home_page_nav.dart';
+import 'package:devil_scout/pages/manage/manage_home.dart';
+import 'package:devil_scout/pages/scout/scout_home.dart';
 import 'package:flutter/material.dart';
 
 class AppWrapper extends StatefulWidget {
@@ -8,26 +12,46 @@ class AppWrapper extends StatefulWidget {
 }
 
 class _AppWrapperState extends State<AppWrapper> {
+  int _pageIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      body: IndexedStack(
+        index: _pageIndex,
+        children: <Widget>[
+          HomePageNavigator(),
+          ScoutHomePage(),
+          AnalyzePageNavigator(),
+          ManageHomePage(),
+        ],
+      ),
       bottomNavigationBar: NavigationBar(
-        labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
+        selectedIndex: _pageIndex,
+        onDestinationSelected: (int index) {
+          setState(() {
+            _pageIndex = index;
+          });
+        },
         destinations: <NavigationDestination>[
           NavigationDestination(
             icon: Icon(Icons.home_outlined),
+            selectedIcon: Icon(Icons.home),
             label: 'Home',
           ),
           NavigationDestination(
             icon: Icon(Icons.assignment_outlined),
+            selectedIcon: Icon(Icons.assignment),
             label: 'Scout',
           ),
           NavigationDestination(
             icon: Icon(Icons.analytics_outlined),
+            selectedIcon: Icon(Icons.analytics),
             label: 'Analyze',
           ),
           NavigationDestination(
             icon: Icon(Icons.settings_outlined),
+            selectedIcon: Icon(Icons.settings),
             label: 'Manage',
           ),
         ],

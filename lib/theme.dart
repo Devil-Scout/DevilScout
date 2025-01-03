@@ -58,6 +58,17 @@ final ThemeData lightTheme = ThemeData(
     onSurface: _onSurfaceColorLight,
     surfaceTint: Colors.transparent,
   ),
+  navigationBarTheme: NavigationBarThemeData(
+    height: 70.0,
+    elevation: 4.0,
+    backgroundColor: _surfaceColorLight,
+    shadowColor: _onSurfaceColorLight.withValues(alpha: 0.1),
+    indicatorColor: _secondaryColorLight,
+    indicatorShape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10.7),
+    ),
+    labelTextStyle: WidgetStatePropertyAll(_textTheme.bodySmall),
+  ),
   outlinedButtonTheme: OutlinedButtonThemeData(
     style: OutlinedButton.styleFrom(
       textStyle: _textTheme.bodyLarge,
