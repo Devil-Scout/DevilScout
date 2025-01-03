@@ -20,6 +20,11 @@ Future<void> supabaseInit() async {
   supabase = Supabase.instance.client;
 }
 
+extension UserName on User {
+  static const nameKey = 'full_name';
+  String? get name => userMetadata?[nameKey];
+}
+
 enum SsoProvider {
   apple(
     name: 'Apple',

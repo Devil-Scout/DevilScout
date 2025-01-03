@@ -14,11 +14,13 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: check supabase.currentSession on startup
-
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const LoginSelectPage(),
+      home: Scaffold(
+        body: supabase.auth.currentSession == null
+            ? const LoginSelectPage()
+            : Center(child: Text('${supabase.auth.currentUser?.name}')),
+      ),
       theme: lightTheme,
     );
   }
