@@ -6,24 +6,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-late final SupabaseClient supabase;
-
-Future<void> supabaseInit() async {
-  const supabaseUrl = 'https://jlhplhsuiwwcmxrtbdhp.supabase.co';
-  const supabaseAnonKey =
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpsaHBsaHN1aXd3Y214cnRiZGhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjU4MjA3ODQsImV4cCI6MjA0MTM5Njc4NH0.QKbKHdYoSGC71hrOaHYyJNIJWvwE4ehpNOWVJUYng0M';
-
-  await Supabase.initialize(
-    url: supabaseUrl,
-    anonKey: supabaseAnonKey,
-  );
-  supabase = Supabase.instance.client;
-}
-
-extension UserName on User {
-  static const nameKey = 'full_name';
-  String? get name => userMetadata?[nameKey];
-}
+import 'client.dart';
 
 enum SsoProvider {
   apple(
@@ -138,67 +121,4 @@ Future<AuthResponse?> _loginWithAppleNative() async {
     idToken: idToken,
     nonce: rawNonce,
   );
-}
-
-Future<AuthResponse?> supabaseCreateEmailUser({
-  required String name,
-  required String email,
-  required String password,
-}) async {
-  final AuthResponse signupResponse;
-  try {
-    signupResponse = await supabase.auth.signUp(
-      email: email,
-      password: password,
-    );
-  } on AuthException catch (e) {
-    // TODO: notify user of the error in the UI
-    // https://supabase.com/docs/guides/auth/debugging/error-codes#auth-error-codes-table
-    print('email signup failed');
-    print(e.code);
-    print(e.message);
-    return null;
-  }
-
-  // TODO: handle Confirm Emails once enabled
-
-  Session? session = signupResponse.session;
-  if (session != null) {
-    // Set the user's name in the db
-    await supabase.from('users').upsert({
-      'name': name,
-    }).eq('id', session.user.id);
-
-    // TODO: clear nav stack and push home page
-    print('email signup succeeded');
-  }
-
-  return signupResponse;
-}
-
-Future<AuthResponse?> supabaseLoginWithEmail({
-  required String email,
-  required String password,
-}) async {
-  final AuthResponse loginResponse;
-  try {
-    loginResponse = await supabase.auth.signInWithPassword(
-      email: email,
-      password: password,
-    );
-  } on AuthException catch (e) {
-    // TODO: notify user of the error in the UI
-    // https://supabase.com/docs/guides/auth/debugging/error-codes#auth-error-codes-table
-    print('email login failed');
-    print(e.code);
-    print(e.message);
-    return null;
-  }
-
-  if (loginResponse.session != null) {
-    // TODO: clear nav stack and push home page
-    print('email login succeeded');
-  }
-
-  return loginResponse;
 }

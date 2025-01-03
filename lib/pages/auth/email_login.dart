@@ -4,7 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../components/labeled_text_field.dart';
 import '../../pages/auth/email_signup.dart';
-import '../../supabase.dart';
+import '../../supabase/email_auth.dart';
 
 class EmailLoginPage extends StatefulWidget {
   const EmailLoginPage({super.key});

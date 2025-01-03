@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'pages/auth/login_select.dart';
-import 'supabase.dart';
+import 'supabase/client.dart';
 import 'theme.dart';
 
 Future<void> main() async {
