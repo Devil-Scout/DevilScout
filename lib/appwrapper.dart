@@ -30,7 +30,7 @@ class _AppWrapperState extends State<AppWrapper> {
         decoration: BoxDecoration(
           boxShadow: <BoxShadow>[
             BoxShadow(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
+              color: Theme.of(context).colorScheme.onSurface.withAlpha(20),
               blurRadius: 6.0,
               offset: const Offset(0.0, -3.0),
             ),
