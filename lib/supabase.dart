@@ -39,7 +39,7 @@ enum SsoProvider {
   });
 }
 
-void supabaseLoginWithSso(SsoProvider provider) async {
+Future<AuthResponse?> supabaseLoginWithSso(SsoProvider provider) async {
   final AuthResponse? loginResponse;
   try {
     loginResponse = switch (provider) {
@@ -52,21 +52,23 @@ void supabaseLoginWithSso(SsoProvider provider) async {
     print('sso login failed');
     print(e.code);
     print(e.message);
-    return;
+    return null;
   } catch (e) {
     // other exceptions
     print('sso login failed');
     print(e);
-    return;
+    return null;
   }
 
   if (loginResponse == null) {
     print('sso login aborted');
-    return;
+    return null;
   }
 
   print(loginResponse);
   print(loginResponse.user?.identities);
+
+  return loginResponse;
 }
 
 Future<AuthResponse?> _loginWithGoogle() async {
@@ -131,4 +133,67 @@ Future<AuthResponse?> _loginWithAppleNative() async {
     idToken: idToken,
     nonce: rawNonce,
   );
+}
+
+Future<AuthResponse?> supabaseCreateEmailUser({
+  required String name,
+  required String email,
+  required String password,
+}) async {
+  final AuthResponse signupResponse;
+  try {
+    signupResponse = await supabase.auth.signUp(
+      email: email,
+      password: password,
+    );
+  } on AuthException catch (e) {
+    // TODO: notify user of the error in the UI
+    // https://supabase.com/docs/guides/auth/debugging/error-codes#auth-error-codes-table
+    print('email signup failed');
+    print(e.code);
+    print(e.message);
+    return null;
+  }
+
+  // TODO: handle Confirm Emails once enabled
+
+  Session? session = signupResponse.session;
+  if (session != null) {
+    // Set the user's name in the db
+    await supabase.from('users').upsert({
+      'name': name,
+    }).eq('id', session.user.id);
+
+    // TODO: clear nav stack and push home page
+    print('email signup succeeded');
+  }
+
+  return signupResponse;
+}
+
+Future<AuthResponse?> supabaseLoginWithEmail({
+  required String email,
+  required String password,
+}) async {
+  final AuthResponse loginResponse;
+  try {
+    loginResponse = await supabase.auth.signInWithPassword(
+      email: email,
+      password: password,
+    );
+  } on AuthException catch (e) {
+    // TODO: notify user of the error in the UI
+    // https://supabase.com/docs/guides/auth/debugging/error-codes#auth-error-codes-table
+    print('email login failed');
+    print(e.code);
+    print(e.message);
+    return null;
+  }
+
+  if (loginResponse.session != null) {
+    // TODO: clear nav stack and push home page
+    print('email login succeeded');
+  }
+
+  return loginResponse;
 }

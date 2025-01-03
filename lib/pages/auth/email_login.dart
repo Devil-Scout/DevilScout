@@ -1,10 +1,10 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../components/labeled_text_field.dart';
 import '../../pages/auth/email_signup.dart';
+import '../../supabase.dart';
 
 class EmailLoginPage extends StatefulWidget {
   const EmailLoginPage({super.key});
@@ -133,26 +133,9 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
   }
 
   void _loginWithEmail() async {
-    final supabase = Supabase.instance.client;
-
-    final AuthResponse loginResponse;
-    try {
-      loginResponse = await supabase.auth.signInWithPassword(
-        email: _emailController.text,
-        password: _passwordController.text,
-      );
-    } on AuthException catch (e) {
-      // TODO: notify user of the error in the UI
-      // https://supabase.com/docs/guides/auth/debugging/error-codes#auth-error-codes-table
-      print('email login failed');
-      print(e.code);
-      print(e.message);
-      return;
-    }
-
-    if (loginResponse.session != null) {
-      // TODO: clear nav stack and push home page
-      print('email login succeeded');
-    }
+    await supabaseLoginWithEmail(
+      email: _emailController.text,
+      password: _passwordController.text,
+    );
   }
 }

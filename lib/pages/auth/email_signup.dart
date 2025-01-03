@@ -1,9 +1,9 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../components/labeled_text_field.dart';
+import '../../supabase.dart';
 
 class EmailSignUpPage extends StatefulWidget {
   const EmailSignUpPage({super.key});
@@ -112,6 +112,14 @@ class _EmailSignUpPageState extends State<EmailSignUpPage> {
     );
   }
 
+  void _createUser() async {
+    await supabaseCreateEmailUser(
+      name: _nameController.text,
+      email: _emailController.text,
+      password: _passwordController.text,
+    );
+  }
+
   void _validateForm([String? _]) {
     setState(() {
       _signupButtonActive = _nameController.text.isNotEmpty &&
@@ -120,37 +128,5 @@ class _EmailSignUpPageState extends State<EmailSignUpPage> {
           _passwordController.text == _verifyController.text;
     });
     print(_signupButtonActive);
-  }
-
-  void _createUser() async {
-    final supabase = Supabase.instance.client;
-
-    final AuthResponse signupResponse;
-    try {
-      signupResponse = await supabase.auth.signUp(
-        email: _emailController.text,
-        password: _passwordController.text,
-      );
-    } on AuthException catch (e) {
-      // TODO: notify user of the error in the UI
-      // https://supabase.com/docs/guides/auth/debugging/error-codes#auth-error-codes-table
-      print('email signup failed');
-      print(e.code);
-      print(e.message);
-      return;
-    }
-
-    // TODO: handle Confirm Emails once enabled
-
-    Session? session = signupResponse.session;
-    if (session != null) {
-      // Set the user's name in the db
-      await supabase.from('users').upsert({
-        'name': _nameController.text,
-      }).eq('id', session.user.id);
-
-      // TODO: clear nav stack and push home page
-      print('email signup succeeded');
-    }
   }
 }
