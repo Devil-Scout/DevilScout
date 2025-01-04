@@ -1,6 +1,7 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 
+import '../../appwrapper.dart';
 import '../../components/labeled_text_field.dart';
 import '../../pages/auth/email_signup.dart';
 import '../../supabase/email_auth.dart';
@@ -97,7 +98,8 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
         Expanded(
           child: ElevatedButton(
             // TODO: style button when inactive using MaterialState.disabled
-            onPressed: _loginButtonActive ? _loginWithEmail : null,
+            onPressed:
+                _loginButtonActive ? () => _loginWithEmail(context) : null,
             child: const Text("Sign In"),
           ),
         )
@@ -133,10 +135,23 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
     });
   }
 
-  void _loginWithEmail() async {
-    await supabaseLoginWithEmail(
+  void _loginWithEmail(BuildContext context) async {
+    final response = await supabaseLoginWithEmail(
       email: _emailController.text,
       password: _passwordController.text,
     );
+    if (!context.mounted) return;
+
+    if (response?.session != null) {
+      // Push home page and clear nav stack
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (_) => const AppWrapper()),
+        (_) => false,
+      );
+    }
+
+    // TODO: unsuccessful/additional steps
+    print(response);
   }
 }

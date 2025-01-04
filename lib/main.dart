@@ -17,11 +17,9 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: supabase.auth.currentSession == null
-            ? const LoginSelectPage()
-            : const AppWrapper(),
-      ),
+      home: supabase.auth.currentSession == null
+          ? const LoginSelectPage()
+          : const AppWrapper(),
       theme: lightTheme,
     );
   }

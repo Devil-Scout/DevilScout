@@ -1,6 +1,7 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 
+import '../../appwrapper.dart';
 import '../../components/labeled_text_field.dart';
 import '../../supabase/email_auth.dart';
 
@@ -103,7 +104,7 @@ class _EmailSignUpPageState extends State<EmailSignUpPage> {
         const SizedBox(width: 10.0),
         Expanded(
           child: ElevatedButton(
-            onPressed: _signupButtonActive ? _createUser : null,
+            onPressed: _signupButtonActive ? () => _createUser(context) : null,
             child: const Text("Sign Up"),
           ),
         )
@@ -111,12 +112,25 @@ class _EmailSignUpPageState extends State<EmailSignUpPage> {
     );
   }
 
-  void _createUser() async {
-    await supabaseCreateEmailUser(
+  void _createUser(BuildContext context) async {
+    final response = await supabaseCreateEmailUser(
       name: _nameController.text,
       email: _emailController.text,
       password: _passwordController.text,
     );
+    if (!context.mounted) return;
+
+    if (response?.session != null) {
+      // Push home page and clear nav stack
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (_) => const AppWrapper()),
+        (_) => false,
+      );
+    }
+
+    // TODO: unsuccessful/additional steps
+    print(response);
   }
 
   void _validateForm([String? _]) {
@@ -126,6 +140,5 @@ class _EmailSignUpPageState extends State<EmailSignUpPage> {
           _passwordController.text.isNotEmpty &&
           _passwordController.text == _verifyController.text;
     });
-    print(_signupButtonActive);
   }
 }

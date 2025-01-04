@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
+import '../../appwrapper.dart';
 import '../../supabase/sso_auth.dart';
 import 'email_login.dart';
 
@@ -59,7 +60,7 @@ class LoginSelectPage extends StatelessWidget {
       children: [
         Expanded(
           child: OutlinedButton.icon(
-            onPressed: () => supabaseLoginWithSso(provider),
+            onPressed: () => _loginWithSso(context, provider),
             icon: SvgPicture.asset(
               provider.iconPath,
               width: 24.0,
@@ -135,5 +136,22 @@ class LoginSelectPage extends StatelessWidget {
             ),
       ),
     );
+  }
+
+  Future<void> _loginWithSso(BuildContext context, SsoProvider provider) async {
+    final response = await supabaseLoginWithSso(provider);
+    if (!context.mounted) return;
+
+    if (response?.session != null) {
+      // Push home page and clear nav stack
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (_) => const AppWrapper()),
+        (_) => false,
+      );
+    }
+
+    // TODO: unsuccessful/additional steps
+    print(response);
   }
 }
