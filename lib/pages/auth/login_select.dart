@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../supabase/sso_auth.dart';
 import 'email_login.dart';
@@ -67,7 +66,7 @@ class LoginSelectPage extends StatelessWidget {
               height: 24.0,
             ),
             label: Padding(
-              padding: EdgeInsets.only(left: 4.0),
+              padding: EdgeInsets.only(left: 6.0),
               child: Text('Sign in with ${provider.name}'),
             ),
           ),
@@ -106,9 +105,9 @@ class LoginSelectPage extends StatelessWidget {
                 MaterialPageRoute(builder: (context) => const EmailLoginPage()),
               );
             },
-            icon: const FaIcon(FontAwesomeIcons.envelope),
+            icon: Icon(Icons.mail_outline),
             label: const Padding(
-              padding: EdgeInsets.only(left: 4.0),
+              padding: EdgeInsets.only(left: 6.0),
               child: Text("Continue with Email"),
             ),
           ),
@@ -121,11 +120,12 @@ class LoginSelectPage extends StatelessWidget {
     return Center(
       child: TextButton.icon(
         onPressed: () {},
-        icon: const FaIcon(FontAwesomeIcons.circleQuestion),
+        icon: Icon(Icons.help_outline, size: 22.0),
         label: const Text("Why do I need to sign in?"),
         style: Theme.of(context).textButtonTheme.style!.copyWith(
               foregroundColor: WidgetStatePropertyAll(Colors.grey[600]),
               overlayColor: WidgetStatePropertyAll(Colors.grey[200]),
+              iconColor: WidgetStatePropertyAll(Colors.grey[600]),
               textStyle: const WidgetStatePropertyAll(
                 TextStyle(decoration: TextDecoration.none),
               ),

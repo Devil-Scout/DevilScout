@@ -1,6 +1,5 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../components/labeled_text_field.dart';
 import '../../pages/auth/email_signup.dart';
@@ -90,7 +89,9 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
           onPressed: () {
             Navigator.pop(context);
           },
-          child: const FaIcon(FontAwesomeIcons.arrowLeft),
+          child: const Icon(
+            Icons.arrow_back,
+          ),
         ),
         const SizedBox(width: 10.0),
         Expanded(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'appwrapper.dart';
 import 'pages/auth/login_select.dart';
 import 'supabase/client.dart';
 import 'theme.dart';
@@ -19,7 +20,7 @@ class MainApp extends StatelessWidget {
       home: Scaffold(
         body: supabase.auth.currentSession == null
             ? const LoginSelectPage()
-            : Center(child: Text('${supabase.auth.currentUser?.name}')),
+            : const AppWrapper(),
       ),
       theme: lightTheme,
     );
