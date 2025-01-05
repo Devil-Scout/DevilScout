@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:devil_scout/theme.dart';
-
 import 'pages/auth/login_select.dart';
+import 'theme.dart';
 
 void main() {
   runApp(const MainApp());

@@ -1,5 +1,6 @@
-import 'package:devil_scout/pages/home/home.dart';
 import 'package:flutter/material.dart';
+
+import '../pages/home/home.dart';
 
 class HomePageNavigator extends StatefulWidget {
   const HomePageNavigator({super.key});

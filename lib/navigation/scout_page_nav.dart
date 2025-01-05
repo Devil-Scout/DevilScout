@@ -1,5 +1,6 @@
-import 'package:devil_scout/pages/scout/scout_home.dart';
 import 'package:flutter/material.dart';
+
+import '../pages/scout/scout_home.dart';
 
 class ScoutPageNavigator extends StatefulWidget {
   const ScoutPageNavigator({super.key});
