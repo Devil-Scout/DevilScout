@@ -1,5 +1,6 @@
-import 'package:devil_scout/pages/analyze/analyze_home.dart';
 import 'package:flutter/material.dart';
+
+import '../pages/analyze/analyze_home.dart';
 
 class AnalyzePageNavigator extends StatefulWidget {
   const AnalyzePageNavigator({super.key});

@@ -1,6 +1,7 @@
-import 'package:devil_scout/pages/auth/email_login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+
+import 'email_login.dart';
 
 class LoginSelectPage extends StatelessWidget {
   const LoginSelectPage({super.key});

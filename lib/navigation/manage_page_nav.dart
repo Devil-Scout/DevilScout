@@ -1,5 +1,6 @@
-import 'package:devil_scout/pages/manage/manage_home.dart';
 import 'package:flutter/material.dart';
+
+import '../pages/manage/manage_home.dart';
 
 class ManagePageNavigator extends StatefulWidget {
   const ManagePageNavigator({super.key});

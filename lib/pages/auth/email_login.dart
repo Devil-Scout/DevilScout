@@ -1,6 +1,7 @@
-import 'package:devil_scout/components/data_collection_field.dart';
-import 'package:devil_scout/pages/auth/email_signup.dart';
 import 'package:flutter/material.dart';
+
+import '../../components/data_collection_field.dart';
+import 'email_signup.dart';
 
 class EmailLoginPage extends StatelessWidget {
   const EmailLoginPage({super.key});
