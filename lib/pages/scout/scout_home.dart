@@ -6,7 +6,7 @@ class ScoutHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Center(
-      child: Text('Scout Home Page'),
+      child: Text('Scout Page'),
     );
   }
 }

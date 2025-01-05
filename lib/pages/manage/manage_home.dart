@@ -6,7 +6,7 @@ class ManageHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Center(
-      child: Text('Manage Home Page'),
+      child: Text('Manage Page'),
     );
   }
 }
