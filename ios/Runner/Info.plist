@@ -32,6 +32,14 @@
 				<string>com.googleusercontent.apps.609606147453-at5j8nhgv2j52ogh7rn1nfij7vpn8h2v</string>
 			</array>
 		</dict>
+		<dict>
+      <key>CFBundleTypeRole</key>
+      <string>Editor</string>
+      <key>CFBundleURLSchemes</key>
+      <array>
+        <string>org.devilscout.client</string>
+      </array>
+    </dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>

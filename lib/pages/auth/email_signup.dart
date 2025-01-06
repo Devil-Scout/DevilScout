@@ -1,7 +1,6 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 
-import '../../appwrapper.dart';
 import '../../components/labeled_text_field.dart';
 import '../../supabase/email_auth.dart';
 
@@ -113,24 +112,15 @@ class _EmailSignUpPageState extends State<EmailSignUpPage> {
   }
 
   void _createUser(BuildContext context) async {
-    final response = await supabaseCreateEmailUser(
-      name: _nameController.text,
-      email: _emailController.text,
-      password: _passwordController.text,
-    );
-    if (!context.mounted) return;
-
-    if (response?.session != null) {
-      // Push home page and clear nav stack
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (_) => const AppWrapper()),
-        (_) => false,
+    try {
+      await supabaseCreateEmailUser(
+        name: _nameController.text,
+        email: _emailController.text,
+        password: _passwordController.text,
       );
+    } catch (e) {
+      // TODO: notify user of error
     }
-
-    // TODO: unsuccessful/additional steps
-    print(response);
   }
 
   void _validateForm([String? _]) {

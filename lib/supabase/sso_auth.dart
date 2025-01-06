@@ -27,39 +27,21 @@ enum SsoProvider {
   });
 }
 
-Future<AuthResponse?> supabaseLoginWithSso(SsoProvider provider) async {
-  final AuthResponse? loginResponse;
+Future<void> supabaseLoginWithSso(SsoProvider provider) async {
   try {
-    loginResponse = switch (provider) {
-      SsoProvider.apple => await _loginWithAppleNative(),
-      SsoProvider.google => await _loginWithGoogle(),
+    await switch (provider) {
+      SsoProvider.apple =>
+        Platform.isIOS ? _loginWithAppleNative() : _loginWithAppleAndroid(),
+      SsoProvider.google => _loginWithGoogle(),
     };
   } on AuthException catch (e) {
-    // TODO: notify user of the error in the UI
-    // https://supabase.com/docs/guides/auth/debugging/error-codes#auth-error-codes-table
-    print('sso login failed');
-    print(e.code);
-    print(e.message);
-    return null;
+    throw e.message;
   } catch (e) {
-    // other exceptions
-    print('sso login failed');
-    print(e);
-    return null;
+    throw e.toString();
   }
-
-  if (loginResponse == null) {
-    print('sso login aborted');
-    return null;
-  }
-
-  print(loginResponse);
-  print(loginResponse.user?.identities);
-
-  return loginResponse;
 }
 
-Future<AuthResponse?> _loginWithGoogle() async {
+Future<void> _loginWithGoogle() async {
   // from https://console.cloud.google.com/apis/credentials
   const webClientId =
       '609606147453-l9aepfbrr7bc3c8qgf3sp6mjlrguo6un.apps.googleusercontent.com';
@@ -73,8 +55,8 @@ Future<AuthResponse?> _loginWithGoogle() async {
 
   final googleUser = await googleSignIn.signIn();
   if (googleUser == null) {
-    // login was aborted
-    return null;
+    // aborted
+    return;
   }
 
   final googleAuth = await googleUser.authentication;
@@ -85,19 +67,14 @@ Future<AuthResponse?> _loginWithGoogle() async {
     throw 'Error';
   }
 
-  return await supabase.auth.signInWithIdToken(
+  await supabase.auth.signInWithIdToken(
     provider: OAuthProvider.google,
     idToken: idToken,
     accessToken: accessToken,
   );
 }
 
-Future<AuthResponse?> _loginWithAppleNative() async {
-  if (!Platform.isIOS) {
-    print('only supported on iOS');
-    return null;
-  }
-
+Future<void> _loginWithAppleNative() async {
   final rawNonce = supabase.auth.generateRawNonce();
   final hashedNonce = sha256.convert(utf8.encode(rawNonce)).toString();
 
@@ -111,14 +88,20 @@ Future<AuthResponse?> _loginWithAppleNative() async {
 
   final idToken = credential.identityToken;
   if (idToken == null) {
-    throw const AuthException(
-      'Could not find ID Token from generated credential.',
-    );
+    throw 'Invalid AppleID credential';
   }
 
-  return await supabase.auth.signInWithIdToken(
+  await supabase.auth.signInWithIdToken(
     provider: OAuthProvider.apple,
     idToken: idToken,
     nonce: rawNonce,
+  );
+}
+
+Future<void> _loginWithAppleAndroid() async {
+  await supabase.auth.signInWithOAuth(
+    OAuthProvider.apple,
+    redirectTo: 'org.devilscout.client://',
+    queryParams: {'client_id': 'org.devilscout.supabase'},
   );
 }

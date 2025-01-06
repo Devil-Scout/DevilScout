@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-import '../../appwrapper.dart';
 import '../../supabase/sso_auth.dart';
 import 'email_login.dart';
 
@@ -139,19 +138,10 @@ class LoginSelectPage extends StatelessWidget {
   }
 
   Future<void> _loginWithSso(BuildContext context, SsoProvider provider) async {
-    final response = await supabaseLoginWithSso(provider);
-    if (!context.mounted) return;
-
-    if (response?.session != null) {
-      // Push home page and clear nav stack
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (_) => const AppWrapper()),
-        (_) => false,
-      );
+    try {
+      await supabaseLoginWithSso(provider);
+    } catch (e) {
+      // TODO: notify user of error
     }
-
-    // TODO: unsuccessful/additional steps
-    print(response);
   }
 }
