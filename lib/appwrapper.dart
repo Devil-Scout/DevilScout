@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'navigation/analyze_page_nav.dart';
 import 'navigation/home_page_nav.dart';
-import 'pages/manage/manage_home.dart';
-import 'pages/scout/scout_home.dart';
+import 'navigation/manage_page_nav.dart';
+import 'navigation/scout_page_nav.dart';
 
 class AppWrapper extends StatefulWidget {
   const AppWrapper({super.key});
@@ -22,9 +22,9 @@ class _AppWrapperState extends State<AppWrapper> {
         index: _pageIndex,
         children: <Widget>[
           HomePageNavigator(),
-          ScoutHomePage(),
+          ScoutPageNavigator(),
           AnalyzePageNavigator(),
-          ManageHomePage(),
+          ManagePageNavigator(),
         ],
       ),
       bottomNavigationBar: Container(
