@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
 
-class DataCollectionField extends StatelessWidget {
+class LabeledTextField extends StatelessWidget {
   final String label;
   final bool autocorrect;
   final bool obscureText;
   final TextInputType inputType;
 
-  const DataCollectionField({
+  final TextEditingController? controller;
+  final void Function(String)? onChanged;
+
+  const LabeledTextField({
     super.key,
     required this.label,
     this.autocorrect = false,
     this.obscureText = false,
     required this.inputType,
+    this.controller,
+    this.onChanged,
   });
 
   @override
@@ -29,6 +34,8 @@ class DataCollectionField extends StatelessWidget {
           keyboardType: inputType,
           enableSuggestions: autocorrect,
           obscureText: obscureText,
+          controller: controller,
+          onChanged: onChanged,
         ),
       ],
     );

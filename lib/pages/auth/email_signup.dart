@@ -1,9 +1,23 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 
-import '../../components/data_collection_field.dart';
+import '../../components/labeled_text_field.dart';
+import '../../supabase/email_auth.dart';
 
-class EmailSignUpPage extends StatelessWidget {
+class EmailSignUpPage extends StatefulWidget {
   const EmailSignUpPage({super.key});
+
+  @override
+  State<EmailSignUpPage> createState() => _EmailSignUpPageState();
+}
+
+class _EmailSignUpPageState extends State<EmailSignUpPage> {
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _verifyController = TextEditingController();
+
+  bool _signupButtonActive = false;
 
   @override
   Widget build(BuildContext context) {
@@ -16,31 +30,39 @@ class EmailSignUpPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _InfoText(),
+                _headerText(context),
                 const SizedBox(height: 40.0),
-                const DataCollectionField(
+                LabeledTextField(
                   label: "Full Name",
                   inputType: TextInputType.name,
+                  controller: _nameController,
+                  onChanged: _validateForm,
                 ),
                 const SizedBox(height: 14.0),
-                const DataCollectionField(
+                LabeledTextField(
                   label: "Email",
                   inputType: TextInputType.emailAddress,
+                  controller: _emailController,
+                  onChanged: _validateForm,
                 ),
                 const SizedBox(height: 14.0),
-                const DataCollectionField(
+                LabeledTextField(
                   label: "Password",
                   inputType: TextInputType.text,
                   obscureText: true,
+                  controller: _passwordController,
+                  onChanged: _validateForm,
                 ),
                 const SizedBox(height: 14.0),
-                const DataCollectionField(
+                LabeledTextField(
                   label: "Verify Password",
                   inputType: TextInputType.text,
                   obscureText: true,
+                  controller: _verifyController,
+                  onChanged: _validateForm,
                 ),
                 const SizedBox(height: 40.0),
-                _EmailSignUpFunctions(),
+                _bottomButtons(context),
               ],
             ),
           ),
@@ -48,11 +70,8 @@ class EmailSignUpPage extends StatelessWidget {
       ),
     );
   }
-}
 
-class _InfoText extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
+  Widget _headerText(BuildContext context) {
     return ConstrainedBox(
       constraints: const BoxConstraints(maxWidth: 256.0),
       child: Column(
@@ -71,11 +90,8 @@ class _InfoText extends StatelessWidget {
       ),
     );
   }
-}
 
-class _EmailSignUpFunctions extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
+  Widget _bottomButtons(BuildContext context) {
     return Row(
       children: [
         OutlinedButton(
@@ -87,11 +103,32 @@ class _EmailSignUpFunctions extends StatelessWidget {
         const SizedBox(width: 10.0),
         Expanded(
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: _signupButtonActive ? () => _createUser(context) : null,
             child: const Text("Sign Up"),
           ),
         )
       ],
     );
+  }
+
+  void _createUser(BuildContext context) async {
+    try {
+      await supabaseCreateEmailUser(
+        name: _nameController.text,
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
+    } catch (e) {
+      // TODO: notify user of error
+    }
+  }
+
+  void _validateForm([String? _]) {
+    setState(() {
+      _signupButtonActive = _nameController.text.isNotEmpty &&
+          EmailValidator.validate(_emailController.text) &&
+          _passwordController.text.isNotEmpty &&
+          _passwordController.text == _verifyController.text;
+    });
   }
 }
