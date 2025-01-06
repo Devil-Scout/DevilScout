@@ -96,6 +96,26 @@ Future<void> _loginWithAppleNative() async {
     idToken: idToken,
     nonce: rawNonce,
   );
+
+  final String? name;
+  if (credential.givenName == null) {
+    name = credential.familyName;
+  } else if (credential.familyName == null) {
+    name = credential.givenName;
+  } else {
+    name = '${credential.givenName} ${credential.familyName}';
+  }
+
+  if (name != null) {
+    // native Apple doesn't return name for some reason
+    await supabase.auth.updateUser(
+      UserAttributes(
+        data: {
+          UserName.metadataKey: name,
+        },
+      ),
+    );
+  }
 }
 
 Future<void> _loginWithAppleAndroid() async {
