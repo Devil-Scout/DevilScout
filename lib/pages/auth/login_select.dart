@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-import '../../supabase/client.dart';
+import '../../supabase/database.dart';
+import '../../supabase/repository/auth.dart';
 import 'email_login.dart';
 
 class LoginSelectPage extends StatelessWidget {
@@ -139,7 +140,7 @@ class LoginSelectPage extends StatelessWidget {
 
   Future<void> _loginWithSso(BuildContext context, SsoProvider provider) async {
     try {
-      await supabaseLoginWithSso(provider);
+      await Database.of(context).auth.signInWithSso(provider);
     } catch (e) {
       // TODO: notify user of error
     }

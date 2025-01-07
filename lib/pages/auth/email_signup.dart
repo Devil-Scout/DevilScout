@@ -2,7 +2,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 
 import '../../components/labeled_text_field.dart';
-import '../../supabase/client.dart';
+import '../../supabase/database.dart';
 
 class EmailSignUpPage extends StatefulWidget {
   const EmailSignUpPage({super.key});
@@ -113,11 +113,11 @@ class _EmailSignUpPageState extends State<EmailSignUpPage> {
 
   void _createUser(BuildContext context) async {
     try {
-      await supabaseCreateEmailUser(
-        name: _nameController.text,
-        email: _emailController.text,
-        password: _passwordController.text,
-      );
+      await Database.of(context).auth.signUpWithEmail(
+            name: _nameController.text,
+            email: _emailController.text,
+            password: _passwordController.text,
+          );
     } catch (e) {
       // TODO: notify user of error
     }

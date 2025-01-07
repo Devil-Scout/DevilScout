@@ -1,16 +1,20 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'appwrapper.dart';
 import 'pages/auth/login_select.dart';
-import 'supabase/client.dart';
+import 'supabase/database.dart';
 import 'theme.dart';
 
 Future<void> main() async {
-  await supabaseInit();
-  runApp(const MainApp());
+  await Database.initSupabase();
+  runApp(Provider(
+    create: (context) => Database.supabase(Supabase.instance.client),
+    child: const MainApp(),
+  ));
 }
 
 class MainApp extends StatefulWidget {
@@ -27,35 +31,37 @@ class _MainAppState extends State<MainApp> {
   void initState() {
     super.initState();
 
-    supabaseAuthListen((data) {
-      switch (data.event) {
-        case AuthChangeEvent.signedIn:
-          navigatorKey.currentState?.pushAndRemoveUntil(
-            MaterialPageRoute(builder: (_) => const AppWrapper()),
-            (_) => false,
-          );
-          break;
-        case AuthChangeEvent.signedOut:
-          navigatorKey.currentState?.pushAndRemoveUntil(
-            MaterialPageRoute(builder: (_) => const LoginSelectPage()),
-            (_) => false,
-          );
-          break;
-        case AuthChangeEvent.initialSession:
-          navigatorKey.currentState?.pushAndRemoveUntil(
-            data.session == null
-                ? MaterialPageRoute(builder: (_) => const LoginSelectPage())
-                : MaterialPageRoute(builder: (_) => const AppWrapper()),
-            (_) => false,
-          );
-          break;
-        // case AuthChangeEvent.passwordRecovery:
-        // case AuthChangeEvent.tokenRefreshed:
-        // case AuthChangeEvent.userUpdated:
-        // case AuthChangeEvent.mfaChallengeVerified:
-        default:
-          break;
-      }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Database.of(context).auth.addListener((data) {
+        switch (data.event) {
+          case AuthChangeEvent.signedIn:
+            navigatorKey.currentState?.pushAndRemoveUntil(
+              MaterialPageRoute(builder: (_) => const AppWrapper()),
+              (_) => false,
+            );
+            break;
+          case AuthChangeEvent.signedOut:
+            navigatorKey.currentState?.pushAndRemoveUntil(
+              MaterialPageRoute(builder: (_) => const LoginSelectPage()),
+              (_) => false,
+            );
+            break;
+          case AuthChangeEvent.initialSession:
+            navigatorKey.currentState?.pushAndRemoveUntil(
+              data.session == null
+                  ? MaterialPageRoute(builder: (_) => const LoginSelectPage())
+                  : MaterialPageRoute(builder: (_) => const AppWrapper()),
+              (_) => false,
+            );
+            break;
+          // case AuthChangeEvent.passwordRecovery:
+          // case AuthChangeEvent.tokenRefreshed:
+          // case AuthChangeEvent.userUpdated:
+          // case AuthChangeEvent.mfaChallengeVerified:
+          default:
+            break;
+        }
+      });
     });
   }
 
