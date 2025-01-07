@@ -9,7 +9,6 @@ import 'theme.dart';
 
 Future<void> main() async {
   await supabaseInit();
-  Future.delayed(Duration(seconds: 5), supabase.auth.signOut);
   runApp(const MainApp());
 }
 
@@ -21,8 +20,6 @@ class MainApp extends StatefulWidget {
 }
 
 class _MainAppState extends State<MainApp> {
-  final router = initRouter();
-
   @override
   void initState() {
     super.initState();

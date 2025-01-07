@@ -16,7 +16,9 @@ final _scoutNavigator = GlobalKey<NavigatorState>();
 final _analyzeNavigator = GlobalKey<NavigatorState>();
 final _settingsNavigator = GlobalKey<NavigatorState>();
 
-GoRouter initRouter() {
+final router = _router();
+
+GoRouter _router() {
   return GoRouter(
     navigatorKey: _rootNavigator,
     routes: [

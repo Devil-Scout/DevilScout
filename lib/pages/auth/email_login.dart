@@ -1,8 +1,8 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../components/labeled_text_field.dart';
+import '../../router.dart';
 import '../../supabase/email_auth.dart';
 
 class EmailLoginPage extends StatefulWidget {
@@ -86,7 +86,7 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
     return Row(
       children: [
         OutlinedButton(
-          onPressed: context.pop,
+          onPressed: router.pop,
           child: const Icon(
             Icons.arrow_back,
           ),
@@ -113,7 +113,7 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
         ),
         const SizedBox(width: 6.0),
         TextButton(
-          onPressed: () => context.go('/login/email/signup'),
+          onPressed: () => router.go('/login/email/signup'),
           child: const Text("Create one"),
         )
       ],
