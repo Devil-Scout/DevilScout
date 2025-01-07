@@ -1,5 +1,6 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../components/labeled_text_field.dart';
 import '../../supabase/email_auth.dart';
@@ -95,9 +96,7 @@ class _EmailSignUpPageState extends State<EmailSignUpPage> {
     return Row(
       children: [
         OutlinedButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          onPressed: context.pop,
           child: Icon(Icons.arrow_back),
         ),
         const SizedBox(width: 10.0),

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../supabase/sso_auth.dart';
-import 'email_login.dart';
 
 class LoginSelectPage extends StatelessWidget {
   const LoginSelectPage({super.key});
@@ -99,12 +99,7 @@ class LoginSelectPage extends StatelessWidget {
       children: [
         Expanded(
           child: ElevatedButton.icon(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const EmailLoginPage()),
-              );
-            },
+            onPressed: () => context.go('/login/email'),
             icon: Icon(Icons.mail_outline),
             label: const Padding(
               padding: EdgeInsets.only(left: 6.0),

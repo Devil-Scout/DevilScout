@@ -1,32 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-import 'navigation/analyze_page_nav.dart';
-import 'navigation/home_page_nav.dart';
-import 'navigation/manage_page_nav.dart';
-import 'navigation/scout_page_nav.dart';
+class NavBarWrapper extends StatelessWidget {
+  final StatefulNavigationShell shell;
 
-class AppWrapper extends StatefulWidget {
-  const AppWrapper({super.key});
-
-  @override
-  State<AppWrapper> createState() => _AppWrapperState();
-}
-
-class _AppWrapperState extends State<AppWrapper> {
-  int _pageIndex = 0;
+  const NavBarWrapper({super.key, required this.shell});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
-        index: _pageIndex,
-        children: <Widget>[
-          HomePageNavigator(),
-          ScoutPageNavigator(),
-          AnalyzePageNavigator(),
-          ManagePageNavigator(),
-        ],
-      ),
+      body: shell,
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           boxShadow: <BoxShadow>[
@@ -38,12 +21,8 @@ class _AppWrapperState extends State<AppWrapper> {
           ],
         ),
         child: NavigationBar(
-          selectedIndex: _pageIndex,
-          onDestinationSelected: (int index) {
-            setState(() {
-              _pageIndex = index;
-            });
-          },
+          selectedIndex: shell.currentIndex,
+          onDestinationSelected: shell.goBranch,
           destinations: <NavigationDestination>[
             NavigationDestination(
               icon: Icon(Icons.home_outlined),
