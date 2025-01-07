@@ -3,10 +3,12 @@ import 'dart:convert';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../database.dart';
+import '../model/enums.dart';
 import '../model/questions.dart';
 
 class QuestionsRepository {
-  final Cache<(int, ScoutingCategory), QuestionNode> _questionsCache;
+  final Cache<(int, ScoutingCategory), Map<String?, QuestionNode>>
+      _questionsCache;
   final Cache<(int, ScoutingCategory), Map<String, String>> _detailsCache;
 
   QuestionsRepository.supabase(SupabaseClient supabase)
@@ -28,7 +30,7 @@ class QuestionsRepository {
           ),
         );
 
-  Future<QuestionNode> getQuestions({
+  Future<Map<String?, QuestionNode>> getQuestions({
     required int season,
     required ScoutingCategory category,
     bool forceOrigin = false,
@@ -54,16 +56,17 @@ class QuestionsService {
 
   QuestionsService(this.supabase);
 
-  Future<QuestionNode> getQuestions({
+  Future<Map<String?, QuestionNode>> getQuestions({
     required int season,
     required ScoutingCategory category,
-  }) {
-    return (supabase
-            .from('questions')
-            .select()
-            .eq('season', 2025)
-            .eq('category', category.value))
-        .then(QuestionNode.buildTree);
+  }) async {
+    final data = await supabase
+        .from('questions')
+        .select()
+        .eq('season', 2025)
+        .eq('category', category.value);
+    final nodes = data.map(QuestionNode.fromJson);
+    return Map.fromIterables(nodes.map((node) => node.parentId), nodes);
   }
 
   Future<Map<String, String>> getDetails({
