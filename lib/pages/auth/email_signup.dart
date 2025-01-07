@@ -2,7 +2,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 
 import '../../components/labeled_text_field.dart';
-import '../../supabase/email_auth.dart';
+import '../../supabase/client.dart';
 
 class EmailSignUpPage extends StatefulWidget {
   const EmailSignUpPage({super.key});

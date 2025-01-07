@@ -10,7 +10,6 @@ import 'theme.dart';
 
 Future<void> main() async {
   await supabaseInit();
-  Future.delayed(Duration(seconds: 5), supabase.auth.signOut);
   runApp(const MainApp());
 }
 
@@ -28,11 +27,8 @@ class _MainAppState extends State<MainApp> {
   void initState() {
     super.initState();
 
-    supabase.auth.onAuthStateChange.listen((data) {
-      final AuthChangeEvent event = data.event;
-      final Session? session = data.session;
-
-      switch (event) {
+    supabaseAuthListen((data) {
+      switch (data.event) {
         case AuthChangeEvent.signedIn:
           navigatorKey.currentState?.pushAndRemoveUntil(
             MaterialPageRoute(builder: (_) => const AppWrapper()),
@@ -47,7 +43,7 @@ class _MainAppState extends State<MainApp> {
           break;
         case AuthChangeEvent.initialSession:
           navigatorKey.currentState?.pushAndRemoveUntil(
-            session == null
+            data.session == null
                 ? MaterialPageRoute(builder: (_) => const LoginSelectPage())
                 : MaterialPageRoute(builder: (_) => const AppWrapper()),
             (_) => false,

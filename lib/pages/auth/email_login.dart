@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../components/labeled_text_field.dart';
 import '../../pages/auth/email_signup.dart';
-import '../../supabase/email_auth.dart';
+import '../../supabase/client.dart';
 
 class EmailLoginPage extends StatefulWidget {
   const EmailLoginPage({super.key});
