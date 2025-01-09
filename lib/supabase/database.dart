@@ -1,11 +1,12 @@
 import 'dart:async';
+import 'dart:collection';
 
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'repository/auth.dart';
-import 'repository/questions.dart';
+import 'repository/scouting/questions.dart';
 
 class Database {
   final AuthRepository auth;
@@ -38,9 +39,9 @@ class Database {
 }
 
 class Cache<K, V> {
-  final Map<K, _CacheEntry<V>> _cache = {};
+  final Map<K, CacheEntry<V>> cache = {};
 
-  final Future<V> Function(K) origin;
+  final Future<V?> Function(K) origin;
   final Duration expiration;
 
   Cache({
@@ -48,28 +49,65 @@ class Cache<K, V> {
     required this.origin,
   });
 
-  Future<V> get({
+  Future<V?> get({
     required K key,
     bool forceOrigin = false,
   }) async {
-    final entry = _cache[key];
-    if (!forceOrigin && entry != null && entry.isValid(expiration)) {
-      return entry.data;
+    final entry = cache[key];
+    if (!forceOrigin && (entry?.isValid(expiration) ?? false)) {
+      return entry!.data;
     }
 
     final data = await origin(key);
-    _cache[key] = _CacheEntry(data);
-    return data;
+    if (data != null) {
+      cache[key] = CacheEntry(data);
+      return data;
+    } else {
+      cache.remove(key);
+      return null;
+    }
   }
 
-  void clear() => _cache.clear();
+  void clear() => cache.clear();
 }
 
-class _CacheEntry<V> {
+class CacheAll<K, V> extends Cache<K, V> {
+  final Future<Map<K, V>> Function() originAll;
+
+  CacheEntry<Null>? _allValues;
+
+  CacheAll({
+    required super.expiration,
+    required super.origin,
+    required this.originAll,
+  });
+
+  Future<Map<K, V>> getAll({
+    bool forceOrigin = false,
+  }) async {
+    if (!forceOrigin &&
+        (_allValues?.isValid(expiration) ?? false) &&
+        cache.values.where((e) => !e.isValid(expiration)).isEmpty) {
+      return UnmodifiableMapView(cache.map(
+        (key, value) => MapEntry(key, value.data),
+      ));
+    }
+
+    final data = await originAll();
+    cache
+      ..clear()
+      ..addAll(data.map(
+        (key, value) => MapEntry(key, CacheEntry(value)),
+      ));
+    return UnmodifiableMapView(data);
+  }
+}
+
+class CacheEntry<V> {
   final V data;
   final DateTime timestamp;
 
-  _CacheEntry(this.data) : timestamp = DateTime.now();
+  CacheEntry(this.data) : timestamp = DateTime.now();
 
   bool isValid(Duration expiration) =>
       DateTime.now().isBefore(timestamp.add(expiration));

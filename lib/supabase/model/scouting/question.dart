@@ -1,11 +1,9 @@
-// ignore_for_file: invalid_annotation_target
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'enums.dart';
 
-part 'questions.freezed.dart';
-part 'questions.g.dart';
+part 'question.freezed.dart';
+part 'question.g.dart';
 
 @Freezed(fromJson: true)
 sealed class QuestionNode with _$QuestionNode {
@@ -23,8 +21,8 @@ sealed class QuestionNode with _$QuestionNode {
     required int season,
     required ScoutingCategory category,
     required String prompt,
-    @JsonKey(name: 'parent_id') String? parentId,
-    int? index,
+    @JsonKey(name: 'parent_id') required String? parentId,
+    required int? index,
     @JsonKey(name: 'data_type') required DataType dataType,
     required Map<String, dynamic> config,
   }) = Question;
