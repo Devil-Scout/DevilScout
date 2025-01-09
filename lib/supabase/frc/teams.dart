@@ -34,12 +34,13 @@ class FrcTeamsRepository {
   FrcTeamsRepository(FrcTeamsService service)
       : _teamsCache = CacheAll(
           expiration: const Duration(minutes: 30),
-          origin: (teamNum) => service.getTeam(teamNum: teamNum),
-          originAll: () => service.getAllTeams(),
+          origin: service.getTeam,
+          originAll: service.getAllTeams,
+          key: (team) => team.number,
         ),
         _eventTeamsCache = Cache(
           expiration: const Duration(minutes: 30),
-          origin: (eventKey) => service.getTeamsAtEvent(eventKey: eventKey),
+          origin: service.getTeamsAtEvent,
         );
 
   Future<FrcTeam?> getTeam({
@@ -51,7 +52,7 @@ class FrcTeamsRepository {
         forceOrigin: forceOrigin,
       );
 
-  Future<Map<int, FrcTeam>> getAllTeams({
+  Future<List<FrcTeam>> getAllTeams({
     bool forceOrigin = false,
   }) =>
       _teamsCache.getAll(
@@ -73,9 +74,7 @@ class FrcTeamsService {
 
   FrcTeamsService(this.supabase);
 
-  Future<FrcTeam?> getTeam({
-    required int teamNum,
-  }) async {
+  Future<FrcTeam?> getTeam(int teamNum) async {
     final data = await supabase
         .from('frc_teams')
         .select()
@@ -84,21 +83,16 @@ class FrcTeamsService {
     return data == null ? null : FrcTeam.fromJson(data);
   }
 
-  Future<Map<int, FrcTeam>> getAllTeams() async {
+  Future<List<FrcTeam>> getAllTeams() async {
     final data = await supabase.from('frc_teams').select();
-    final teams = data.map(FrcTeam.fromJson);
-    return Map.fromEntries(teams.map(
-      (team) => MapEntry(team.number, team),
-    ));
+    return data.parse(FrcTeam.fromJson);
   }
 
-  Future<List<FrcTeam>?> getTeamsAtEvent({
-    required String eventKey,
-  }) async {
+  Future<List<FrcTeam>> getTeamsAtEvent(String eventKey) async {
     final data = await supabase
         .from('frc_teams')
         .select()
         .eq('event_teams.event_key', eventKey);
-    return data.isEmpty ? null : data.map(FrcTeam.fromJson).toList();
+    return data.parse(FrcTeam.fromJson);
   }
 }

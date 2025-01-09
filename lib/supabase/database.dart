@@ -18,8 +18,8 @@ import 'scouting/questions.dart';
 class Database {
   final AuthRepository auth;
 
-  final UsersRepository users;
   final TeamsRepository teams;
+  final TeamUsersRepository teamUsers;
   final TeamRequestsRepository teamRequests;
 
   final FrcSeasonsRepository frcSeasons;
@@ -31,8 +31,8 @@ class Database {
 
   Database({
     required this.auth,
-    required this.users,
     required this.teams,
+    required this.teamUsers,
     required this.teamRequests,
     required this.frcSeasons,
     required this.frcTeams,
@@ -44,8 +44,8 @@ class Database {
   Database.supabase(SupabaseClient supabase)
       : this(
           auth: AuthRepository.supabase(supabase),
-          users: UsersRepository.supabase(supabase),
           teams: TeamsRepository.supabase(supabase),
+          teamUsers: TeamUsersRepository.supabase(supabase),
           teamRequests: TeamRequestsRepository.supabase(supabase),
           frcSeasons: FrcSeasonsRepository.supabase(supabase),
           frcTeams: FrcTeamsRepository.supabase(supabase),
@@ -86,19 +86,16 @@ class Cache<K, V> {
     required K key,
     required bool forceOrigin,
   }) async {
-    final entry = cache[key];
-    if (!forceOrigin && (entry?.isValid(expiration) ?? false)) {
-      return entry!.data;
+    if (forceOrigin || (cache[key]?.isExpired(expiration) ?? true)) {
+      final data = await origin(key);
+      if (data != null) {
+        cache[key] = CacheEntry(data);
+      } else {
+        cache.remove(key);
+      }
     }
 
-    final data = await origin(key);
-    if (data != null) {
-      cache[key] = CacheEntry(data);
-      return data;
-    } else {
-      cache.remove(key);
-      return null;
-    }
+    return cache[key]?.data;
   }
 
   void clear() => cache.clear();
@@ -106,7 +103,9 @@ class Cache<K, V> {
 
 class CacheAll<K, V> extends Cache<K, V> {
   @protected
-  final Future<Map<K, V>> Function() originAll;
+  final Future<Iterable<V>> Function() originAll;
+  @protected
+  final K Function(V) key;
   @protected
   CacheEntry<Null>? allValues;
 
@@ -114,26 +113,27 @@ class CacheAll<K, V> extends Cache<K, V> {
     required super.expiration,
     required super.origin,
     required this.originAll,
+    required this.key,
   });
 
-  Future<Map<K, V>> getAll({
+  Future<List<V>> getAll({
     required bool forceOrigin,
   }) async {
-    if (!forceOrigin &&
-        (allValues?.isValid(expiration) ?? false) &&
-        cache.values.where((e) => !e.isValid(expiration)).isEmpty) {
-      return UnmodifiableMapView(cache.map(
-        (key, value) => MapEntry(key, value.data),
-      ));
+    if (forceOrigin ||
+        (allValues?.isExpired(expiration) ?? true) ||
+        cache.values.where((e) => !e.isExpired(expiration)).isNotEmpty) {
+      final data = await originAll();
+      cache
+        ..clear()
+        ..addEntries(data.map(
+          (value) => MapEntry(key(value), CacheEntry(value)),
+        ));
+      allValues = CacheEntry(null);
     }
 
-    final data = await originAll();
-    cache
-      ..clear()
-      ..addAll(data.map(
-        (key, value) => MapEntry(key, CacheEntry(value)),
-      ));
-    return UnmodifiableMapView(data);
+    return UnmodifiableListView(cache.values.map(
+      (entry) => entry.data,
+    ));
   }
 }
 
@@ -143,8 +143,8 @@ class CacheEntry<V> {
 
   CacheEntry(this.data) : timestamp = DateTime.now();
 
-  bool isValid(Duration expiration) =>
-      DateTime.now().isBefore(timestamp.add(expiration));
+  bool isExpired(Duration expiration) =>
+      DateTime.now().isAfter(timestamp.add(expiration));
 }
 
 extension JsonParseObject on PostgrestMap {
@@ -152,14 +152,6 @@ extension JsonParseObject on PostgrestMap {
 }
 
 extension JsonParseList on PostgrestList {
-  List<T>? parseToList<T>(T Function(Map<String, dynamic>) fromJson) =>
-      isEmpty ? null : map(fromJson).toList();
-
-  Map<K, V> parseToMap<K, V>(
-          V Function(Map<String, dynamic>) fromJson, K Function(V) key) =>
-      Map.fromEntries(
-        map(fromJson).map(
-          (value) => MapEntry(key(value), value),
-        ),
-      );
+  List<T> parse<T>(T Function(Map<String, dynamic>) fromJson) =>
+      map(fromJson).toList();
 }

@@ -50,17 +50,18 @@ class UserPermission with _$UserPermission {
       _$UserPermissionFromJson(json);
 }
 
-class UsersRepository {
+class TeamUsersRepository {
   final CacheAll<UserId, User> _teamUsersCache;
 
-  UsersRepository.supabase(SupabaseClient supabase)
-      : this(UsersService(supabase));
+  TeamUsersRepository.supabase(SupabaseClient supabase)
+      : this(TeamUsersService(supabase));
 
-  UsersRepository(UsersService service)
+  TeamUsersRepository(TeamUsersService service)
       : _teamUsersCache = CacheAll(
           expiration: const Duration(minutes: 30),
-          origin: (id) => service.getUser(id: id),
-          originAll: () => service.getAllUsers(),
+          origin: service.getUser,
+          originAll: service.getAllUsers,
+          key: (user) => user.id,
         );
 
   Future<User?> getUser({
@@ -72,7 +73,7 @@ class UsersRepository {
         forceOrigin: forceOrigin,
       );
 
-  Future<Map<UserId, User>> getAllUsers({
+  Future<List<User>> getAllUsers({
     bool forceOrigin = false,
   }) =>
       _teamUsersCache.getAll(
@@ -80,14 +81,12 @@ class UsersRepository {
       );
 }
 
-class UsersService {
+class TeamUsersService {
   final SupabaseClient supabase;
 
-  UsersService(this.supabase);
+  TeamUsersService(this.supabase);
 
-  Future<User?> getUser({
-    required UserId id,
-  }) async {
+  Future<User?> getUser(UserId id) async {
     final data = await supabase
         .from('users')
         .select('*, team_users:team_user(*), permissions(*)')
@@ -96,11 +95,11 @@ class UsersService {
     return data?.parse(User.fromJson);
   }
 
-  Future<Map<UserId, User>> getAllUsers() async {
+  Future<List<User>> getAllUsers() async {
     final data = await supabase
         .from('users')
         .select('*, team_users:team_user(*), permissions(*)')
         .not('team_user.team_num', 'is', null);
-    return data.parseToMap(User.fromJson, (user) => user.id);
+    return data.parse(User.fromJson);
   }
 }

@@ -27,8 +27,9 @@ class FrcSeasonsRepository {
   FrcSeasonsRepository(FrcSeasonsService service)
       : _seasonsCache = CacheAll(
           expiration: const Duration(minutes: 30),
-          origin: (year) => service.getSeason(year: year),
-          originAll: () => service.getAllSeasons(),
+          origin: service.getSeason,
+          originAll: service.getAllSeasons,
+          key: (season) => season.year,
         );
 
   Future<FrcSeason?> getSeason({
@@ -40,7 +41,7 @@ class FrcSeasonsRepository {
         forceOrigin: forceOrigin,
       );
 
-  Future<Map<int, FrcSeason>> getAllSeasons({
+  Future<List<FrcSeason>> getAllSeasons({
     bool forceOrigin = false,
   }) =>
       _seasonsCache.getAll(
@@ -53,9 +54,7 @@ class FrcSeasonsService {
 
   FrcSeasonsService(this.supabase);
 
-  Future<FrcSeason?> getSeason({
-    required int year,
-  }) async {
+  Future<FrcSeason?> getSeason(int year) async {
     final data = await supabase
         .from('frc_seasons')
         .select()
@@ -64,8 +63,8 @@ class FrcSeasonsService {
     return data?.parse(FrcSeason.fromJson);
   }
 
-  Future<Map<int, FrcSeason>> getAllSeasons() async {
+  Future<List<FrcSeason>> getAllSeasons() async {
     final data = await supabase.from('frc_seasons').select();
-    return data.parseToMap(FrcSeason.fromJson, (season) => season.year);
+    return data.parse(FrcSeason.fromJson);
   }
 }

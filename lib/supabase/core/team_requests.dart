@@ -36,7 +36,7 @@ class RequestUser with _$RequestUser {
 }
 
 class TeamRequestsRepository {
-  final CacheAll<String, TeamRequest> _teamsCache;
+  final CacheAll<UserId, TeamRequest> _teamsCache;
 
   TeamRequestsRepository.supabase(SupabaseClient supabase)
       : this(TeamRequestsService(supabase));
@@ -44,8 +44,9 @@ class TeamRequestsRepository {
   TeamRequestsRepository(TeamRequestsService service)
       : _teamsCache = CacheAll(
           expiration: const Duration(minutes: 30),
-          origin: (userId) => service.getRequest(userId: userId),
-          originAll: () => service.getAllRequests(),
+          origin: service.getRequest,
+          originAll: service.getAllRequests,
+          key: (request) => request.userId,
         );
 
   Future<TeamRequest?> getTeam({
@@ -57,7 +58,7 @@ class TeamRequestsRepository {
         forceOrigin: forceOrigin,
       );
 
-  Future<Map<String, TeamRequest>> getAllRequests({
+  Future<List<TeamRequest>> getAllRequests({
     bool forceOrigin = false,
   }) =>
       _teamsCache.getAll(
@@ -70,9 +71,7 @@ class TeamRequestsService {
 
   TeamRequestsService(this.supabase);
 
-  Future<TeamRequest?> getRequest({
-    required String userId,
-  }) async {
+  Future<TeamRequest?> getRequest(String userId) async {
     final data = await supabase
         .from('team_requests')
         .select('*, users:user(*)')
@@ -81,8 +80,8 @@ class TeamRequestsService {
     return data?.parse(TeamRequest.fromJson);
   }
 
-  Future<Map<String, TeamRequest>> getAllRequests() async {
+  Future<List<TeamRequest>> getAllRequests() async {
     final data = await supabase.from('team_requests').select('*,users:user(*)');
-    return data.parseToMap(TeamRequest.fromJson, (request) => request.userId);
+    return data.parse(TeamRequest.fromJson);
   }
 }

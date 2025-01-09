@@ -30,12 +30,11 @@ class FrcDistrictsRepository {
   FrcDistrictsRepository(FrcDistrictsService service)
       : _districtsCache = Cache(
           expiration: const Duration(minutes: 30),
-          origin: (districtKey) =>
-              service.getDistrict(districtKey: districtKey),
+          origin: service.getDistrict,
         ),
         _seasonDistrictsCache = Cache(
           expiration: const Duration(minutes: 30),
-          origin: (year) => service.getSeasonDistricts(year: year),
+          origin: service.getSeasonDistricts,
         );
 
   Future<FrcDistrict?> getDistrict({
@@ -62,9 +61,7 @@ class FrcDistrictsService {
 
   FrcDistrictsService(this.supabase);
 
-  Future<FrcDistrict?> getDistrict({
-    required String districtKey,
-  }) async {
+  Future<FrcDistrict?> getDistrict(String districtKey) async {
     final data = await supabase
         .from('frc_districts')
         .select()
@@ -73,11 +70,9 @@ class FrcDistrictsService {
     return data?.parse(FrcDistrict.fromJson);
   }
 
-  Future<List<FrcDistrict>?> getSeasonDistricts({
-    required int year,
-  }) async {
+  Future<List<FrcDistrict>?> getSeasonDistricts(int year) async {
     final data =
         await supabase.from('frc_districts').select().eq('season', year);
-    return data.parseToList(FrcDistrict.fromJson);
+    return data.parse(FrcDistrict.fromJson);
   }
 }

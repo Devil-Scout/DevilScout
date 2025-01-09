@@ -97,7 +97,7 @@ class QuestionsService {
         .select()
         .eq('season', season)
         .eq('category', category.value);
-    return data.parseToList(QuestionNode.fromJson);
+    return data.parse(QuestionNode.fromJson);
   }
 
   Future<Map<String, String>> getDetails({

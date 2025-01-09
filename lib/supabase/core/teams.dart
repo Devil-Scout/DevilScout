@@ -16,7 +16,7 @@ class Team with _$Team {
     required DateTime createdAt,
     required String createdBy,
     required String name,
-    FrcTeam? frcTeam,
+    required FrcTeam frcTeam,
   }) = _Team;
 
   factory Team.fromJson(Map<String, dynamic> json) => _$TeamFromJson(json);
@@ -31,8 +31,9 @@ class TeamsRepository {
   TeamsRepository(TeamsService service)
       : _teamsCache = CacheAll(
           expiration: const Duration(minutes: 30),
-          origin: (teamNum) => service.getTeam(teamNum: teamNum),
-          originAll: () => service.getAllTeams(),
+          origin: service.getTeam,
+          originAll: service.getAllTeams,
+          key: (team) => team.number,
         );
 
   Future<Team?> getTeam({
@@ -44,7 +45,7 @@ class TeamsRepository {
         forceOrigin: forceOrigin,
       );
 
-  Future<Map<int, Team>> getAllTeams({
+  Future<List<Team>> getAllTeams({
     bool forceOrigin = false,
   }) =>
       _teamsCache.getAll(
@@ -57,19 +58,17 @@ class TeamsService {
 
   TeamsService(this.supabase);
 
-  Future<Team?> getTeam({
-    required int teamNum,
-  }) async {
+  Future<Team?> getTeam(int teamNum) async {
     final data = await supabase
         .from('teams')
-        .select()
+        .select('*, frc_teams(*)')
         .eq('number', teamNum)
         .maybeSingle();
     return data?.parse(Team.fromJson);
   }
 
-  Future<Map<int, Team>> getAllTeams() async {
-    final data = await supabase.from('teams').select();
-    return data.parseToMap(Team.fromJson, (team) => team.number);
+  Future<List<Team>> getAllTeams() async {
+    final data = await supabase.from('teams').select('*, frc_teams(*)');
+    return data.parse(Team.fromJson);
   }
 }

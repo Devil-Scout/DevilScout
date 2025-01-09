@@ -68,37 +68,55 @@ class FrcEvent with _$FrcEvent {
       );
 
 class FrcEventsRepository {
-  final Cache<String, FrcEvent> _eventsCache;
-  final Cache<int, List<FrcEvent>> _seasonEventsCache;
+  final Map<int, CacheAll<String, FrcEvent>> _eventsCaches;
+  final CacheAll<String, FrcEvent> Function(int) _seasonCacheGenerator;
+  final Cache<int, List<FrcEvent>> _teamEventsCache;
 
   FrcEventsRepository.supabase(SupabaseClient supabase)
       : this(FrcEventsService(supabase));
 
   FrcEventsRepository(FrcEventsService service)
-      : _eventsCache = Cache(
+      : _eventsCaches = {},
+        _teamEventsCache = Cache(
           expiration: const Duration(minutes: 30),
-          origin: (eventKey) => service.getEvent(eventKey: eventKey),
+          origin: service.getTeamEvents,
         ),
-        _seasonEventsCache = Cache(
-          expiration: const Duration(minutes: 30),
-          origin: (year) => service.getSeasonEvents(year: year),
-        );
+        _seasonCacheGenerator = ((year) => CacheAll(
+              expiration: const Duration(minutes: 30),
+              origin: service.getEvent,
+              originAll: () => service.getSeasonEvents(year),
+              key: (event) => event.key,
+            ));
 
   Future<FrcEvent?> getEvent({
     required String eventKey,
     bool forceOrigin = false,
-  }) =>
-      _eventsCache.get(
-        key: eventKey,
-        forceOrigin: forceOrigin,
-      );
+  }) {
+    int season = int.parse(eventKey.substring(0, 4));
+    return _eventsCaches
+        .putIfAbsent(season, () => _seasonCacheGenerator(season))
+        .get(
+          key: eventKey,
+          forceOrigin: forceOrigin,
+        );
+  }
 
   Future<List<FrcEvent>?> getSeasonEvents({
     required int season,
     bool forceOrigin = false,
   }) =>
-      _seasonEventsCache.get(
-        key: season,
+      _eventsCaches
+          .putIfAbsent(season, () => _seasonCacheGenerator(season))
+          .getAll(
+            forceOrigin: forceOrigin,
+          );
+
+  Future<List<FrcEvent>?> getTeamEvents({
+    required int teamNum,
+    bool forceOrigin = false,
+  }) =>
+      _teamEventsCache.get(
+        key: teamNum,
         forceOrigin: forceOrigin,
       );
 }
@@ -108,9 +126,7 @@ class FrcEventsService {
 
   FrcEventsService(this.supabase);
 
-  Future<FrcEvent?> getEvent({
-    required String eventKey,
-  }) async {
+  Future<FrcEvent?> getEvent(String eventKey) async {
     final data = await supabase
         .from('frc_events')
         .select('*, frc_event_types:event_type(*)')
@@ -119,13 +135,19 @@ class FrcEventsService {
     return data?.parse(FrcEvent.fromJson);
   }
 
-  Future<List<FrcEvent>?> getSeasonEvents({
-    required int year,
-  }) async {
+  Future<List<FrcEvent>> getSeasonEvents(int year) async {
     final data = await supabase
         .from('frc_events')
         .select('*, frc_event_types:event_type(*)')
         .eq('season', year);
-    return data.parseToList(FrcEvent.fromJson);
+    return data.parse(FrcEvent.fromJson);
+  }
+
+  Future<List<FrcEvent>> getTeamEvents(int teamNum) async {
+    final data = await supabase
+        .from('frc_events')
+        .select('*, frc_event_types:event_type(*)')
+        .eq('frc_event_teams.team_num', teamNum);
+    return data.parse(FrcEvent.fromJson);
   }
 }
