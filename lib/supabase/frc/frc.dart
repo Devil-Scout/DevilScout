@@ -13,12 +13,8 @@ enum FrcMatchLevel {
   const FrcMatchLevel(this.value);
 }
 
-@JsonEnum(valueField: 'value')
+@JsonEnum()
 enum FrcAlliance {
-  blue('blue'),
-  red('red');
-
-  final String value;
-
-  const FrcAlliance(this.value);
+  blue,
+  red;
 }

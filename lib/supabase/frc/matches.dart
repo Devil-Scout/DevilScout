@@ -115,4 +115,16 @@ class FrcMatchesService {
         .eq('event_key', eventKey);
     return data.parse(FrcMatch.fromJson);
   }
+
+  Future<List<FrcMatch>> getTeamMatches({
+    required int season,
+    required int teamNum,
+  }) async {
+    final data = await supabase
+        .from('frc_matches')
+        .select('*, frc_match_teams:teams(*), frc_match_results:result(*)')
+        .like('key', '$season%')
+        .eq('teams.team_num', teamNum);
+    return data.parse(FrcMatch.fromJson);
+  }
 }
