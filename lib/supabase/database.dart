@@ -6,20 +6,34 @@ import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'auth.dart';
+import 'core/team_requests.dart';
+import 'core/teams.dart';
+import 'core/users.dart';
 import 'scouting/questions.dart';
 
 class Database {
   final AuthRepository auth;
+
+  final UsersRepository users;
+  final TeamsRepository teams;
+  final TeamRequestsRepository teamRequests;
+
   final QuestionsRepository questions;
 
   Database({
     required this.auth,
+    required this.users,
+    required this.teams,
+    required this.teamRequests,
     required this.questions,
   });
 
   Database.supabase(SupabaseClient supabase)
       : this(
           auth: AuthRepository.supabase(supabase),
+          users: UsersRepository.supabase(supabase),
+          teams: TeamsRepository.supabase(supabase),
+          teamRequests: TeamRequestsRepository.supabase(supabase),
           questions: QuestionsRepository.supabase(supabase),
         );
 
