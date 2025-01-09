@@ -36,12 +36,13 @@ class RequestUser with _$RequestUser {
 }
 
 class TeamRequestsRepository {
+  final TeamRequestsService service;
   final CacheAll<UserId, TeamRequest> _teamsCache;
 
   TeamRequestsRepository.supabase(SupabaseClient supabase)
       : this(TeamRequestsService(supabase));
 
-  TeamRequestsRepository(TeamRequestsService service)
+  TeamRequestsRepository(this.service)
       : _teamsCache = CacheAll(
           expiration: const Duration(minutes: 30),
           origin: service.getRequest,

@@ -40,13 +40,14 @@ sealed class QuestionNode with _$QuestionNode {
 }
 
 class QuestionsRepository {
+  final QuestionsService service;
   final Cache<(int, ScoutingCategory), List<QuestionNode>> _questionsCache;
   final Cache<(int, ScoutingCategory), Map<String, String>> _detailsCache;
 
   QuestionsRepository.supabase(SupabaseClient supabase)
       : this(QuestionsService(supabase));
 
-  QuestionsRepository(QuestionsService service)
+  QuestionsRepository(this.service)
       : _questionsCache = Cache(
           expiration: const Duration(minutes: 30),
           origin: (key) => service.getQuestions(

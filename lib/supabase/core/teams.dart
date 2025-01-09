@@ -2,7 +2,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../database.dart';
-import '../frc/teams.dart';
 
 part 'teams.freezed.dart';
 part 'teams.g.dart';
@@ -12,23 +11,39 @@ part 'teams.g.dart';
 class Team with _$Team {
   const factory Team({
     required int number,
-    required bool verified,
-    required DateTime createdAt,
-    required String createdBy,
     required String name,
-    required FrcTeam frcTeam,
+    String? country,
+    String? province,
+    String? city,
+    TeamRegistration? registration,
   }) = _Team;
 
   factory Team.fromJson(Map<String, dynamic> json) => _$TeamFromJson(json);
 }
 
+@immutable
+@freezed
+class TeamRegistration with _$TeamRegistration {
+  const factory TeamRegistration({
+    required int number,
+    required bool verified,
+    required DateTime createdAt,
+    required String createdBy,
+    required String name,
+  }) = _TeamRegistration;
+
+  factory TeamRegistration.fromJson(Map<String, dynamic> json) =>
+      _$TeamRegistrationFromJson(json);
+}
+
 class TeamsRepository {
+  final TeamsService service;
   final CacheAll<int, Team> _teamsCache;
 
   TeamsRepository.supabase(SupabaseClient supabase)
       : this(TeamsService(supabase));
 
-  TeamsRepository(TeamsService service)
+  TeamsRepository(this.service)
       : _teamsCache = CacheAll(
           expiration: const Duration(minutes: 30),
           origin: service.getTeam,
@@ -60,15 +75,17 @@ class TeamsService {
 
   Future<Team?> getTeam(int teamNum) async {
     final data = await supabase
-        .from('teams')
-        .select('*, frc_teams(*)')
+        .from('frc_teams')
+        .select('number, name, country, province, city, teams:registration(*)')
         .eq('number', teamNum)
         .maybeSingle();
     return data?.parse(Team.fromJson);
   }
 
   Future<List<Team>> getAllTeams() async {
-    final data = await supabase.from('teams').select('*, frc_teams(*)');
+    final data = await supabase
+        .from('frc_teams')
+        .select('number, name, country, province, city, teams:registration(*)');
     return data.parse(Team.fromJson);
   }
 }

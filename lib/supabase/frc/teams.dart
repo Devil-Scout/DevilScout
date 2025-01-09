@@ -25,13 +25,14 @@ class FrcTeam with _$FrcTeam {
 }
 
 class FrcTeamsRepository {
+  final FrcTeamsService service;
   final CacheAll<int, FrcTeam> _teamsCache;
   final Cache<String, List<FrcTeam>> _eventTeamsCache;
 
   FrcTeamsRepository.supabase(SupabaseClient supabase)
       : this(FrcTeamsService(supabase));
 
-  FrcTeamsRepository(FrcTeamsService service)
+  FrcTeamsRepository(this.service)
       : _teamsCache = CacheAll(
           expiration: const Duration(minutes: 30),
           origin: service.getTeam,

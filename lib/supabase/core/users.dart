@@ -51,12 +51,13 @@ class UserPermission with _$UserPermission {
 }
 
 class TeamUsersRepository {
+  final TeamUsersService service;
   final CacheAll<UserId, User> _teamUsersCache;
 
   TeamUsersRepository.supabase(SupabaseClient supabase)
       : this(TeamUsersService(supabase));
 
-  TeamUsersRepository(TeamUsersService service)
+  TeamUsersRepository(this.service)
       : _teamUsersCache = CacheAll(
           expiration: const Duration(minutes: 30),
           origin: service.getUser,

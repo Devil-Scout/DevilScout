@@ -68,25 +68,26 @@ class FrcEvent with _$FrcEvent {
       );
 
 class FrcEventsRepository {
+  final FrcEventsService service;
   final Map<int, CacheAll<String, FrcEvent>> _eventsCaches;
-  final CacheAll<String, FrcEvent> Function(int) _seasonCacheGenerator;
   final Cache<int, List<FrcEvent>> _teamEventsCache;
 
   FrcEventsRepository.supabase(SupabaseClient supabase)
       : this(FrcEventsService(supabase));
 
-  FrcEventsRepository(FrcEventsService service)
+  FrcEventsRepository(this.service)
       : _eventsCaches = {},
         _teamEventsCache = Cache(
           expiration: const Duration(minutes: 30),
           origin: service.getTeamEvents,
-        ),
-        _seasonCacheGenerator = ((year) => CacheAll(
-              expiration: const Duration(minutes: 30),
-              origin: service.getEvent,
-              originAll: () => service.getSeasonEvents(year),
-              key: (event) => event.key,
-            ));
+        );
+
+  CacheAll<String, FrcEvent> _seasonCacheGenerator(int year) => CacheAll(
+        expiration: const Duration(minutes: 30),
+        origin: service.getEvent,
+        originAll: () => service.getSeasonEvents(year),
+        key: (event) => event.key,
+      );
 
   Future<FrcEvent?> getEvent({
     required String eventKey,
