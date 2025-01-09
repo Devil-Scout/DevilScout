@@ -4,31 +4,32 @@ import 'package:supabase_flutter/supabase_flutter.dart' hide User;
 import '../database.dart';
 import 'core.dart';
 
-part 'users.freezed.dart';
-part 'users.g.dart';
+part 'team_users.freezed.dart';
+part 'team_users.g.dart';
 
 @immutable
 @freezed
-class User with _$User {
-  const factory User({
-    required UserId id,
+class UserProfile with _$UserProfile {
+  const factory UserProfile({
+    required Uuid id,
     required String name,
     required DateTime createdAt,
-    required TeamUser teamUser,
-    required List<UserPermission> permissions,
-  }) = _User;
+  }) = _UserProfile;
 
-  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
+  factory UserProfile.fromJson(Map<String, dynamic> json) =>
+      _$UserProfileFromJson(json);
 }
 
 @immutable
 @freezed
 class TeamUser with _$TeamUser {
   const factory TeamUser({
-    required UserId userId,
+    required Uuid userId,
     required int teamNum,
-    required UserId addedBy,
+    required Uuid addedBy,
     required DateTime addedAt,
+    required UserProfile profile,
+    required List<UserPermission> permissions,
   }) = _TeamUser;
 
   factory TeamUser.fromJson(Map<String, dynamic> json) =>
@@ -39,10 +40,10 @@ class TeamUser with _$TeamUser {
 @freezed
 class UserPermission with _$UserPermission {
   const factory UserPermission({
-    required UserId userId,
+    required Uuid userId,
     required int teamNum,
     required DateTime grantedAt,
-    required UserId grantedBy,
+    required Uuid grantedBy,
     required PermissionType type,
   }) = _UserPermission;
 
@@ -52,7 +53,7 @@ class UserPermission with _$UserPermission {
 
 class TeamUsersRepository {
   final TeamUsersService service;
-  final CacheAll<UserId, User> _teamUsersCache;
+  final CacheAll<Uuid, TeamUser> _teamUsersCache;
 
   TeamUsersRepository.supabase(SupabaseClient supabase)
       : this(TeamUsersService(supabase));
@@ -62,11 +63,11 @@ class TeamUsersRepository {
           expiration: const Duration(minutes: 30),
           origin: service.getUser,
           originAll: service.getAllUsers,
-          key: (user) => user.id,
+          key: (user) => user.userId,
         );
 
-  Future<User?> getUser({
-    required UserId userId,
+  Future<TeamUser?> getUser({
+    required Uuid userId,
     bool forceOrigin = false,
   }) =>
       _teamUsersCache.get(
@@ -74,7 +75,7 @@ class TeamUsersRepository {
         forceOrigin: forceOrigin,
       );
 
-  Future<List<User>> getAllUsers({
+  Future<List<TeamUser>> getAllUsers({
     bool forceOrigin = false,
   }) =>
       _teamUsersCache.getAll(
@@ -87,20 +88,19 @@ class TeamUsersService {
 
   TeamUsersService(this.supabase);
 
-  Future<User?> getUser(UserId id) async {
+  Future<TeamUser?> getUser(Uuid id) async {
     final data = await supabase
-        .from('users')
-        .select('*, team_users:team_user(*), permissions(*)')
-        .eq('id', id)
+        .from('team_users')
+        .select('*, users:profile(*), permissions(*)')
+        .eq('user_id', id)
         .maybeSingle();
-    return data?.parse(User.fromJson);
+    return data?.parse(TeamUser.fromJson);
   }
 
-  Future<List<User>> getAllUsers() async {
+  Future<List<TeamUser>> getAllUsers() async {
     final data = await supabase
-        .from('users')
-        .select('*, team_users:team_user(*), permissions(*)')
-        .not('team_user.team_num', 'is', null);
-    return data.parse(User.fromJson);
+        .from('team_users')
+        .select('*, users:profile(*), permissions(*)');
+    return data.parse(TeamUser.fromJson);
   }
 }

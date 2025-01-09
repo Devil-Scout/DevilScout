@@ -2,8 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide User;
 
 import '../database.dart';
-import 'core.dart';
-import 'users.dart';
+import 'team_users.dart';
 
 part 'team_requests.freezed.dart';
 part 'team_requests.g.dart';
@@ -12,32 +11,19 @@ part 'team_requests.g.dart';
 @freezed
 class TeamRequest with _$TeamRequest {
   const factory TeamRequest({
-    required String userId,
+    required Uuid userId,
     required DateTime requestedAt,
     required int teamNum,
-    required User user,
+    required UserProfile profile,
   }) = _TeamRequest;
 
   factory TeamRequest.fromJson(Map<String, dynamic> json) =>
       _$TeamRequestFromJson(json);
 }
 
-@immutable
-@freezed
-class RequestUser with _$RequestUser {
-  const factory RequestUser({
-    required UserId id,
-    required String name,
-    required DateTime createdAt,
-  }) = _RequestUser;
-
-  factory RequestUser.fromJson(Map<String, dynamic> json) =>
-      _$RequestUserFromJson(json);
-}
-
 class TeamRequestsRepository {
   final TeamRequestsService service;
-  final CacheAll<UserId, TeamRequest> _teamsCache;
+  final CacheAll<Uuid, TeamRequest> _teamsCache;
 
   TeamRequestsRepository.supabase(SupabaseClient supabase)
       : this(TeamRequestsService(supabase));
@@ -75,14 +61,14 @@ class TeamRequestsService {
   Future<TeamRequest?> getRequest(String userId) async {
     final data = await supabase
         .from('team_requests')
-        .select('*, users:user(*)')
+        .select('*, user_profiles:profile(*)')
         .eq('user_id', userId)
         .maybeSingle();
     return data?.parse(TeamRequest.fromJson);
   }
 
   Future<List<TeamRequest>> getAllRequests() async {
-    final data = await supabase.from('team_requests').select('*,users:user(*)');
+    final data = await supabase.from('team_requests').select('*, user_profiles:profile(*)');
     return data.parse(TeamRequest.fromJson);
   }
 }

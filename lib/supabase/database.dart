@@ -8,7 +8,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'auth.dart';
 import 'core/team_requests.dart';
 import 'core/teams.dart';
-import 'core/users.dart';
+import 'core/team_users.dart';
 import 'frc/districts.dart';
 import 'frc/events.dart';
 import 'frc/seasons.dart';
@@ -146,6 +146,8 @@ class CacheEntry<V> {
   bool isExpired(Duration expiration) =>
       DateTime.now().isAfter(timestamp.add(expiration));
 }
+
+typedef Uuid = String;
 
 extension JsonParseObject on PostgrestMap {
   T parse<T>(T Function(Map<String, dynamic>) fromJson) => fromJson(this);

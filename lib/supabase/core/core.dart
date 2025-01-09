@@ -1,7 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-typedef UserId = String;
-
 @JsonEnum(valueField: 'value')
 enum PermissionType {
   matchScouting('scout.match'),

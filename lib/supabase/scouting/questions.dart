@@ -13,7 +13,7 @@ part 'questions.g.dart';
 @Freezed(fromJson: true, toJson: true)
 sealed class QuestionNode with _$QuestionNode {
   const factory QuestionNode.group({
-    required String id,
+    required Uuid id,
     required int season,
     required ScoutingCategory category,
     String? prompt,

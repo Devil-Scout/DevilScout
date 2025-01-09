@@ -28,7 +28,7 @@ class TeamRegistration with _$TeamRegistration {
     required int number,
     required bool verified,
     required DateTime createdAt,
-    required String createdBy,
+    required Uuid createdBy,
     required String name,
   }) = _TeamRegistration;
 
