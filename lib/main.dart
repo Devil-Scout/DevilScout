@@ -3,14 +3,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import 'appwrapper.dart';
-import 'pages/auth/login_select.dart';
+import 'router.dart';
 import 'supabase/client.dart';
 import 'theme.dart';
 
 Future<void> main() async {
   await supabaseInit();
-  Future.delayed(Duration(seconds: 5), supabase.auth.signOut);
   runApp(const MainApp());
 }
 
@@ -22,8 +20,6 @@ class MainApp extends StatefulWidget {
 }
 
 class _MainAppState extends State<MainApp> {
-  final navigatorKey = GlobalKey<NavigatorState>();
-
   @override
   void initState() {
     super.initState();
@@ -34,24 +30,13 @@ class _MainAppState extends State<MainApp> {
 
       switch (event) {
         case AuthChangeEvent.signedIn:
-          navigatorKey.currentState?.pushAndRemoveUntil(
-            MaterialPageRoute(builder: (_) => const AppWrapper()),
-            (_) => false,
-          );
+          router.go('/home');
           break;
         case AuthChangeEvent.signedOut:
-          navigatorKey.currentState?.pushAndRemoveUntil(
-            MaterialPageRoute(builder: (_) => const LoginSelectPage()),
-            (_) => false,
-          );
+          router.go('/login');
           break;
         case AuthChangeEvent.initialSession:
-          navigatorKey.currentState?.pushAndRemoveUntil(
-            session == null
-                ? MaterialPageRoute(builder: (_) => const LoginSelectPage())
-                : MaterialPageRoute(builder: (_) => const AppWrapper()),
-            (_) => false,
-          );
+          router.go(session == null ? '/login' : '/home');
           break;
         // case AuthChangeEvent.passwordRecovery:
         // case AuthChangeEvent.tokenRefreshed:
@@ -65,12 +50,10 @@ class _MainAppState extends State<MainApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home:
-          const Scaffold(), // TODO: start page while determining session status
+    return MaterialApp.router(
+      routerConfig: router,
       theme: lightTheme,
-      navigatorKey: navigatorKey,
+      debugShowCheckedModeBanner: false,
     );
   }
 }

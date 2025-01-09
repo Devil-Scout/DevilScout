@@ -121,7 +121,7 @@ Future<void> _loginWithAppleNative() async {
 Future<void> _loginWithAppleAndroid() async {
   await supabase.auth.signInWithOAuth(
     OAuthProvider.apple,
-    redirectTo: 'org.devilscout.client://',
+    redirectTo: 'org.devilscout.client://client.devilscout.org/home',
     queryParams: {'client_id': 'org.devilscout.supabase'},
   );
 }
