@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
+import '../../supabase/auth.dart';
 import '../../supabase/database.dart';
-import '../../supabase/repository/auth.dart';
 import 'email_login.dart';
 
 class LoginSelectPage extends StatelessWidget {
