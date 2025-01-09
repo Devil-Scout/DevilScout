@@ -5,8 +5,8 @@ import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import 'repository/auth.dart';
-import 'repository/scouting/questions.dart';
+import 'auth.dart';
+import 'scouting/questions.dart';
 
 class Database {
   final AuthRepository auth;
@@ -39,9 +39,11 @@ class Database {
 }
 
 class Cache<K, V> {
+  @protected
   final Map<K, CacheEntry<V>> cache = {};
-
+  @protected
   final Future<V?> Function(K) origin;
+  @protected
   final Duration expiration;
 
   Cache({
@@ -72,9 +74,10 @@ class Cache<K, V> {
 }
 
 class CacheAll<K, V> extends Cache<K, V> {
+  @protected
   final Future<Map<K, V>> Function() originAll;
-
-  CacheEntry<Null>? _allValues;
+  @protected
+  CacheEntry<Null>? allValues;
 
   CacheAll({
     required super.expiration,
@@ -83,10 +86,10 @@ class CacheAll<K, V> extends Cache<K, V> {
   });
 
   Future<Map<K, V>> getAll({
-    bool forceOrigin = false,
+    required bool forceOrigin,
   }) async {
     if (!forceOrigin &&
-        (_allValues?.isValid(expiration) ?? false) &&
+        (allValues?.isValid(expiration) ?? false) &&
         cache.values.where((e) => !e.isValid(expiration)).isEmpty) {
       return UnmodifiableMapView(cache.map(
         (key, value) => MapEntry(key, value.data),
