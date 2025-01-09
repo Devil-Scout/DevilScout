@@ -3,12 +3,10 @@ import 'dart:convert';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../database.dart';
-import '../../model/scouting/enums.dart';
-import '../../model/scouting/question.dart';
+import '../../model/scouting.dart';
 
 class QuestionsRepository {
-  final Cache<(int, ScoutingCategory), Map<String?, QuestionNode>>
-      _questionsCache;
+  final Cache<(int, ScoutingCategory), List<QuestionNode>> _questionsCache;
   final Cache<(int, ScoutingCategory), Map<String, String>> _detailsCache;
 
   QuestionsRepository.supabase(SupabaseClient supabase)
@@ -30,7 +28,7 @@ class QuestionsRepository {
           ),
         );
 
-  Future<Map<String?, QuestionNode>?> getQuestions({
+  Future<List<QuestionNode>?> getQuestions({
     required int season,
     required ScoutingCategory category,
     bool forceOrigin = false,
@@ -56,7 +54,7 @@ class QuestionsService {
 
   QuestionsService(this.supabase);
 
-  Future<Map<String?, QuestionNode>> getQuestions({
+  Future<List<QuestionNode>?> getQuestions({
     required int season,
     required ScoutingCategory category,
   }) async {
@@ -66,7 +64,7 @@ class QuestionsService {
         .eq('season', season)
         .eq('category', category.value);
     final nodes = data.map(QuestionNode.fromJson);
-    return Map.fromEntries(nodes.map((node) => MapEntry(node.parentId, node)));
+    return nodes.isEmpty ? null : nodes.toList();
   }
 
   Future<Map<String, String>> getDetails({
