@@ -76,18 +76,13 @@ class TeamRequestsService {
     final data = await supabase
         .from('team_requests')
         .select('*, users:user(*)')
-        .eq('user_id', userId);
-    if (data.isEmpty) return null;
-
-    assert(data.length == 1);
-    return TeamRequest.fromJson(data[0]);
+        .eq('user_id', userId)
+        .maybeSingle();
+    return data?.parse(TeamRequest.fromJson);
   }
 
   Future<Map<String, TeamRequest>> getAllRequests() async {
     final data = await supabase.from('team_requests').select('*,users:user(*)');
-    final teams = data.map(TeamRequest.fromJson);
-    return Map.fromEntries(teams.map(
-      (request) => MapEntry(request.userId, request),
-    ));
+    return data.parseToMap(TeamRequest.fromJson, (request) => request.userId);
   }
 }

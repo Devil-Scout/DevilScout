@@ -60,16 +60,16 @@ class TeamsService {
   Future<Team?> getTeam({
     required int teamNum,
   }) async {
-    final data = await supabase.from('teams').select().eq('number', teamNum);
-    if (data.isEmpty) return null;
-
-    assert(data.length == 1);
-    return Team.fromJson(data[0]);
+    final data = await supabase
+        .from('teams')
+        .select()
+        .eq('number', teamNum)
+        .maybeSingle();
+    return data?.parse(Team.fromJson);
   }
 
   Future<Map<int, Team>> getAllTeams() async {
     final data = await supabase.from('teams').select();
-    final teams = data.map(Team.fromJson);
-    return Map.fromEntries(teams.map((team) => MapEntry(team.number, team)));
+    return data.parseToMap(Team.fromJson, (team) => team.number);
   }
 }

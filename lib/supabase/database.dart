@@ -67,7 +67,7 @@ class Cache<K, V> {
 
   Future<V?> get({
     required K key,
-    bool forceOrigin = false,
+    required bool forceOrigin,
   }) async {
     final entry = cache[key];
     if (!forceOrigin && (entry?.isValid(expiration) ?? false)) {
@@ -128,4 +128,21 @@ class CacheEntry<V> {
 
   bool isValid(Duration expiration) =>
       DateTime.now().isBefore(timestamp.add(expiration));
+}
+
+extension JsonParseObject on PostgrestMap {
+  T parse<T>(T Function(Map<String, dynamic>) fromJson) => fromJson(this);
+}
+
+extension JsonParseList on PostgrestList {
+  List<T>? parseToList<T>(T Function(Map<String, dynamic>) fromJson) =>
+      isEmpty ? null : map(fromJson).toList();
+
+  Map<K, V> parseToMap<K, V>(
+          V Function(Map<String, dynamic>) fromJson, K Function(V) key) =>
+      Map.fromEntries(
+        map(fromJson).map(
+          (value) => MapEntry(key(value), value),
+        ),
+      );
 }

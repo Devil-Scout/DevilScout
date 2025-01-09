@@ -91,11 +91,9 @@ class UsersService {
     final data = await supabase
         .from('users')
         .select('*, team_users:team_user(*), permissions(*)')
-        .eq('id', id);
-    if (data.isEmpty) return null;
-
-    assert(data.length == 1);
-    return User.fromJson(data[0]);
+        .eq('id', id)
+        .maybeSingle();
+    return data?.parse(User.fromJson);
   }
 
   Future<Map<UserId, User>> getAllUsers() async {
@@ -103,7 +101,6 @@ class UsersService {
         .from('users')
         .select('*, team_users:team_user(*), permissions(*)')
         .not('team_user.team_num', 'is', null);
-    final users = data.map(User.fromJson);
-    return Map.fromEntries(users.map((user) => MapEntry(user.id, user)));
+    return data.parseToMap(User.fromJson, (user) => user.id);
   }
 }
