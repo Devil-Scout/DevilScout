@@ -9,6 +9,10 @@ import 'auth.dart';
 import 'core/team_requests.dart';
 import 'core/teams.dart';
 import 'core/users.dart';
+import 'frc/districts.dart';
+import 'frc/events.dart';
+import 'frc/seasons.dart';
+import 'frc/teams.dart';
 import 'scouting/questions.dart';
 
 class Database {
@@ -18,6 +22,11 @@ class Database {
   final TeamsRepository teams;
   final TeamRequestsRepository teamRequests;
 
+  final FrcSeasonsRepository frcSeasons;
+  final FrcTeamsRepository frcTeams;
+  final FrcDistrictsRepository frcDistricts;
+  final FrcEventsRepository frcEvents;
+
   final QuestionsRepository questions;
 
   Database({
@@ -25,6 +34,10 @@ class Database {
     required this.users,
     required this.teams,
     required this.teamRequests,
+    required this.frcSeasons,
+    required this.frcTeams,
+    required this.frcDistricts,
+    required this.frcEvents,
     required this.questions,
   });
 
@@ -34,6 +47,10 @@ class Database {
           users: UsersRepository.supabase(supabase),
           teams: TeamsRepository.supabase(supabase),
           teamRequests: TeamRequestsRepository.supabase(supabase),
+          frcSeasons: FrcSeasonsRepository.supabase(supabase),
+          frcTeams: FrcTeamsRepository.supabase(supabase),
+          frcDistricts: FrcDistrictsRepository.supabase(supabase),
+          frcEvents: FrcEventsRepository.supabase(supabase),
           questions: QuestionsRepository.supabase(supabase),
         );
 
