@@ -20,8 +20,7 @@ class FrcTeam with _$FrcTeam {
     String? website,
   }) = _FrcTeam;
 
-  factory FrcTeam.fromJson(Map<String, dynamic> json) =>
-      _$FrcTeamFromJson(json);
+  factory FrcTeam.fromJson(JsonObject json) => _$FrcTeamFromJson(json);
 }
 
 class FrcTeamsRepository {
@@ -48,26 +47,18 @@ class FrcTeamsRepository {
     required int teamNum,
     bool forceOrigin = false,
   }) =>
-      _teamsCache.get(
-        key: teamNum,
-        forceOrigin: forceOrigin,
-      );
+      _teamsCache.get(key: teamNum, forceOrigin: forceOrigin);
 
   Future<List<FrcTeam>> getAllTeams({
     bool forceOrigin = false,
   }) =>
-      _teamsCache.getAll(
-        forceOrigin: forceOrigin,
-      );
+      _teamsCache.getAll(forceOrigin: forceOrigin);
 
   Future<List<FrcTeam>?> getTeamsAtEvent({
     required String eventKey,
     bool forceOrigin = false,
   }) =>
-      _eventTeamsCache.get(
-        key: eventKey,
-        forceOrigin: forceOrigin,
-      );
+      _eventTeamsCache.get(key: eventKey, forceOrigin: forceOrigin);
 }
 
 class FrcTeamsService {

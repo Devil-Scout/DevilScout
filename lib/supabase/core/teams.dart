@@ -18,7 +18,7 @@ class Team with _$Team {
     TeamRegistration? registration,
   }) = _Team;
 
-  factory Team.fromJson(Map<String, dynamic> json) => _$TeamFromJson(json);
+  factory Team.fromJson(JsonObject json) => _$TeamFromJson(json);
 }
 
 @immutable
@@ -32,7 +32,7 @@ class TeamRegistration with _$TeamRegistration {
     required String name,
   }) = _TeamRegistration;
 
-  factory TeamRegistration.fromJson(Map<String, dynamic> json) =>
+  factory TeamRegistration.fromJson(JsonObject json) =>
       _$TeamRegistrationFromJson(json);
 }
 
@@ -55,17 +55,12 @@ class TeamsRepository {
     required int teamNum,
     bool forceOrigin = false,
   }) =>
-      _teamsCache.get(
-        key: teamNum,
-        forceOrigin: forceOrigin,
-      );
+      _teamsCache.get(key: teamNum, forceOrigin: forceOrigin);
 
   Future<List<Team>> getAllTeams({
     bool forceOrigin = false,
   }) =>
-      _teamsCache.getAll(
-        forceOrigin: forceOrigin,
-      );
+      _teamsCache.getAll(forceOrigin: forceOrigin);
 }
 
 class TeamsService {

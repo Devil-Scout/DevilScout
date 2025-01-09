@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:supabase_flutter/supabase_flutter.dart' hide User;
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../database.dart';
 import 'core.dart';
@@ -16,8 +16,7 @@ class UserProfile with _$UserProfile {
     required DateTime createdAt,
   }) = _UserProfile;
 
-  factory UserProfile.fromJson(Map<String, dynamic> json) =>
-      _$UserProfileFromJson(json);
+  factory UserProfile.fromJson(JsonObject json) => _$UserProfileFromJson(json);
 }
 
 @immutable
@@ -32,8 +31,7 @@ class TeamUser with _$TeamUser {
     required List<UserPermission> permissions,
   }) = _TeamUser;
 
-  factory TeamUser.fromJson(Map<String, dynamic> json) =>
-      _$TeamUserFromJson(json);
+  factory TeamUser.fromJson(JsonObject json) => _$TeamUserFromJson(json);
 }
 
 @immutable
@@ -47,7 +45,7 @@ class UserPermission with _$UserPermission {
     required PermissionType type,
   }) = _UserPermission;
 
-  factory UserPermission.fromJson(Map<String, dynamic> json) =>
+  factory UserPermission.fromJson(JsonObject json) =>
       _$UserPermissionFromJson(json);
 }
 
@@ -70,17 +68,12 @@ class TeamUsersRepository {
     required Uuid userId,
     bool forceOrigin = false,
   }) =>
-      _teamUsersCache.get(
-        key: userId,
-        forceOrigin: forceOrigin,
-      );
+      _teamUsersCache.get(key: userId, forceOrigin: forceOrigin);
 
   Future<List<TeamUser>> getAllUsers({
     bool forceOrigin = false,
   }) =>
-      _teamUsersCache.getAll(
-        forceOrigin: forceOrigin,
-      );
+      _teamUsersCache.getAll(forceOrigin: forceOrigin);
 }
 
 class TeamUsersService {

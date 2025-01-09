@@ -29,10 +29,10 @@ sealed class QuestionNode with _$QuestionNode {
     required String parentId,
     required int index,
     required DataType dataType,
-    required Map<String, dynamic> config,
+    required JsonObject config,
   }) = Question;
 
-  factory QuestionNode.fromJson(Map<String, dynamic> json) {
+  factory QuestionNode.fromJson(JsonObject json) {
     return json['data_type'] == null
         ? QuestionGroup.fromJson(json)
         : Question.fromJson(json);
@@ -68,20 +68,14 @@ class QuestionsRepository {
     required ScoutingCategory category,
     bool forceOrigin = false,
   }) =>
-      _questionsCache.get(
-        key: (season, category),
-        forceOrigin: forceOrigin,
-      );
+      _questionsCache.get(key: (season, category), forceOrigin: forceOrigin);
 
   Future<Map<String, String>?> getDetails({
     required int season,
     required ScoutingCategory category,
     bool forceOrigin = false,
   }) =>
-      _detailsCache.get(
-        key: (season, category),
-        forceOrigin: forceOrigin,
-      );
+      _detailsCache.get(key: (season, category), forceOrigin: forceOrigin);
 }
 
 class QuestionsService {

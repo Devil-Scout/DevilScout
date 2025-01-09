@@ -16,8 +16,7 @@ class FrcDistrict with _$FrcDistrict {
     required String name,
   }) = _FrcDistrict;
 
-  factory FrcDistrict.fromJson(Map<String, dynamic> json) =>
-      _$FrcDistrictFromJson(json);
+  factory FrcDistrict.fromJson(JsonObject json) => _$FrcDistrictFromJson(json);
 }
 
 class FrcDistrictsRepository {
@@ -29,10 +28,10 @@ class FrcDistrictsRepository {
 
   FrcDistrictsRepository(this.service) : _districtsCaches = {};
 
-  CacheAll<String, FrcDistrict> _seasonCacheGenerator(int year) => CacheAll(
+  CacheAll<String, FrcDistrict> _cache(int season) => CacheAll(
         expiration: const Duration(minutes: 30),
         origin: service.getDistrict,
-        originAll: () => service.getSeasonDistricts(year),
+        originAll: () => service.getSeasonDistricts(season),
         key: (district) => district.name,
       );
 
@@ -42,11 +41,8 @@ class FrcDistrictsRepository {
   }) {
     final year = int.parse(districtKey.substring(0, 4));
     return _districtsCaches
-        .putIfAbsent(year, () => _seasonCacheGenerator(year))
-        .get(
-          key: districtKey,
-          forceOrigin: forceOrigin,
-        );
+        .putIfAbsent(year, () => _cache(year))
+        .get(key: districtKey, forceOrigin: forceOrigin);
   }
 
   Future<List<FrcDistrict>?> getSeasonDistricts({
@@ -54,10 +50,8 @@ class FrcDistrictsRepository {
     bool forceOrigin = false,
   }) =>
       _districtsCaches
-          .putIfAbsent(season, () => _seasonCacheGenerator(season))
-          .getAll(
-            forceOrigin: forceOrigin,
-          );
+          .putIfAbsent(season, () => _cache(season))
+          .getAll(forceOrigin: forceOrigin);
 }
 
 class FrcDistrictsService {

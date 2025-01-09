@@ -14,8 +14,7 @@ class FrcSeason with _$FrcSeason {
     required String name,
   }) = _FrcSeason;
 
-  factory FrcSeason.fromJson(Map<String, dynamic> json) =>
-      _$FrcSeasonFromJson(json);
+  factory FrcSeason.fromJson(JsonObject json) => _$FrcSeasonFromJson(json);
 }
 
 class FrcSeasonsRepository {
@@ -37,17 +36,12 @@ class FrcSeasonsRepository {
     required int year,
     bool forceOrigin = false,
   }) =>
-      _seasonsCache.get(
-        key: year,
-        forceOrigin: forceOrigin,
-      );
+      _seasonsCache.get(key: year, forceOrigin: forceOrigin);
 
   Future<List<FrcSeason>> getAllSeasons({
     bool forceOrigin = false,
   }) =>
-      _seasonsCache.getAll(
-        forceOrigin: forceOrigin,
-      );
+      _seasonsCache.getAll(forceOrigin: forceOrigin);
 }
 
 class FrcSeasonsService {

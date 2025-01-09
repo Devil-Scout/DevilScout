@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:supabase_flutter/supabase_flutter.dart' hide User;
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../database.dart';
 import 'team_users.dart';
@@ -17,8 +17,7 @@ class TeamRequest with _$TeamRequest {
     required UserProfile profile,
   }) = _TeamRequest;
 
-  factory TeamRequest.fromJson(Map<String, dynamic> json) =>
-      _$TeamRequestFromJson(json);
+  factory TeamRequest.fromJson(JsonObject json) => _$TeamRequestFromJson(json);
 }
 
 class TeamRequestsRepository {
@@ -40,17 +39,12 @@ class TeamRequestsRepository {
     required String userId,
     bool forceOrigin = false,
   }) =>
-      _teamsCache.get(
-        key: userId,
-        forceOrigin: forceOrigin,
-      );
+      _teamsCache.get(key: userId, forceOrigin: forceOrigin);
 
   Future<List<TeamRequest>> getAllRequests({
     bool forceOrigin = false,
   }) =>
-      _teamsCache.getAll(
-        forceOrigin: forceOrigin,
-      );
+      _teamsCache.getAll(forceOrigin: forceOrigin);
 }
 
 class TeamRequestsService {
@@ -68,7 +62,9 @@ class TeamRequestsService {
   }
 
   Future<List<TeamRequest>> getAllRequests() async {
-    final data = await supabase.from('team_requests').select('*, user_profiles:profile(*)');
+    final data = await supabase
+        .from('team_requests')
+        .select('*, user_profiles:profile(*)');
     return data.parse(TeamRequest.fromJson);
   }
 }

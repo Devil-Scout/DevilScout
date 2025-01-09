@@ -148,12 +148,14 @@ class CacheEntry<V> {
 }
 
 typedef Uuid = String;
+typedef JsonObject = Map<String, dynamic>;
+typedef JsonList = List<Map<String, dynamic>>;
 
-extension JsonParseObject on PostgrestMap {
-  T parse<T>(T Function(Map<String, dynamic>) fromJson) => fromJson(this);
+extension JsonParseObject on JsonObject {
+  T parse<T>(T Function(JsonObject) fromJson) => fromJson(this);
 }
 
-extension JsonParseList on PostgrestList {
-  List<T> parse<T>(T Function(Map<String, dynamic>) fromJson) =>
+extension JsonParseList on JsonList {
+  List<T> parse<T>(T Function(JsonObject) fromJson) =>
       map(fromJson).toList();
 }

@@ -21,7 +21,7 @@ class FrcEventType with _$FrcEventType {
     required String nameShort,
   }) = _FrcEventType;
 
-  factory FrcEventType.fromJson(Map<String, dynamic> json) =>
+  factory FrcEventType.fromJson(JsonObject json) =>
       _$FrcEventTypeFromJson(json);
 }
 
@@ -50,8 +50,7 @@ class FrcEvent with _$FrcEvent {
     String? postalCode,
   }) = _FrcEvent;
 
-  factory FrcEvent.fromJson(Map<String, dynamic> json) =>
-      _$FrcEventFromJson(json);
+  factory FrcEvent.fromJson(JsonObject json) => _$FrcEventFromJson(json);
 }
 
 (int, int)? _pointFromString(String? json) => json == null
@@ -82,10 +81,10 @@ class FrcEventsRepository {
           origin: service.getTeamEvents,
         );
 
-  CacheAll<String, FrcEvent> _seasonCacheGenerator(int year) => CacheAll(
+  CacheAll<String, FrcEvent> _cache(int season) => CacheAll(
         expiration: const Duration(minutes: 30),
         origin: service.getEvent,
-        originAll: () => service.getSeasonEvents(year),
+        originAll: () => service.getSeasonEvents(season),
         key: (event) => event.key,
       );
 
@@ -95,11 +94,8 @@ class FrcEventsRepository {
   }) {
     int season = int.parse(eventKey.substring(0, 4));
     return _eventsCaches
-        .putIfAbsent(season, () => _seasonCacheGenerator(season))
-        .get(
-          key: eventKey,
-          forceOrigin: forceOrigin,
-        );
+        .putIfAbsent(season, () => _cache(season))
+        .get(key: eventKey, forceOrigin: forceOrigin);
   }
 
   Future<List<FrcEvent>?> getSeasonEvents({
@@ -107,10 +103,8 @@ class FrcEventsRepository {
     bool forceOrigin = false,
   }) =>
       _eventsCaches
-          .putIfAbsent(season, () => _seasonCacheGenerator(season))
-          .getAll(
-            forceOrigin: forceOrigin,
-          );
+          .putIfAbsent(season, () => _cache(season))
+          .getAll(forceOrigin: forceOrigin);
 
   Future<List<FrcEvent>?> getTeamEvents({
     required int teamNum,
