@@ -21,17 +21,17 @@ class TeamRequest with _$TeamRequest {
 }
 
 class TeamRequestsRepository {
-  final TeamRequestsService service;
-  final CacheAll<Uuid, TeamRequest> _teamsCache;
+  final TeamRequestsService _service;
+  final CacheAll<Uuid, TeamRequest> _requestsCache;
 
   TeamRequestsRepository.supabase(SupabaseClient supabase)
       : this(TeamRequestsService(supabase));
 
-  TeamRequestsRepository(this.service)
-      : _teamsCache = CacheAll(
+  TeamRequestsRepository(this._service)
+      : _requestsCache = CacheAll(
           expiration: const Duration(minutes: 30),
-          origin: service.getRequest,
-          originAll: service.getAllRequests,
+          origin: _service.getRequest,
+          originAll: _service.getAllRequests,
           key: (request) => request.userId,
         );
 
@@ -39,21 +39,31 @@ class TeamRequestsRepository {
     required String userId,
     bool forceOrigin = false,
   }) =>
-      _teamsCache.get(key: userId, forceOrigin: forceOrigin);
+      _requestsCache.get(key: userId, forceOrigin: forceOrigin);
 
   Future<List<TeamRequest>> getAllRequests({
     bool forceOrigin = false,
   }) =>
-      _teamsCache.getAll(forceOrigin: forceOrigin);
+      _requestsCache.getAll(forceOrigin: forceOrigin);
+
+  Future<void> requestToJoin({
+    required int teamNum,
+  }) =>
+      _service.requestToJoin(teamNum);
+
+  Future<void> deleteRequest({
+    required Uuid userId,
+  }) =>
+      _service.deleteRequest(userId);
 }
 
 class TeamRequestsService {
-  final SupabaseClient supabase;
+  final SupabaseClient _supabase;
 
-  TeamRequestsService(this.supabase);
+  TeamRequestsService(this._supabase);
 
   Future<TeamRequest?> getRequest(String userId) async {
-    final data = await supabase
+    final data = await _supabase
         .from('team_requests')
         .select('*, user_profiles:profile(*)')
         .eq('user_id', userId)
@@ -62,9 +72,15 @@ class TeamRequestsService {
   }
 
   Future<List<TeamRequest>> getAllRequests() async {
-    final data = await supabase
+    final data = await _supabase
         .from('team_requests')
         .select('*, user_profiles:profile(*)');
     return data.parse(TeamRequest.fromJson);
   }
+
+  Future<void> requestToJoin(int teamNum) =>
+      _supabase.from('team_requests').insert({'team_num': teamNum});
+
+  Future<void> deleteRequest(Uuid userId) =>
+      _supabase.from('team_requests').delete().eq('user_id', userId);
 }

@@ -34,7 +34,7 @@ class AuthRepository {
       : this(AuthService(supabase));
 
   String? get name => _service.name;
-  set name(String? name) => _service.name = name;
+  Future<void> setName(String name) => _service.setName(name);
 
   StreamSubscription<AuthState> addListener(
     void Function(AuthState data) onData,
@@ -66,7 +66,8 @@ class AuthService {
   AuthService(this.supabase);
 
   String? get name => supabase.auth.currentUser?.userMetadata?['full_name'];
-  set name(String? name) => supabase.auth.updateUser(
+
+  Future<void> setName(String name) => supabase.auth.updateUser(
         UserAttributes(
           data: {'full_name': name},
         ),

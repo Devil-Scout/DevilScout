@@ -67,24 +67,24 @@ class FrcEvent with _$FrcEvent {
       );
 
 class FrcEventsRepository {
-  final FrcEventsService service;
+  final FrcEventsService _service;
   final Map<int, CacheAll<String, FrcEvent>> _eventsCaches;
   final Cache<int, List<FrcEvent>> _teamEventsCache;
 
   FrcEventsRepository.supabase(SupabaseClient supabase)
       : this(FrcEventsService(supabase));
 
-  FrcEventsRepository(this.service)
+  FrcEventsRepository(this._service)
       : _eventsCaches = {},
         _teamEventsCache = Cache(
           expiration: const Duration(minutes: 30),
-          origin: service.getTeamEvents,
+          origin: _service.getTeamEvents,
         );
 
   CacheAll<String, FrcEvent> _cache(int season) => CacheAll(
         expiration: const Duration(minutes: 30),
-        origin: service.getEvent,
-        originAll: () => service.getSeasonEvents(season),
+        origin: _service.getEvent,
+        originAll: () => _service.getSeasonEvents(season),
         key: (event) => event.key,
       );
 
@@ -117,12 +117,12 @@ class FrcEventsRepository {
 }
 
 class FrcEventsService {
-  final SupabaseClient supabase;
+  final SupabaseClient _supabase;
 
-  FrcEventsService(this.supabase);
+  FrcEventsService(this._supabase);
 
   Future<FrcEvent?> getEvent(String eventKey) async {
-    final data = await supabase
+    final data = await _supabase
         .from('frc_events')
         .select('*, frc_event_types:event_type(*)')
         .eq('key', eventKey)
@@ -131,7 +131,7 @@ class FrcEventsService {
   }
 
   Future<List<FrcEvent>> getSeasonEvents(int year) async {
-    final data = await supabase
+    final data = await _supabase
         .from('frc_events')
         .select('*, frc_event_types:event_type(*)')
         .eq('season', year);
@@ -139,7 +139,7 @@ class FrcEventsService {
   }
 
   Future<List<FrcEvent>> getTeamEvents(int teamNum) async {
-    final data = await supabase
+    final data = await _supabase
         .from('frc_events')
         .select('*, frc_event_types:event_type(*)')
         .eq('frc_event_teams.team_num', teamNum);

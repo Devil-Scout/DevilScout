@@ -11,6 +11,7 @@ import 'core/teams.dart';
 import 'core/team_users.dart';
 import 'frc/districts.dart';
 import 'frc/events.dart';
+import 'frc/matches.dart';
 import 'frc/seasons.dart';
 import 'frc/teams.dart';
 import 'scouting/questions.dart';
@@ -26,6 +27,7 @@ class Database {
   final FrcTeamsRepository frcTeams;
   final FrcDistrictsRepository frcDistricts;
   final FrcEventsRepository frcEvents;
+  final FrcMatchesRepository frcMatches;
 
   final QuestionsRepository questions;
 
@@ -38,6 +40,7 @@ class Database {
     required this.frcTeams,
     required this.frcDistricts,
     required this.frcEvents,
+    required this.frcMatches,
     required this.questions,
   });
 
@@ -51,6 +54,7 @@ class Database {
           frcTeams: FrcTeamsRepository.supabase(supabase),
           frcDistricts: FrcDistrictsRepository.supabase(supabase),
           frcEvents: FrcEventsRepository.supabase(supabase),
+          frcMatches: FrcMatchesRepository.supabase(supabase),
           questions: QuestionsRepository.supabase(supabase),
         );
 
@@ -156,6 +160,5 @@ extension JsonParseObject on JsonObject {
 }
 
 extension JsonParseList on JsonList {
-  List<T> parse<T>(T Function(JsonObject) fromJson) =>
-      map(fromJson).toList();
+  List<T> parse<T>(T Function(JsonObject) fromJson) => map(fromJson).toList();
 }

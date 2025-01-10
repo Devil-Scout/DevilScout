@@ -50,17 +50,17 @@ class UserPermission with _$UserPermission {
 }
 
 class TeamUsersRepository {
-  final TeamUsersService service;
+  final TeamUsersService _service;
   final CacheAll<Uuid, TeamUser> _teamUsersCache;
 
   TeamUsersRepository.supabase(SupabaseClient supabase)
       : this(TeamUsersService(supabase));
 
-  TeamUsersRepository(this.service)
+  TeamUsersRepository(this._service)
       : _teamUsersCache = CacheAll(
           expiration: const Duration(minutes: 30),
-          origin: service.getUser,
-          originAll: service.getAllUsers,
+          origin: _service.getUser,
+          originAll: _service.getAllUsers,
           key: (user) => user.userId,
         );
 
@@ -74,26 +74,67 @@ class TeamUsersRepository {
     bool forceOrigin = false,
   }) =>
       _teamUsersCache.getAll(forceOrigin: forceOrigin);
+
+  Future<void> addUser(Uuid userId) => _service.addUser(userId);
+
+  Future<void> removeUser(Uuid userId) => _service.removeUser(userId);
+
+  Future<void> grantPermission({
+    required Uuid userId,
+    required PermissionType type,
+  }) =>
+      _service.grantPermission(userId: userId, type: type);
+
+  Future<void> revokePermission({
+    required Uuid userId,
+    required PermissionType type,
+  }) =>
+      _service.revokePermission(userId: userId, type: type);
 }
 
 class TeamUsersService {
-  final SupabaseClient supabase;
+  final SupabaseClient _supabase;
 
-  TeamUsersService(this.supabase);
+  TeamUsersService(this._supabase);
 
   Future<TeamUser?> getUser(Uuid id) async {
-    final data = await supabase
+    final data = await _supabase
         .from('team_users')
-        .select('*, users:profile(*), permissions(*)')
+        .select('*, profiles:profile(*), permissions(*)')
         .eq('user_id', id)
         .maybeSingle();
     return data?.parse(TeamUser.fromJson);
   }
 
   Future<List<TeamUser>> getAllUsers() async {
-    final data = await supabase
+    final data = await _supabase
         .from('team_users')
-        .select('*, users:profile(*), permissions(*)');
+        .select('*, profiles:profile(*), permissions(*)');
     return data.parse(TeamUser.fromJson);
   }
+
+  Future<void> addUser(Uuid userId) =>
+      _supabase.from('team_users').insert({'user_id': userId});
+
+  Future<void> removeUser(Uuid userId) =>
+      _supabase.from('team_users').delete().eq('user_id', userId);
+
+  Future<void> grantPermission({
+    required Uuid userId,
+    required PermissionType type,
+  }) =>
+      _supabase.from('permissions').insert({
+        'user_id': userId,
+        'type': type,
+      });
+
+  Future<void> revokePermission({
+    required Uuid userId,
+    required PermissionType type,
+  }) =>
+      _supabase
+          .from('permissions')
+          .delete()
+          .eq('user_id', userId)
+          .eq('type', type);
 }

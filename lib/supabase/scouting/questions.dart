@@ -39,81 +39,136 @@ sealed class QuestionNode with _$QuestionNode {
   }
 }
 
+@immutable
+@freezed
+class QuestionDetails with _$QuestionDetails {
+  const factory QuestionDetails({
+    required Uuid questionId,
+    required String markdown,
+  }) = _QuestionDetails;
+}
+
 class QuestionsRepository {
-  final QuestionsService service;
-  final Cache<(int, ScoutingCategory), List<QuestionNode>> _questionsCache;
-  final Cache<(int, ScoutingCategory), Map<String, String>> _detailsCache;
+  final QuestionsService _service;
+
+  final Map<int, CacheAll<Uuid, QuestionNode>> _questionsCaches;
+  final Map<int, CacheAll<Uuid, QuestionDetails>> _detailsCaches;
 
   QuestionsRepository.supabase(SupabaseClient supabase)
       : this(QuestionsService(supabase));
 
-  QuestionsRepository(this.service)
-      : _questionsCache = Cache(
-          expiration: const Duration(minutes: 30),
-          origin: (key) => service.getQuestions(
-            season: key.$1,
-            category: key.$2,
-          ),
-        ),
-        _detailsCache = Cache(
-          expiration: const Duration(minutes: 30),
-          origin: (key) => service.getDetails(
-            season: key.$1,
-            category: key.$2,
-          ),
-        );
+  QuestionsRepository(this._service)
+      : _questionsCaches = {},
+        _detailsCaches = {};
 
-  Future<List<QuestionNode>?> getQuestions({
+  CacheAll<Uuid, QuestionNode> _questionsCache(int season) => CacheAll(
+        expiration: const Duration(minutes: 30),
+        origin: _service.getQuestion,
+        originAll: () => _service.getSeasonQuestions(season),
+        key: (node) => node.id,
+      );
+
+  CacheAll<Uuid, QuestionDetails> _detailsCache(int season) => CacheAll(
+        expiration: const Duration(minutes: 30),
+        origin: (questionId) =>
+            _service.getDetails(season: season, questionId: questionId),
+        originAll: () => _service.getSeasonDetails(season),
+        key: (details) => details.questionId,
+      );
+
+  Future<QuestionNode?> getQuestion({
     required int season,
-    required ScoutingCategory category,
+    required Uuid questionId,
     bool forceOrigin = false,
   }) =>
-      _questionsCache.get(key: (season, category), forceOrigin: forceOrigin);
+      _questionsCaches
+          .putIfAbsent(season, () => _questionsCache(season))
+          .get(key: questionId, forceOrigin: forceOrigin);
 
-  Future<Map<String, String>?> getDetails({
+  Future<List<QuestionNode>> getSeasonQuestions({
     required int season,
-    required ScoutingCategory category,
     bool forceOrigin = false,
   }) =>
-      _detailsCache.get(key: (season, category), forceOrigin: forceOrigin);
+      _questionsCaches
+          .putIfAbsent(season, () => _questionsCache(season))
+          .getAll(forceOrigin: forceOrigin);
+
+  Future<QuestionDetails?> getDetails({
+    required int season,
+    required Uuid questionId,
+    bool forceOrigin = false,
+  }) =>
+      _detailsCaches
+          .putIfAbsent(season, () => _detailsCache(season))
+          .get(key: questionId, forceOrigin: forceOrigin);
+
+  Future<List<QuestionDetails>> getSeasonDetails({
+    required int season,
+    bool forceOrigin = false,
+  }) =>
+      _detailsCaches
+          .putIfAbsent(season, () => _detailsCache(season))
+          .getAll(forceOrigin: forceOrigin);
 }
 
 class QuestionsService {
-  final SupabaseClient supabase;
+  final SupabaseClient _supabase;
 
-  QuestionsService(this.supabase);
+  QuestionsService(this._supabase);
 
-  Future<List<QuestionNode>?> getQuestions({
-    required int season,
-    required ScoutingCategory category,
-  }) async {
-    final data = await supabase
+  Future<QuestionNode?> getQuestion(Uuid questionId) async {
+    final data = await _supabase
         .from('questions')
         .select()
-        .eq('season', season)
-        .eq('category', category.value);
+        .eq('id', questionId)
+        .maybeSingle();
+    return data?.parse(QuestionNode.fromJson);
+  }
+
+  Future<List<QuestionNode>> getSeasonQuestions(int season) async {
+    final data =
+        await _supabase.from('questions').select().eq('season', season);
     return data.parse(QuestionNode.fromJson);
   }
 
-  Future<Map<String, String>> getDetails({
+  Future<QuestionDetails?> getDetails({
     required int season,
-    required ScoutingCategory category,
+    required Uuid questionId,
   }) async {
-    final directory = '$season/${category.value}';
+    try {
+      final data = await _supabase.storage
+          .from('question-info')
+          .download('$season/$questionId');
+      return QuestionDetails(
+        questionId: questionId,
+        markdown: utf8.decode(data),
+      );
+    } on StorageException catch (_) {
+      // file not found
+      return null;
+    }
+  }
 
+  Future<List<QuestionDetails>> getSeasonDetails(int season) async {
     final files =
-        await supabase.storage.from('question-info').list(path: directory);
+        await _supabase.storage.from('question-info').list(path: '$season');
     final questionIds = files.map((file) => file.name);
 
     final data = await Future.wait(
       questionIds.map(
-        (id) => supabase.storage
+        (id) => _supabase.storage
             .from('question-info')
-            .download('$directory/$id')
+            .download('$season/$id')
             .then(utf8.decode),
       ),
     );
 
-    return Map.fromIterables(questionIds, data);
+    return Map.fromIterables(questionIds, data)
+        .entries
+        .map(
+          (entry) =>
+              QuestionDetails(questionId: entry.key, markdown: entry.value),
+        )
+        .toList();
   }
 }

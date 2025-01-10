@@ -11,10 +11,16 @@ enum FrcMatchLevel {
   final String value;
 
   const FrcMatchLevel(this.value);
+
+  @override
+  String toString() => value;
 }
 
 @JsonEnum()
 enum FrcAlliance {
   blue,
   red;
+
+  @override
+  String toString() => name;
 }

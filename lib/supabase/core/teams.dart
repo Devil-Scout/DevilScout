@@ -37,17 +37,17 @@ class TeamRegistration with _$TeamRegistration {
 }
 
 class TeamsRepository {
-  final TeamsService service;
+  final TeamsService _service;
   final CacheAll<int, Team> _teamsCache;
 
   TeamsRepository.supabase(SupabaseClient supabase)
       : this(TeamsService(supabase));
 
-  TeamsRepository(this.service)
+  TeamsRepository(this._service)
       : _teamsCache = CacheAll(
           expiration: const Duration(minutes: 30),
-          origin: service.getTeam,
-          originAll: service.getAllTeams,
+          origin: _service.getTeam,
+          originAll: _service.getAllTeams,
           key: (team) => team.number,
         );
 
@@ -57,19 +57,38 @@ class TeamsRepository {
   }) =>
       _teamsCache.get(key: teamNum, forceOrigin: forceOrigin);
 
-  Future<List<Team>> getAllTeams({
-    bool forceOrigin = false,
-  }) =>
+  Future<List<Team>> getAllTeams({bool forceOrigin = false}) =>
       _teamsCache.getAll(forceOrigin: forceOrigin);
+
+  Future<List<int>> searchTeams({
+    required String query,
+    int limit = 5,
+  }) =>
+      _service.searchTeams(query, limit: limit);
+
+  Future<void> createTeam({
+    required int teamNum,
+    required String name,
+  }) =>
+      _service.createTeam(teamNum: teamNum, name: name);
+
+  Future<void> deleteTeam({required int teamNum}) =>
+      _service.deleteTeam(teamNum);
+
+  Future<void> updateTeamName({
+    required int teamNum,
+    required String name,
+  }) =>
+      _service.updateTeamName(teamNum: teamNum, name: name);
 }
 
 class TeamsService {
-  final SupabaseClient supabase;
+  final SupabaseClient _supabase;
 
-  TeamsService(this.supabase);
+  TeamsService(this._supabase);
 
   Future<Team?> getTeam(int teamNum) async {
-    final data = await supabase
+    final data = await _supabase
         .from('frc_teams')
         .select('number, name, country, province, city, teams:registration(*)')
         .eq('number', teamNum)
@@ -78,9 +97,33 @@ class TeamsService {
   }
 
   Future<List<Team>> getAllTeams() async {
-    final data = await supabase
+    final data = await _supabase
         .from('frc_teams')
         .select('number, name, country, province, city, teams:registration(*)');
     return data.parse(Team.fromJson);
   }
+
+  Future<List<int>> searchTeams(String query, {int limit = 10}) async {
+    final data = await _supabase
+        .rpc('frc_teams_search', params: {'query': query}).limit(limit);
+    return data as List<int>;
+  }
+
+  Future<void> createTeam({
+    required int teamNum,
+    required String name,
+  }) =>
+      _supabase.from('teams').insert({
+        'number': teamNum,
+        'name': name,
+      });
+
+  Future<void> deleteTeam(int teamNum) =>
+      _supabase.from('teams').delete().eq('number', teamNum);
+
+  Future<void> updateTeamName({
+    required int teamNum,
+    required String name,
+  }) =>
+      _supabase.from('teams').update({'name': name}).eq('team_num', teamNum);
 }

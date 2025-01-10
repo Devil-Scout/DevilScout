@@ -24,23 +24,21 @@ class FrcTeam with _$FrcTeam {
 }
 
 class FrcTeamsRepository {
-  final FrcTeamsService service;
-  final CacheAll<int, FrcTeam> _teamsCache;
+  final FrcTeamsService _service;
+  final Cache<int, FrcTeam> _teamsCache;
   final Cache<String, List<FrcTeam>> _eventTeamsCache;
 
   FrcTeamsRepository.supabase(SupabaseClient supabase)
       : this(FrcTeamsService(supabase));
 
-  FrcTeamsRepository(this.service)
-      : _teamsCache = CacheAll(
+  FrcTeamsRepository(this._service)
+      : _teamsCache = Cache(
           expiration: const Duration(minutes: 30),
-          origin: service.getTeam,
-          originAll: service.getAllTeams,
-          key: (team) => team.number,
+          origin: _service.getTeam,
         ),
         _eventTeamsCache = Cache(
           expiration: const Duration(minutes: 30),
-          origin: service.getTeamsAtEvent,
+          origin: _service.getTeamsAtEvent,
         );
 
   Future<FrcTeam?> getTeam({
@@ -48,11 +46,6 @@ class FrcTeamsRepository {
     bool forceOrigin = false,
   }) =>
       _teamsCache.get(key: teamNum, forceOrigin: forceOrigin);
-
-  Future<List<FrcTeam>> getAllTeams({
-    bool forceOrigin = false,
-  }) =>
-      _teamsCache.getAll(forceOrigin: forceOrigin);
 
   Future<List<FrcTeam>?> getTeamsAtEvent({
     required String eventKey,
@@ -62,26 +55,21 @@ class FrcTeamsRepository {
 }
 
 class FrcTeamsService {
-  final SupabaseClient supabase;
+  final SupabaseClient _supabase;
 
-  FrcTeamsService(this.supabase);
+  FrcTeamsService(this._supabase);
 
   Future<FrcTeam?> getTeam(int teamNum) async {
-    final data = await supabase
+    final data = await _supabase
         .from('frc_teams')
         .select()
         .eq('number', teamNum)
         .maybeSingle();
-    return data == null ? null : FrcTeam.fromJson(data);
-  }
-
-  Future<List<FrcTeam>> getAllTeams() async {
-    final data = await supabase.from('frc_teams').select();
-    return data.parse(FrcTeam.fromJson);
+    return data?.parse(FrcTeam.fromJson);
   }
 
   Future<List<FrcTeam>> getTeamsAtEvent(String eventKey) async {
-    final data = await supabase
+    final data = await _supabase
         .from('frc_teams')
         .select()
         .eq('event_teams.event_key', eventKey);

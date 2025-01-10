@@ -59,20 +59,29 @@ class FrcMatchResult with _$FrcMatchResult {
 }
 
 class FrcMatchesRepository {
-  final FrcMatchesService service;
+  final FrcMatchesService _service;
 
   final Map<String, CacheAll<String, FrcMatch>> _matchesCaches;
+  final Map<int, Cache<int, List<FrcMatch>>> _teamMatchesCaches;
 
   FrcMatchesRepository.supabase(SupabaseClient supabase)
       : this(FrcMatchesService(supabase));
 
-  FrcMatchesRepository(this.service) : _matchesCaches = {};
+  FrcMatchesRepository(this._service)
+      : _matchesCaches = {},
+        _teamMatchesCaches = {};
 
-  CacheAll<String, FrcMatch> _cache(String eventKey) => CacheAll(
+  CacheAll<String, FrcMatch> _matchesCache(String eventKey) => CacheAll(
         expiration: const Duration(minutes: 30),
-        origin: service.getMatch,
-        originAll: () => service.getEventMatches(eventKey),
+        origin: _service.getMatch,
+        originAll: () => _service.getEventMatches(eventKey),
         key: (event) => event.key,
+      );
+
+  Cache<int, List<FrcMatch>> _teamMatchesCache(int teamNum) => Cache(
+        expiration: const Duration(minutes: 30),
+        origin: (season) =>
+            _service.getTeamMatches(season: season, teamNum: teamNum),
       );
 
   Future<FrcMatch?> getMatch({
@@ -81,7 +90,7 @@ class FrcMatchesRepository {
   }) {
     final eventKey = matchKey.substring(0, matchKey.indexOf('_'));
     return _matchesCaches
-        .putIfAbsent(eventKey, () => _cache(eventKey))
+        .putIfAbsent(eventKey, () => _matchesCache(eventKey))
         .get(key: matchKey, forceOrigin: forceOrigin);
   }
 
@@ -90,17 +99,27 @@ class FrcMatchesRepository {
     bool forceOrigin = false,
   }) =>
       _matchesCaches
-          .putIfAbsent(eventKey, () => _cache(eventKey))
+          .putIfAbsent(eventKey, () => _matchesCache(eventKey))
           .getAll(forceOrigin: forceOrigin);
+
+  Future<List<FrcMatch>> getTeamMatches({
+    required int season,
+    required int teamNum,
+    bool forceOrigin = false,
+  }) =>
+      _teamMatchesCaches
+          .putIfAbsent(teamNum, () => _teamMatchesCache(teamNum))
+          .get(key: season, forceOrigin: forceOrigin)
+          .then((list) => list ?? List.empty());
 }
 
 class FrcMatchesService {
-  final SupabaseClient supabase;
+  final SupabaseClient _supabase;
 
-  FrcMatchesService(this.supabase);
+  FrcMatchesService(this._supabase);
 
   Future<FrcMatch?> getMatch(String matchKey) async {
-    final data = await supabase
+    final data = await _supabase
         .from('frc_matches')
         .select('*, frc_match_teams:teams(*), frc_match_results:result(*)')
         .eq('key', matchKey)
@@ -109,7 +128,7 @@ class FrcMatchesService {
   }
 
   Future<List<FrcMatch>> getEventMatches(String eventKey) async {
-    final data = await supabase
+    final data = await _supabase
         .from('frc_matches')
         .select('*, frc_match_teams:teams(*), frc_match_results:result(*)')
         .eq('event_key', eventKey);
@@ -120,7 +139,7 @@ class FrcMatchesService {
     required int season,
     required int teamNum,
   }) async {
-    final data = await supabase
+    final data = await _supabase
         .from('frc_matches')
         .select('*, frc_match_teams:teams(*), frc_match_results:result(*)')
         .like('key', '$season%')

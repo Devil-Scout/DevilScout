@@ -9,6 +9,9 @@ enum ScoutingCategory {
   final String value;
 
   const ScoutingCategory(this.value);
+
+  @override
+  String toString() => value;
 }
 
 @JsonEnum(valueField: 'value')
@@ -21,4 +24,7 @@ enum DataType {
   final String value;
 
   const DataType(this.value);
+
+  @override
+  String toString() => value;
 }

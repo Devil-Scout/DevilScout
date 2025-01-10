@@ -10,4 +10,7 @@ enum PermissionType {
   final String value;
 
   const PermissionType(this.value);
+
+  @override
+  String toString() => value;
 }

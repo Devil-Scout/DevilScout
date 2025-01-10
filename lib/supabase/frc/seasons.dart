@@ -18,17 +18,17 @@ class FrcSeason with _$FrcSeason {
 }
 
 class FrcSeasonsRepository {
-  final FrcSeasonsService service;
+  final FrcSeasonsService _service;
   final CacheAll<int, FrcSeason> _seasonsCache;
 
   FrcSeasonsRepository.supabase(SupabaseClient supabase)
       : this(FrcSeasonsService(supabase));
 
-  FrcSeasonsRepository(this.service)
+  FrcSeasonsRepository(this._service)
       : _seasonsCache = CacheAll(
           expiration: const Duration(minutes: 30),
-          origin: service.getSeason,
-          originAll: service.getAllSeasons,
+          origin: _service.getSeason,
+          originAll: _service.getAllSeasons,
           key: (season) => season.year,
         );
 
@@ -38,19 +38,17 @@ class FrcSeasonsRepository {
   }) =>
       _seasonsCache.get(key: year, forceOrigin: forceOrigin);
 
-  Future<List<FrcSeason>> getAllSeasons({
-    bool forceOrigin = false,
-  }) =>
+  Future<List<FrcSeason>> getAllSeasons({bool forceOrigin = false}) =>
       _seasonsCache.getAll(forceOrigin: forceOrigin);
 }
 
 class FrcSeasonsService {
-  final SupabaseClient supabase;
+  final SupabaseClient _supabase;
 
-  FrcSeasonsService(this.supabase);
+  FrcSeasonsService(this._supabase);
 
   Future<FrcSeason?> getSeason(int year) async {
-    final data = await supabase
+    final data = await _supabase
         .from('frc_seasons')
         .select()
         .eq('year', year)
@@ -59,7 +57,7 @@ class FrcSeasonsService {
   }
 
   Future<List<FrcSeason>> getAllSeasons() async {
-    final data = await supabase.from('frc_seasons').select();
+    final data = await _supabase.from('frc_seasons').select();
     return data.parse(FrcSeason.fromJson);
   }
 }
