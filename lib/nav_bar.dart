@@ -67,12 +67,8 @@ class NavBarWrapper extends StatelessWidget {
           icon: icon,
           inactiveIcon: inactiveIcon,
           title: title,
-          // activeForegroundColor: Theme.of(context).primaryColor,
-          // activeColorSecondary: Colors.transparent,
-          // inactiveForegroundColor:
-          //     Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
-          // inactiveBackgroundColor: Colors.transparent,
-          // textStyle: Theme.of(context).textTheme.bodyMedium!,
+          activeForegroundColor: Theme.of(context).primaryColor,
+          textStyle: Theme.of(context).textTheme.labelSmall!,
         ),
       );
 }
