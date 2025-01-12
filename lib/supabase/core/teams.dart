@@ -88,7 +88,6 @@ class TeamsService {
         .select('number, name, country, province, city, registration:teams(*)')
         .eq('number', teamNum)
         .maybeSingle();
-    print(teamNum);
     return data?.parse(Team.fromJson);
   }
 

@@ -19,6 +19,9 @@ class CurrentUserRepository {
   String? get name => _service.name;
   int? get teamNum => _service.teamNum;
   Set<PermissionType>? get permissions => _service.permissions;
+
+  bool hasPermission(PermissionType type) =>
+      permissions?.contains(type) ?? false;
 }
 
 class CurrentUserService {
