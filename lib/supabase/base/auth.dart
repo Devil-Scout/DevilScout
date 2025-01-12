@@ -198,8 +198,7 @@ class AuthService {
   Future<void> _signInWithAppleWeb() async {
     await _supabase.auth.signInWithOAuth(
       OAuthProvider.apple,
-      redirectTo: 'org.devilscout.client://',
-      queryParams: {'client_id': 'org.devilscout.supabase'},
+      redirectTo: 'org.devilscout.client://client.devilscout.org/home',
     );
   }
 
