@@ -65,7 +65,7 @@ class TeamRequestsService {
   Future<TeamRequest?> getRequest(String userId) async {
     final data = await _supabase
         .from('team_requests')
-        .select('*, user_profiles:profile(*)')
+        .select('*, profile:profiles(*)')
         .eq('user_id', userId)
         .maybeSingle();
     return data?.parse(TeamRequest.fromJson);
@@ -74,7 +74,7 @@ class TeamRequestsService {
   Future<List<TeamRequest>> getAllRequests() async {
     final data = await _supabase
         .from('team_requests')
-        .select('*, user_profiles:profile(*)');
+        .select('*, profile:profiles(*)');
     return data.parse(TeamRequest.fromJson);
   }
 

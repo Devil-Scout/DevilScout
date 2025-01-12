@@ -5,7 +5,8 @@ import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import 'auth.dart';
+import 'base/auth.dart';
+import 'base/current_user.dart';
 import 'core/team_requests.dart';
 import 'core/teams.dart';
 import 'core/team_users.dart';
@@ -17,7 +18,10 @@ import 'frc/teams.dart';
 import 'scouting/questions.dart';
 
 class Database {
+  final SupabaseClient? supabase;
+
   final AuthRepository auth;
+  final CurrentUserRepository currentUser;
 
   final TeamsRepository teams;
   final TeamUsersRepository teamUsers;
@@ -32,7 +36,9 @@ class Database {
   final QuestionsRepository questions;
 
   Database({
+    this.supabase,
     required this.auth,
+    required this.currentUser,
     required this.teams,
     required this.teamUsers,
     required this.teamRequests,
@@ -46,7 +52,9 @@ class Database {
 
   Database.supabase(SupabaseClient supabase)
       : this(
+          supabase: supabase,
           auth: AuthRepository.supabase(supabase),
+          currentUser: CurrentUserRepository.supabase(supabase),
           teams: TeamsRepository.supabase(supabase),
           teamUsers: TeamUsersRepository.supabase(supabase),
           teamRequests: TeamRequestsRepository.supabase(supabase),

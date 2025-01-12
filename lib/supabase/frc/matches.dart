@@ -51,7 +51,6 @@ class FrcMatchResult with _$FrcMatchResult {
     required FrcAlliance? winningAlliance,
     required String matchKey,
     required JsonList videos,
-    required JsonObject? scoreBreakdown,
   }) = _FrcMatchResult;
 
   factory FrcMatchResult.fromJson(JsonObject json) =>
@@ -121,7 +120,7 @@ class FrcMatchesService {
   Future<FrcMatch?> getMatch(String matchKey) async {
     final data = await _supabase
         .from('frc_matches')
-        .select('*, frc_match_teams:teams(*), frc_match_results:result(*)')
+        .select('*, teams:frc_match_teams(*), result:frc_match_results(*)')
         .eq('key', matchKey)
         .maybeSingle();
     return data?.parse(FrcMatch.fromJson);
@@ -130,7 +129,7 @@ class FrcMatchesService {
   Future<List<FrcMatch>> getEventMatches(String eventKey) async {
     final data = await _supabase
         .from('frc_matches')
-        .select('*, frc_match_teams:teams(*), frc_match_results:result(*)')
+        .select('*, teams:frc_match_teams(*), result:frc_match_results(*)')
         .eq('event_key', eventKey);
     return data.parse(FrcMatch.fromJson);
   }
@@ -141,7 +140,7 @@ class FrcMatchesService {
   }) async {
     final data = await _supabase
         .from('frc_matches')
-        .select('*, frc_match_teams:teams(*), frc_match_results:result(*)')
+        .select('*, teams:frc_match_teams!inner(*), result:frc_match_results(*)')
         .like('key', '$season%')
         .eq('teams.team_num', teamNum);
     return data.parse(FrcMatch.fromJson);

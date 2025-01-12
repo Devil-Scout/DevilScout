@@ -5,7 +5,8 @@ enum PermissionType {
   matchScouting('scout.match'),
   pitScouting('scout.pit'),
   driveTeamScouting('scout.drive_team'),
-  manageTeam('manage_team');
+  manageTeam('team.manage'),
+  teamAdmin('team.admin');
 
   final String value;
 
@@ -13,4 +14,9 @@ enum PermissionType {
 
   @override
   String toString() => value;
+
+  static final _jsonMap =
+      Map.fromEntries(PermissionType.values.map((e) => MapEntry(e.value, e)));
+
+  factory PermissionType.fromJson(String json) => _jsonMap[json]!;
 }

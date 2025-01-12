@@ -11,8 +11,8 @@ part 'team_users.g.dart';
 @freezed
 class UserProfile with _$UserProfile {
   const factory UserProfile({
-    required Uuid id,
-    required String name,
+    required Uuid userId,
+    String? name,
     required DateTime createdAt,
   }) = _UserProfile;
 
@@ -25,7 +25,7 @@ class TeamUser with _$TeamUser {
   const factory TeamUser({
     required Uuid userId,
     required int teamNum,
-    required Uuid addedBy,
+    Uuid? addedBy,
     required DateTime addedAt,
     required UserProfile profile,
     required List<UserPermission> permissions,
@@ -100,16 +100,18 @@ class TeamUsersService {
   Future<TeamUser?> getUser(Uuid id) async {
     final data = await _supabase
         .from('team_users')
-        .select('*, profiles:profile(*), permissions(*)')
+        .select(
+          '*, profile:profiles!team_users_user_id_fkey(*), permissions!permissions_team_num_user_id_fkey(*)',
+        )
         .eq('user_id', id)
         .maybeSingle();
     return data?.parse(TeamUser.fromJson);
   }
 
   Future<List<TeamUser>> getAllUsers() async {
-    final data = await _supabase
-        .from('team_users')
-        .select('*, profiles:profile(*), permissions(*)');
+    final data = await _supabase.from('team_users').select(
+          '*, profile:profiles!team_users_user_id_fkey(*), permissions!permissions_team_num_user_id_fkey(*)',
+        );
     return data.parse(TeamUser.fromJson);
   }
 

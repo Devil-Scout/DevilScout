@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-import '../../supabase/auth.dart';
+import '../../supabase/base/auth.dart';
 import '../../supabase/database.dart';
 import 'email_login.dart';
 

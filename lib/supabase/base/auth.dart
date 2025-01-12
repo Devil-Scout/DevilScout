@@ -30,11 +30,9 @@ class AuthRepository {
   final AuthService _service;
 
   AuthRepository(this._service);
+
   AuthRepository.supabase(SupabaseClient supabase)
       : this(AuthService(supabase));
-
-  String? get name => _service.name;
-  Future<void> setName(String name) => _service.setName(name);
 
   StreamSubscription<AuthState> addListener(
     void Function(AuthState data) onData,
@@ -58,29 +56,21 @@ class AuthRepository {
 
   Future<void> signInWithSso(SsoProvider provider) =>
       _service.signInWithSso(provider);
+
+  Future<void> deleteAccount() => _service.deleteAccount();
 }
 
 class AuthService {
-  final SupabaseClient supabase;
+  final SupabaseClient _supabase;
 
-  AuthService(this.supabase);
-
-  String? get name => supabase.auth.currentUser?.userMetadata?['full_name'];
-
-  Future<void> setName(String name) => supabase.auth.updateUser(
-        UserAttributes(
-          data: {'full_name': name},
-        ),
-      );
-
-  int? get teamNum => supabase.auth.currentUser?.userMetadata?['team_num'];
+  AuthService(this._supabase);
 
   StreamSubscription<AuthState> addListener(
     void Function(AuthState data) onData,
   ) =>
-      supabase.auth.onAuthStateChange.listen(onData);
+      _supabase.auth.onAuthStateChange.listen(onData);
 
-  Future<void> signOut() => supabase.auth.signOut();
+  Future<void> signOut() => _supabase.auth.signOut();
 
   Future<void> signUpWithEmail({
     required String name,
@@ -88,7 +78,7 @@ class AuthService {
     required String password,
   }) async {
     try {
-      await supabase.auth.signUp(
+      await _supabase.auth.signUp(
         email: email,
         password: password,
         data: {
@@ -105,7 +95,7 @@ class AuthService {
     required String password,
   }) async {
     try {
-      await supabase.auth.signInWithPassword(
+      await _supabase.auth.signInWithPassword(
         email: email,
         password: password,
       );
@@ -118,7 +108,7 @@ class AuthService {
     try {
       await switch (provider) {
         SsoProvider.apple =>
-          Platform.isIOS ? _loginWithAppleNative() : _loginWithAppleWeb(),
+          Platform.isIOS ? _signInWithAppleNative() : _signInWithAppleWeb(),
         SsoProvider.google => _signInWithGoogle(),
       };
     } on AuthException catch (e) {
@@ -154,15 +144,15 @@ class AuthService {
       throw 'Error';
     }
 
-    await supabase.auth.signInWithIdToken(
+    await _supabase.auth.signInWithIdToken(
       provider: OAuthProvider.google,
       idToken: idToken,
       accessToken: accessToken,
     );
   }
 
-  Future<void> _loginWithAppleNative() async {
-    final rawNonce = supabase.auth.generateRawNonce();
+  Future<void> _signInWithAppleNative() async {
+    final rawNonce = _supabase.auth.generateRawNonce();
     final hashedNonce = sha256.convert(utf8.encode(rawNonce)).toString();
 
     final credential = await SignInWithApple.getAppleIDCredential(
@@ -178,7 +168,7 @@ class AuthService {
       throw 'Invalid AppleID credential';
     }
 
-    await supabase.auth.signInWithIdToken(
+    await _supabase.auth.signInWithIdToken(
       provider: OAuthProvider.apple,
       idToken: idToken,
       nonce: rawNonce,
@@ -195,7 +185,7 @@ class AuthService {
 
     if (name != null) {
       // native Apple doesn't return name for some reason
-      await supabase.auth.updateUser(
+      await _supabase.auth.updateUser(
         UserAttributes(
           data: {
             'full_name': name,
@@ -205,11 +195,16 @@ class AuthService {
     }
   }
 
-  Future<void> _loginWithAppleWeb() async {
-    await supabase.auth.signInWithOAuth(
+  Future<void> _signInWithAppleWeb() async {
+    await _supabase.auth.signInWithOAuth(
       OAuthProvider.apple,
       redirectTo: 'org.devilscout.client://',
       queryParams: {'client_id': 'org.devilscout.supabase'},
     );
+  }
+
+  Future<void> deleteAccount() async {
+    await _supabase.rpc('auth_delete_user');
+    await _supabase.auth.signOut(scope: SignOutScope.global);
   }
 }

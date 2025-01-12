@@ -33,7 +33,7 @@ class FrcEvent with _$FrcEvent {
     required FrcEventType eventType,
     required DateTime startDate,
     required DateTime endDate,
-    @JsonKey(fromJson: _pointFromString) (int, int)? coordinates,
+    @JsonKey(fromJson: _pointFromString) (double, double)? coordinates,
     int? week,
     required String key,
     required String code,
@@ -53,15 +53,15 @@ class FrcEvent with _$FrcEvent {
   factory FrcEvent.fromJson(JsonObject json) => _$FrcEventFromJson(json);
 }
 
-(int, int)? _pointFromString(String? json) => json == null
+(double, double)? _pointFromString(String? json) => json == null
     ? null
     : (
-        int.parse(json.substring(
+        double.parse(json.substring(
           1,
-          json.indexOf(' '),
+          json.indexOf(','),
         )),
-        int.parse(json.substring(
-          json.indexOf(' ') + 1,
+        double.parse(json.substring(
+          json.indexOf(',') + 1,
           json.length - 1,
         ))
       );
@@ -124,7 +124,7 @@ class FrcEventsService {
   Future<FrcEvent?> getEvent(String eventKey) async {
     final data = await _supabase
         .from('frc_events')
-        .select('*, frc_event_types:event_type(*)')
+        .select('*, event_type:frc_event_types(*)')
         .eq('key', eventKey)
         .maybeSingle();
     return data?.parse(FrcEvent.fromJson);
@@ -133,7 +133,7 @@ class FrcEventsService {
   Future<List<FrcEvent>> getSeasonEvents(int year) async {
     final data = await _supabase
         .from('frc_events')
-        .select('*, frc_event_types:event_type(*)')
+        .select('*, event_type:frc_event_types(*)')
         .eq('season', year);
     return data.parse(FrcEvent.fromJson);
   }
@@ -141,7 +141,9 @@ class FrcEventsService {
   Future<List<FrcEvent>> getTeamEvents(int teamNum) async {
     final data = await _supabase
         .from('frc_events')
-        .select('*, frc_event_types:event_type(*)')
+        .select(
+          '*, event_type:frc_event_types(*), frc_event_teams!inner(team_num)',
+        )
         .eq('frc_event_teams.team_num', teamNum);
     return data.parse(FrcEvent.fromJson);
   }
