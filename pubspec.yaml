@@ -13,8 +13,8 @@ dependencies:
     sdk: flutter
   flutter_svg: ^2.0.16
   freezed_annotation: ^2.4.4
-  google_sign_in: ^6.2.2
   go_router: ^14.6.3
+  google_sign_in: ^6.2.2
   json_annotation: ^4.9.0
   jwt_decoder: ^2.0.1
   persistent_bottom_nav_bar_v2: ^5.3.1
