@@ -68,7 +68,7 @@ class FrcEvent with _$FrcEvent {
 
 class FrcEventsRepository {
   final FrcEventsService _service;
-  final Map<int, CacheAll<String, FrcEvent>> _eventsCaches;
+  final Map<int, Cache<String, FrcEvent>> _eventsCaches;
   final Cache<int, List<FrcEvent>> _teamEventsCache;
 
   FrcEventsRepository.supabase(SupabaseClient supabase)
@@ -81,11 +81,9 @@ class FrcEventsRepository {
           origin: _service.getTeamEvents,
         );
 
-  CacheAll<String, FrcEvent> _cache(int season) => CacheAll(
+  Cache<String, FrcEvent> _cache(int season) => Cache(
         expiration: const Duration(minutes: 30),
         origin: _service.getEvent,
-        originAll: () => _service.getSeasonEvents(season),
-        key: (event) => event.key,
       );
 
   Future<FrcEvent?> getEvent({
@@ -98,14 +96,6 @@ class FrcEventsRepository {
         .get(key: eventKey, forceOrigin: forceOrigin);
   }
 
-  Future<List<FrcEvent>?> getSeasonEvents({
-    required int season,
-    bool forceOrigin = false,
-  }) =>
-      _eventsCaches
-          .putIfAbsent(season, () => _cache(season))
-          .getAll(forceOrigin: forceOrigin);
-
   Future<List<FrcEvent>?> getTeamEvents({
     required int teamNum,
     bool forceOrigin = false,
@@ -113,6 +103,17 @@ class FrcEventsRepository {
       _teamEventsCache.get(
         key: teamNum,
         forceOrigin: forceOrigin,
+      );
+
+  Future<List<String>> searchEvents({
+    required int season,
+    required String query,
+    int limit = 20,
+  }) =>
+      _service.searchEvents(
+        season: season,
+        query: query,
+        limit: limit,
       );
 }
 
@@ -130,14 +131,6 @@ class FrcEventsService {
     return data?.parse(FrcEvent.fromJson);
   }
 
-  Future<List<FrcEvent>> getSeasonEvents(int season) async {
-    final data = await _supabase
-        .from('frc_events')
-        .select('*, event_type:frc_event_types(*)')
-        .eq('season', season);
-    return data.parse(FrcEvent.fromJson);
-  }
-
   Future<List<FrcEvent>> getTeamEvents(int teamNum) async {
     final data = await _supabase
         .from('frc_events')
@@ -146,5 +139,17 @@ class FrcEventsService {
         )
         .eq('frc_event_teams.team_num', teamNum);
     return data.parse(FrcEvent.fromJson);
+  }
+
+  Future<List<String>> searchEvents({
+    required int season,
+    required String query,
+    required int limit,
+  }) async {
+    final data = await _supabase.rpc(
+      'frc_events_search',
+      params: {'year': season, 'query': query},
+    ).limit(limit);
+    return List.castFrom(data as List<dynamic>);
   }
 }
