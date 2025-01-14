@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../components/labeled_text_field.dart';
 import '../../router.dart';
-import '../../supabase/email_auth.dart';
+import '../../supabase/database.dart';
 
 class EmailLoginPage extends StatefulWidget {
   const EmailLoginPage({super.key});
@@ -129,10 +129,10 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
 
   void _loginWithEmail(BuildContext context) async {
     try {
-      await supabaseLoginWithEmail(
-        email: _emailController.text,
-        password: _passwordController.text,
-      );
+      await Database.of(context).auth.signInWithEmail(
+            email: _emailController.text,
+            password: _passwordController.text,
+          );
     } catch (e) {
       // TODO: notify user of error
     }

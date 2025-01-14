@@ -1,15 +1,19 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'router.dart';
-import 'supabase/client.dart';
+import 'supabase/database.dart';
 import 'theme.dart';
 
 Future<void> main() async {
-  await supabaseInit();
-  runApp(const MainApp());
+  await Database.initSupabase();
+  runApp(Provider(
+    create: (context) => Database.supabase(Supabase.instance.client),
+    child: const MainApp(),
+  ));
 }
 
 class MainApp extends StatefulWidget {
@@ -24,11 +28,8 @@ class _MainAppState extends State<MainApp> {
   void initState() {
     super.initState();
 
-    supabase.auth.onAuthStateChange.listen((data) {
-      final AuthChangeEvent event = data.event;
-      final Session? session = data.session;
-
-      switch (event) {
+    Database.of(context).auth.addListener((data) {
+      switch (data.event) {
         case AuthChangeEvent.signedIn:
           router.go('/home');
           break;
@@ -36,7 +37,7 @@ class _MainAppState extends State<MainApp> {
           router.go('/login');
           break;
         case AuthChangeEvent.initialSession:
-          router.go(session == null ? '/login' : '/home');
+          router.go(data.session == null ? '/login' : '/home');
           break;
         // case AuthChangeEvent.passwordRecovery:
         // case AuthChangeEvent.tokenRefreshed:
