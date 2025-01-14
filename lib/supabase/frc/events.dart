@@ -130,11 +130,11 @@ class FrcEventsService {
     return data?.parse(FrcEvent.fromJson);
   }
 
-  Future<List<FrcEvent>> getSeasonEvents(int year) async {
+  Future<List<FrcEvent>> getSeasonEvents(int season) async {
     final data = await _supabase
         .from('frc_events')
         .select('*, event_type:frc_event_types(*)')
-        .eq('season', year);
+        .eq('season', season);
     return data.parse(FrcEvent.fromJson);
   }
 

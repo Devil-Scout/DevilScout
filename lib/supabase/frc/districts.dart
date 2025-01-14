@@ -39,9 +39,9 @@ class FrcDistrictsRepository {
     required String districtKey,
     bool forceOrigin = false,
   }) {
-    final year = int.parse(districtKey.substring(0, 4));
+    final season = int.parse(districtKey.substring(0, 4));
     return _districtsCaches
-        .putIfAbsent(year, () => _cache(year))
+        .putIfAbsent(season, () => _cache(season))
         .get(key: districtKey, forceOrigin: forceOrigin);
   }
 
@@ -68,9 +68,9 @@ class FrcDistrictsService {
     return data?.parse(FrcDistrict.fromJson);
   }
 
-  Future<List<FrcDistrict>> getSeasonDistricts(int year) async {
+  Future<List<FrcDistrict>> getSeasonDistricts(int season) async {
     final data =
-        await _supabase.from('frc_districts').select().eq('season', year);
+        await _supabase.from('frc_districts').select().eq('season', season);
     return data.parse(FrcDistrict.fromJson);
   }
 }

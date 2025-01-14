@@ -57,9 +57,9 @@ class TeamsRepository {
 
   Future<List<int>> searchTeams({
     required String query,
-    int limit = 5,
+    int limit = 20,
   }) =>
-      _service.searchTeams(query, limit: limit);
+      _service.searchTeams(query: query, limit: limit);
 
   Future<void> createTeam({
     required int teamNum,
@@ -91,7 +91,10 @@ class TeamsService {
     return data?.parse(Team.fromJson);
   }
 
-  Future<List<int>> searchTeams(String query, {int limit = 20}) async {
+  Future<List<int>> searchTeams({
+    required String query,
+    required int limit,
+  }) async {
     final data = await _supabase
         .rpc('frc_teams_search', params: {'query': query}).limit(limit);
     return List.castFrom(data as List<dynamic>);
