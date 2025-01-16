@@ -9,6 +9,7 @@ const _errorColorLight = Color(0xFFF44336);
 const _onErrorColorLight = Colors.white;
 const _surfaceColorLight = Colors.white;
 const _onSurfaceColorLight = Colors.black;
+var _onSurfaceColorLightVariant = Colors.grey[500];
 const _outlineBorderColorLight = Color.fromARGB(25, 0, 0, 0);
 
 const _displayFontFamily = 'Montserrat';
@@ -42,23 +43,23 @@ const _textTheme = TextTheme(
   bodyLarge: TextStyle(
     fontFamily: _bodyFontFamily,
     fontSize: 16.0,
-    height: 1.3,
+    height: 1.5,
   ),
   bodyMedium: TextStyle(
     fontFamily: _bodyFontFamily,
     fontSize: 14.0,
-    height: 1.3,
+    height: 1.5,
   ),
   bodySmall: TextStyle(
     fontFamily: _bodyFontFamily,
     fontSize: 12.0,
-    height: 1.3,
+    height: 1.5,
   ),
 );
 
 final ThemeData lightTheme = ThemeData(
   textTheme: _textTheme,
-  colorScheme: const ColorScheme(
+  colorScheme: ColorScheme(
     brightness: Brightness.light,
     primary: _primaryColor,
     onPrimary: _onPrimaryColor,
@@ -68,6 +69,7 @@ final ThemeData lightTheme = ThemeData(
     onError: _onErrorColorLight,
     surface: _surfaceColorLight,
     onSurface: _onSurfaceColorLight,
+    onSurfaceVariant: _onSurfaceColorLightVariant,
     surfaceTint: Colors.transparent,
   ),
   navigationBarTheme: NavigationBarThemeData(
