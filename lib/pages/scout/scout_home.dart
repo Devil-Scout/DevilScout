@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../router.dart';
+
 class ScoutHomePage extends StatelessWidget {
   const ScoutHomePage({super.key});
 
@@ -42,7 +44,7 @@ class _JoinTeamMessage extends StatelessWidget {
             children: [
               Expanded(
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () => router.go('/scout/join-team'),
                   child: Text("Join a Team"),
                 ),
               )
