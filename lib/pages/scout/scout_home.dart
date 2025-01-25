@@ -7,10 +7,10 @@ class ScoutHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      minimum: const EdgeInsets.symmetric(horizontal: 32.0),
-      child: Scaffold(
-        body: _JoinTeamMessage(),
+    return Scaffold(
+      body: SafeArea(
+        minimum: const EdgeInsets.symmetric(horizontal: 32.0),
+        child: _JoinTeamMessage(),
       ),
     );
   }

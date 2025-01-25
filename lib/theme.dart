@@ -26,7 +26,7 @@ const _textTheme = TextTheme(
   ),
   displaySmall: TextStyle(
     fontFamily: _displayFontFamily,
-    fontSize: 20.0,
+    fontSize: 22.0,
   ),
   labelLarge: TextStyle(
     fontFamily: _bodyFontFamily,
@@ -71,6 +71,14 @@ final ThemeData lightTheme = ThemeData(
     onSurface: _onSurfaceColorLight,
     onSurfaceVariant: _onSurfaceColorLightVariant,
     surfaceTint: Colors.transparent,
+  ),
+  appBarTheme: AppBarTheme(
+    color: _surfaceColorLight,
+    elevation: 0.0,
+    iconTheme: IconThemeData(color: _onSurfaceColorLight),
+    titleTextStyle: _textTheme.displaySmall!.copyWith(
+      color: _onSurfaceColorLight,
+    ),
   ),
   navigationBarTheme: NavigationBarThemeData(
     height: 70.0,
