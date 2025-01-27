@@ -25,19 +25,26 @@ class JoinTeamPage extends StatelessWidget {
               controller: _controller,
               hintText: "Search for a team...",
             ),
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.only(bottom: kBottomNavigationBarHeight),
-                child: Center(
-                  child: FullScreenMessage(
-                    icon: Icons.search,
-                    message:
-                        "Search for a team by name or number using the search bar above.",
-                  ),
-                ),
-              ),
-            ),
+            _SearchMessage(),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SearchMessage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Padding(
+        padding: EdgeInsets.only(bottom: kBottomNavigationBarHeight),
+        child: Center(
+          child: FullScreenMessage(
+            icon: Icons.search,
+            message:
+                "Search for a team by name or number using the search bar above.",
+          ),
         ),
       ),
     );
