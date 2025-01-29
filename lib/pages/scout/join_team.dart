@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../components/full_screen_message.dart';
 import '../../components/searchable_text_field.dart';
+import '../../components/team_card.dart';
+import '../../supabase/database.dart';
 
 class JoinTeamPage extends StatelessWidget {
   final _controller = TextEditingController();
@@ -25,10 +27,35 @@ class JoinTeamPage extends StatelessWidget {
               controller: _controller,
               hintText: "Search for a team...",
             ),
-            _SearchMessage(),
+            ValueListenableBuilder<TextEditingValue>(
+              valueListenable: _controller,
+              builder: (context, value, child) {
+                if (value.text.isNotEmpty) {
+                  return const _TeamList();
+                } else {
+                  return _SearchMessage();
+                }
+              },
+            )
           ],
         ),
       ),
+    );
+  }
+}
+
+class _TeamList extends StatelessWidget {
+  const _TeamList({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        SizedBox(height: 16.0),
+        // Use a ListView here to display TeamCards based on the search query
+      ],
     );
   }
 }

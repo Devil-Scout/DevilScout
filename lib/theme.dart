@@ -70,6 +70,7 @@ final ThemeData lightTheme = ThemeData(
     surface: _surfaceColorLight,
     onSurface: _onSurfaceColorLight,
     onSurfaceVariant: _onSurfaceColorLightVariant,
+    surfaceContainer: Colors.grey[200],
     surfaceTint: Colors.transparent,
   ),
   appBarTheme: AppBarTheme(
