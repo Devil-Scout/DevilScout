@@ -28,7 +28,7 @@ class TeamRegistration with _$TeamRegistration {
     required int number,
     required bool verified,
     required DateTime createdAt,
-    required Uuid createdBy,
+    Uuid? createdBy,
     required String name,
   }) = _TeamRegistration;
 
@@ -88,7 +88,12 @@ class TeamsService {
         .select('number, name, country, province, city, registration:teams(*)')
         .eq('number', teamNum)
         .maybeSingle();
-    return data?.parse(Team.fromJson);
+    try {
+      return data?.parse(Team.fromJson);
+    } catch (e) {
+      print(e);
+      return null;
+    }
   }
 
   Future<List<int>> searchTeams({

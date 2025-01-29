@@ -1,14 +1,42 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../components/full_screen_message.dart';
 import '../../components/searchable_text_field.dart';
 import '../../components/team_card.dart';
+import '../../supabase/core/teams.dart';
 import '../../supabase/database.dart';
 
-class JoinTeamPage extends StatelessWidget {
-  final _controller = TextEditingController();
+class JoinTeamPage extends StatefulWidget {
+  const JoinTeamPage({super.key});
 
-  JoinTeamPage({super.key});
+  @override
+  State<JoinTeamPage> createState() => _JoinTeamPageState();
+}
+
+class _JoinTeamPageState extends State<JoinTeamPage> {
+  static const debounce = Duration(milliseconds: 500);
+
+  final _controller = TextEditingController();
+  Timer? _timer;
+  List<Team> _teams = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller.addListener(() {
+      _timer?.cancel();
+      _timer = Timer(debounce, _updateSearch);
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,40 +55,69 @@ class JoinTeamPage extends StatelessWidget {
               controller: _controller,
               hintText: "Search for a team...",
             ),
-            ValueListenableBuilder<TextEditingValue>(
-              valueListenable: _controller,
-              builder: (context, value, child) {
-                if (value.text.isNotEmpty) {
-                  return const _TeamList();
-                } else {
-                  return _SearchMessage();
-                }
-              },
-            )
+            Builder(builder: (context) {
+              if (_teams.isEmpty) {
+                return const _SearchMessage();
+              } else {
+                return _TeamList(teams: _teams);
+              }
+            }),
           ],
         ),
       ),
     );
   }
+
+  void _updateSearch() async {
+    final timer = _timer;
+    final query = _controller.text;
+    if (query.trim().isEmpty) {
+      setState(() {
+        _teams = [];
+      });
+      return;
+    }
+
+    final teamsDb = Database.of(context).teams;
+
+    final teamNums = await teamsDb.searchTeams(query: _controller.text);
+    final teams = await Future.wait([
+      for (final teamNum in teamNums) teamsDb.getTeam(teamNum: teamNum),
+    ]);
+
+    if (identical(_timer, timer)) {
+      setState(() {
+        _teams = teams.nonNulls.toList();
+      });
+    }
+  }
 }
 
 class _TeamList extends StatelessWidget {
   const _TeamList({
-    super.key,
-  });
+    required List<Team> teams,
+  }) : _teams = teams;
+
+  final List<Team> _teams;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(height: 16.0),
-        // Use a ListView here to display TeamCards based on the search query
+        const SizedBox(height: 16.0),
+        ListView.builder(
+          shrinkWrap: true,
+          itemCount: _teams.length,
+          itemBuilder: (context, index) => TeamCard(team: _teams[index]),
+        ),
       ],
     );
   }
 }
 
 class _SearchMessage extends StatelessWidget {
+  const _SearchMessage();
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
