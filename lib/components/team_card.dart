@@ -30,10 +30,10 @@ class TeamCard extends StatelessWidget {
             ),
         subtitle: Text("Team ${team.number} | ${team.city}, ${team.province}"),
         subtitleTextStyle: Theme.of(context).textTheme.bodySmall,
-        trailing: Icon(
-          Icons.error_outline,
-          color: Theme.of(context).colorScheme.error,
-        ),
+        trailing: team.registration == null
+            ? Icon(Icons.error_outline,
+                color: Theme.of(context).colorScheme.error)
+            : null,
       ),
     );
   }
