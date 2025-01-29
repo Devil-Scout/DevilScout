@@ -20,7 +20,13 @@ class TeamCard extends StatelessWidget {
       margin: EdgeInsets.zero,
       child: ListTile(
         leading: Image.network(
-          "https://www.thebluealliance.com/avatar/${DateTime.now().year}/frc1559.png",
+          "https://www.thebluealliance.com/avatar/${DateTime.now().year}/frc${team.number}.png",
+          errorBuilder: (_, __, ___) => const Icon(
+            Icons.groups,
+            size: 40,
+          ),
+          width: 40,
+          height: 40,
         ),
         title: Text(team.name),
         titleTextStyle: Theme.of(context).textTheme.displaySmall!.copyWith(
