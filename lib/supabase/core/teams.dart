@@ -47,6 +47,8 @@ class TeamsRepository {
       : _teamsCache = Cache(
           expiration: const Duration(minutes: 30),
           origin: _service.getTeam,
+          originMultiple: _service.getTeams,
+          key: (team) => team.number,
         );
 
   Future<Team?> getTeam({
@@ -54,6 +56,12 @@ class TeamsRepository {
     bool forceOrigin = false,
   }) =>
       _teamsCache.get(key: teamNum, forceOrigin: forceOrigin);
+
+  Future<List<Team>> getTeams({
+    required Iterable<int> teamNums,
+    bool forceOrigin = false,
+  }) =>
+      _teamsCache.getMultiple(keys: teamNums, forceOrigin: forceOrigin);
 
   Future<List<int>> searchTeams({
     required String query,
@@ -88,12 +96,15 @@ class TeamsService {
         .select('number, name, country, province, city, registration:teams(*)')
         .eq('number', teamNum)
         .maybeSingle();
-    try {
-      return data?.parse(Team.fromJson);
-    } catch (e) {
-      print(e);
-      return null;
-    }
+    return data?.parse(Team.fromJson);
+  }
+
+  Future<List<Team>> getTeams(Iterable<int> teamNums) async {
+    final data = await _supabase
+        .from('frc_teams')
+        .select('number, name, country, province, city, registration:teams(*)')
+        .inFilter('number', teamNums.toList());
+    return data.parse(Team.fromJson);
   }
 
   Future<List<int>> searchTeams({

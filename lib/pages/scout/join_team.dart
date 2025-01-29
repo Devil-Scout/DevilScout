@@ -81,9 +81,7 @@ class _JoinTeamPageState extends State<JoinTeamPage> {
     final teamsDb = Database.of(context).teams;
 
     final teamNums = await teamsDb.searchTeams(query: _controller.text);
-    final teams = await Future.wait([
-      for (final teamNum in teamNums) teamsDb.getTeam(teamNum: teamNum),
-    ]);
+    final teams = await teamsDb.getTeams(teamNums: teamNums);
 
     if (identical(_timer, timer)) {
       setState(() {
