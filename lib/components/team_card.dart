@@ -4,12 +4,10 @@ import '../supabase/core/teams.dart';
 
 class TeamCard extends StatelessWidget {
   final Team team;
-  final bool showCreatedChip;
 
   const TeamCard({
     super.key,
     required this.team,
-    this.showCreatedChip = false,
   });
 
   @override
