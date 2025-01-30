@@ -134,7 +134,7 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
             email: _emailController.text,
             password: _passwordController.text,
           );
-    } catch (e) {
+    } on Object {
       // TODO: notify user of error
     }
   }

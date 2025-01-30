@@ -136,7 +136,7 @@ class LoginSelectPage extends StatelessWidget {
   Future<void> _loginWithSso(BuildContext context, SsoProvider provider) async {
     try {
       await Database.of(context).auth.signInWithSso(provider);
-    } catch (e) {
+    } on Object {
       // TODO: notify user of error
     }
   }

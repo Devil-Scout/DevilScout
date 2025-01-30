@@ -42,8 +42,7 @@ class _MainAppState extends State<MainApp> {
         // case AuthChangeEvent.tokenRefreshed:
         // case AuthChangeEvent.userUpdated:
         // case AuthChangeEvent.mfaChallengeVerified:
-        default:
-          break;
+        default: // ignore the rest
       }
     });
   }
