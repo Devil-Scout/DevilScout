@@ -19,8 +19,9 @@ class _JoinTeamPageState extends State<JoinTeamPage> {
   static const debounce = Duration(milliseconds: 100);
 
   final _controller = TextEditingController();
+
   Timer? _timer;
-  List<Team> _teams = [];
+  Future<List<Team>> _teams = Future.value([]);
 
   @override
   void initState() {
@@ -28,7 +29,14 @@ class _JoinTeamPageState extends State<JoinTeamPage> {
 
     _controller.addListener(() {
       _timer?.cancel();
-      _timer = Timer(debounce, _updateSearch);
+
+      // Don't delay for empty queries
+      final query = _controller.text;
+      if (query.trim().isEmpty) {
+        _updateSearch();
+      } else {
+        _timer = Timer(debounce, _updateSearch);
+      }
     });
   }
 
@@ -36,6 +44,21 @@ class _JoinTeamPageState extends State<JoinTeamPage> {
   void dispose() {
     _timer?.cancel();
     super.dispose();
+  }
+
+  void _updateSearch() {
+    setState(() {
+      _teams = _getTeams(_controller.text);
+    });
+  }
+
+  Future<List<Team>> _getTeams([String query = '']) async {
+    if (query.trim().isEmpty) return [];
+
+    final teamsDb = Database.of(context).teams;
+    final teamNums = await teamsDb.searchTeams(query: query);
+    final teams = await teamsDb.getTeams(teamNums: teamNums);
+    return teams;
   }
 
   @override
@@ -60,40 +83,26 @@ class _JoinTeamPageState extends State<JoinTeamPage> {
               child: Divider(),
             ),
             Expanded(
-              child: Builder(builder: (context) {
-                if (_teams.isEmpty) {
-                  return const _SearchMessage();
-                } else {
-                  return _TeamList(teams: _teams);
-                }
-              }),
+              child: FutureBuilder(
+                future: _teams,
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return const CircularProgressIndicator();
+                  }
+
+                  final teams = snapshot.requireData;
+                  if (teams.isEmpty) {
+                    return const _SearchMessage();
+                  } else {
+                    return _TeamList(teams: snapshot.requireData);
+                  }
+                },
+              ),
             ),
           ],
         ),
       ),
     );
-  }
-
-  void _updateSearch() async {
-    final timer = _timer;
-    final query = _controller.text;
-    if (query.trim().isEmpty) {
-      setState(() {
-        _teams = [];
-      });
-      return;
-    }
-
-    final teamsDb = Database.of(context).teams;
-
-    final teamNums = await teamsDb.searchTeams(query: _controller.text);
-    final teams = await teamsDb.getTeams(teamNums: teamNums);
-
-    if (identical(_timer, timer)) {
-      setState(() {
-        _teams = teams.nonNulls.toList();
-      });
-    }
   }
 }
 
@@ -107,11 +116,12 @@ class _TeamList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-        shrinkWrap: true,
-        itemCount: _teams.length,
-        itemBuilder: (context, index) => TeamCard(team: _teams[index]),
-        separatorBuilder: (context, index) => const SizedBox(height: 6.0),
-        padding: EdgeInsets.symmetric(vertical: 6.0));
+      shrinkWrap: true,
+      itemCount: _teams.length,
+      itemBuilder: (context, index) => TeamCard(team: _teams[index]),
+      separatorBuilder: (context, index) => const SizedBox(height: 6.0),
+      padding: EdgeInsets.symmetric(vertical: 6.0),
+    );
   }
 }
 

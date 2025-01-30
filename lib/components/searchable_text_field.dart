@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class SearchableTextField extends StatefulWidget {
+class SearchableTextField extends StatelessWidget {
   final TextEditingController controller;
 
   final String hintText;
@@ -12,33 +12,28 @@ class SearchableTextField extends StatefulWidget {
   });
 
   @override
-  State<SearchableTextField> createState() => SearchableTextFieldState();
-}
-
-class SearchableTextFieldState extends State<SearchableTextField> {
-  @override
   Widget build(BuildContext context) {
     return TextField(
-      controller: widget.controller,
-      onChanged: (value) => setState(() {}),
+      controller: controller,
       style: Theme.of(context).textTheme.bodyMedium,
       decoration: InputDecoration(
         prefixIcon: Icon(Icons.search, size: 18.0),
-        hintText: widget.hintText,
+        hintText: hintText,
         hintStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
-        suffixIcon: widget.controller.text.isEmpty
-            ? null
-            : IconButton(
-                onPressed: () {
-                  setState(() {
-                    widget.controller.clear();
-                  });
-                },
-                icon: Icon(Icons.clear),
-                iconSize: 18.0,
-              ),
+        suffixIcon: ValueListenableBuilder(
+          valueListenable: controller,
+          builder: (_, value, child) =>
+              value.text.isEmpty ? const SizedBox.shrink() : child!,
+          child: IconButton(
+            onPressed: () {
+              controller.clear();
+            },
+            icon: Icon(Icons.clear),
+            iconSize: 18.0,
+          ),
+        ),
       ),
     );
   }

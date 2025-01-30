@@ -33,9 +33,13 @@ class TeamCard extends StatelessWidget {
         titleTextStyle: Theme.of(context).textTheme.displaySmall!.copyWith(
               fontSize: 16.0,
             ),
-        subtitle: location.isEmpty
-            ? Text("Team ${team.number}")
-            : Text("Team ${team.number} | $location", overflow: TextOverflow.ellipsis, maxLines: 1,),
+        subtitle: Text(
+          location.isEmpty
+              ? "Team ${team.number}"
+              : "Team ${team.number} | $location",
+          overflow: TextOverflow.ellipsis,
+          maxLines: 1,
+        ),
         subtitleTextStyle: Theme.of(context).textTheme.bodySmall,
         trailing: team.registration == null
             ? Icon(Icons.error_outline,
