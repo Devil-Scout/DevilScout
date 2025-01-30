@@ -44,11 +44,11 @@ GoRoute _loginRoutes() {
     routes: [
       GoRoute(
         path: 'email',
-        builder: (context, state) => const EmailLoginPage(),
+        builder: (context, state) => EmailLoginPage(),
         routes: [
           GoRoute(
             path: 'signup',
-            builder: (context, state) => const EmailSignUpPage(),
+            builder: (context, state) => EmailSignUpPage(),
           )
         ],
       )

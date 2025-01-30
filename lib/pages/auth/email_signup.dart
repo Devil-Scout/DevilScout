@@ -5,20 +5,13 @@ import '../../components/labeled_text_field.dart';
 import '../../router.dart';
 import '../../supabase/database.dart';
 
-class EmailSignUpPage extends StatefulWidget {
-  const EmailSignUpPage({super.key});
+class EmailSignUpPage extends StatelessWidget {
+  EmailSignUpPage({super.key});
 
-  @override
-  State<EmailSignUpPage> createState() => _EmailSignUpPageState();
-}
-
-class _EmailSignUpPageState extends State<EmailSignUpPage> {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _verifyController = TextEditingController();
-
-  bool _signupButtonActive = false;
 
   @override
   Widget build(BuildContext context) {
@@ -37,14 +30,12 @@ class _EmailSignUpPageState extends State<EmailSignUpPage> {
                   label: "Full Name",
                   inputType: TextInputType.name,
                   controller: _nameController,
-                  onChanged: _validateForm,
                 ),
                 const SizedBox(height: 14.0),
                 LabeledTextField(
                   label: "Email",
                   inputType: TextInputType.emailAddress,
                   controller: _emailController,
-                  onChanged: _validateForm,
                 ),
                 const SizedBox(height: 14.0),
                 LabeledTextField(
@@ -52,7 +43,6 @@ class _EmailSignUpPageState extends State<EmailSignUpPage> {
                   inputType: TextInputType.text,
                   obscureText: true,
                   controller: _passwordController,
-                  onChanged: _validateForm,
                 ),
                 const SizedBox(height: 14.0),
                 LabeledTextField(
@@ -60,7 +50,6 @@ class _EmailSignUpPageState extends State<EmailSignUpPage> {
                   inputType: TextInputType.text,
                   obscureText: true,
                   controller: _verifyController,
-                  onChanged: _validateForm,
                 ),
                 const SizedBox(height: 40.0),
                 _bottomButtons(context),
@@ -101,11 +90,21 @@ class _EmailSignUpPageState extends State<EmailSignUpPage> {
         ),
         const SizedBox(width: 10.0),
         Expanded(
-          child: ElevatedButton(
-            onPressed: _signupButtonActive ? () => _createUser(context) : null,
-            child: const Text("Sign Up"),
+          child: ListenableBuilder(
+            listenable: Listenable.merge([
+              _nameController,
+              _emailController,
+              _passwordController,
+              _verifyController,
+            ]),
+            builder: (context, _) {
+              return ElevatedButton(
+                onPressed: _isFormValid() ? () => _createUser(context) : null,
+                child: const Text('Sign Up'),
+              );
+            },
           ),
-        )
+        ),
       ],
     );
   }
@@ -122,12 +121,9 @@ class _EmailSignUpPageState extends State<EmailSignUpPage> {
     }
   }
 
-  void _validateForm([String? _]) {
-    setState(() {
-      _signupButtonActive = _nameController.text.isNotEmpty &&
-          EmailValidator.validate(_emailController.text) &&
-          _passwordController.text.isNotEmpty &&
-          _passwordController.text == _verifyController.text;
-    });
-  }
+  bool _isFormValid() =>
+      _nameController.text.isNotEmpty &&
+      EmailValidator.validate(_emailController.text) &&
+      _passwordController.text.isNotEmpty &&
+      _passwordController.text == _verifyController.text;
 }
