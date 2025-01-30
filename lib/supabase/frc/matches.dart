@@ -140,7 +140,9 @@ class FrcMatchesService {
   }) async {
     final data = await _supabase
         .from('frc_matches')
-        .select('*, teams:frc_match_teams!inner(*), result:frc_match_results(*)')
+        .select(
+          '*, teams:frc_match_teams!inner(*), result:frc_match_results(*)',
+        )
         .like('key', '$season%')
         .eq('teams.team_num', teamNum);
     return data.parse(FrcMatch.fromJson);
