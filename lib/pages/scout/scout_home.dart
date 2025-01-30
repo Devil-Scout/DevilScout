@@ -18,7 +18,7 @@ class ScoutHomePage extends StatelessWidget {
             children: [
               FullScreenMessage(
                 icon: Icons.info_outline,
-                message: "You must join a team before you can start scouting.",
+                message: 'You must join a team before you can start scouting.',
               ),
               const SizedBox(height: 24.0),
               Row(
@@ -26,7 +26,7 @@ class ScoutHomePage extends StatelessWidget {
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () => router.go('/scout/join-team'),
-                      child: Text("Join a Team"),
+                      child: Text('Join a Team'),
                     ),
                   ),
                 ],

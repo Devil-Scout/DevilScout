@@ -30,14 +30,14 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
             _headerText(context),
             const SizedBox(height: 40.0),
             LabeledTextField(
-              label: "Email",
+              label: 'Email',
               inputType: TextInputType.emailAddress,
               controller: _emailController,
               onChanged: _validateForm,
             ),
             const SizedBox(height: 14.0),
             LabeledTextField(
-              label: "Password",
+              label: 'Password',
               inputType: TextInputType.text,
               obscureText: true,
               controller: _passwordController,
@@ -62,12 +62,12 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Ready to scout?",
+            'Ready to scout?',
             style: Theme.of(context).textTheme.displayMedium,
           ),
           const SizedBox(height: 6.0),
           Text(
-            "Enter your information to access your account",
+            'Enter your information to access your account',
             style: Theme.of(context).textTheme.bodyLarge,
           )
         ],
@@ -78,7 +78,7 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
   Widget _forgotPasswordButton(BuildContext context) {
     return TextButton(
       onPressed: () {},
-      child: const Text("Forgot password?"),
+      child: const Text('Forgot password?'),
     );
   }
 
@@ -97,7 +97,7 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
             // TODO: style button when inactive using MaterialState.disabled
             onPressed:
                 _loginButtonActive ? () => _loginWithEmail(context) : null,
-            child: const Text("Sign In"),
+            child: const Text('Sign In'),
           ),
         )
       ],
@@ -114,7 +114,7 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
         const SizedBox(width: 6.0),
         TextButton(
           onPressed: () => router.go('/login/email/signup'),
-          child: const Text("Create one"),
+          child: const Text('Create one'),
         )
       ],
     );

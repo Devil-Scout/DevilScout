@@ -65,7 +65,7 @@ class _JoinTeamPageState extends State<JoinTeamPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Join a Team"),
+        title: Text('Join a Team'),
       ),
       body: SafeArea(
         minimum: const EdgeInsets.symmetric(
@@ -76,7 +76,7 @@ class _JoinTeamPageState extends State<JoinTeamPage> {
           children: [
             SearchableTextField(
               controller: _controller,
-              hintText: "Search for a team...",
+              hintText: 'Search for a team...',
             ),
             Padding(
               padding: const EdgeInsets.only(top: 6.0),
@@ -136,7 +136,7 @@ class _SearchMessage extends StatelessWidget {
         child: FullScreenMessage(
           icon: Icons.search,
           message:
-              "Search for a team by name or number using the search bar above.",
+              'Search for a team by name or number using the search bar above.',
         ),
       ),
     );

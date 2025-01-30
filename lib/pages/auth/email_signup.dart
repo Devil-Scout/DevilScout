@@ -34,21 +34,21 @@ class _EmailSignUpPageState extends State<EmailSignUpPage> {
                 _headerText(context),
                 const SizedBox(height: 40.0),
                 LabeledTextField(
-                  label: "Full Name",
+                  label: 'Full Name',
                   inputType: TextInputType.name,
                   controller: _nameController,
                   onChanged: _validateForm,
                 ),
                 const SizedBox(height: 14.0),
                 LabeledTextField(
-                  label: "Email",
+                  label: 'Email',
                   inputType: TextInputType.emailAddress,
                   controller: _emailController,
                   onChanged: _validateForm,
                 ),
                 const SizedBox(height: 14.0),
                 LabeledTextField(
-                  label: "Password",
+                  label: 'Password',
                   inputType: TextInputType.text,
                   obscureText: true,
                   controller: _passwordController,
@@ -56,7 +56,7 @@ class _EmailSignUpPageState extends State<EmailSignUpPage> {
                 ),
                 const SizedBox(height: 14.0),
                 LabeledTextField(
-                  label: "Verify Password",
+                  label: 'Verify Password',
                   inputType: TextInputType.text,
                   obscureText: true,
                   controller: _verifyController,
@@ -79,12 +79,12 @@ class _EmailSignUpPageState extends State<EmailSignUpPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Welcome!",
+            'Welcome!',
             style: Theme.of(context).textTheme.displayMedium,
           ),
           const SizedBox(height: 6.0),
           Text(
-            "Level up your scouting with the DevilScout platform",
+            'Level up your scouting with the DevilScout platform',
             style: Theme.of(context).textTheme.bodyLarge,
           )
         ],
@@ -103,7 +103,7 @@ class _EmailSignUpPageState extends State<EmailSignUpPage> {
         Expanded(
           child: ElevatedButton(
             onPressed: _signupButtonActive ? () => _createUser(context) : null,
-            child: const Text("Sign Up"),
+            child: const Text('Sign Up'),
           ),
         )
       ],

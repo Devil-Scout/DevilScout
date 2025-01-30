@@ -39,12 +39,12 @@ class LoginSelectPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Ready to scout?",
+            'Ready to scout?',
             style: Theme.of(context).textTheme.displayMedium,
           ),
           const SizedBox(height: 6.0),
           Text(
-            "Choose your sign in method below to get started",
+            'Choose your sign in method below to get started',
             style: Theme.of(context).textTheme.bodyLarge,
           )
         ],
@@ -85,7 +85,7 @@ class LoginSelectPage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Text(
-              "or",
+              'or',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
           ),
@@ -104,7 +104,7 @@ class LoginSelectPage extends StatelessWidget {
             icon: Icon(Icons.mail_outline),
             label: const Padding(
               padding: EdgeInsets.only(left: 6.0),
-              child: Text("Continue with Email"),
+              child: Text('Continue with Email'),
             ),
           ),
         ),
@@ -117,7 +117,7 @@ class LoginSelectPage extends StatelessWidget {
       child: TextButton.icon(
         onPressed: () {},
         icon: Icon(Icons.help_outline, size: 22.0),
-        label: const Text("Why do I need to sign in?"),
+        label: const Text('Why do I need to sign in?'),
         style: Theme.of(context).textButtonTheme.style!.copyWith(
               foregroundColor: WidgetStatePropertyAll(Colors.grey[600]),
               overlayColor: WidgetStatePropertyAll(Colors.grey[200]),

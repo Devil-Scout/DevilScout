@@ -35,8 +35,8 @@ class TeamCard extends StatelessWidget {
             ),
         subtitle: Text(
           location.isEmpty
-              ? "Team ${team.number}"
-              : "Team ${team.number} | $location",
+              ? 'Team ${team.number}'
+              : 'Team ${team.number} | $location',
           overflow: TextOverflow.ellipsis,
           maxLines: 1,
         ),
