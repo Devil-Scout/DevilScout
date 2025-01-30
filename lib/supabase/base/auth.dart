@@ -10,11 +10,11 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 enum SsoProvider {
   apple(
     name: 'Apple',
-    iconPath: "assets/images/logos/apple-logo.svg",
+    iconPath: 'assets/images/logos/apple-logo.svg',
   ),
   google(
     name: 'Google',
-    iconPath: "assets/images/logos/g-logo.svg",
+    iconPath: 'assets/images/logos/g-logo.svg',
   );
 
   final String name;

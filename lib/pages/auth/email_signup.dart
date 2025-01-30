@@ -24,7 +24,7 @@ class _EmailSignUpPageState extends State<EmailSignUpPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        minimum: const EdgeInsets.symmetric(horizontal: 32.0),
+        minimum: const EdgeInsets.symmetric(horizontal: 32),
         child: Center(
           child: SingleChildScrollView(
             child: Column(
@@ -32,37 +32,37 @@ class _EmailSignUpPageState extends State<EmailSignUpPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _headerText(context),
-                const SizedBox(height: 40.0),
+                const SizedBox(height: 40),
                 LabeledTextField(
-                  label: "Full Name",
+                  label: 'Full Name',
                   inputType: TextInputType.name,
                   controller: _nameController,
                   onChanged: _validateForm,
                 ),
-                const SizedBox(height: 14.0),
+                const SizedBox(height: 14),
                 LabeledTextField(
-                  label: "Email",
+                  label: 'Email',
                   inputType: TextInputType.emailAddress,
                   controller: _emailController,
                   onChanged: _validateForm,
                 ),
-                const SizedBox(height: 14.0),
+                const SizedBox(height: 14),
                 LabeledTextField(
-                  label: "Password",
+                  label: 'Password',
                   inputType: TextInputType.text,
                   obscureText: true,
                   controller: _passwordController,
                   onChanged: _validateForm,
                 ),
-                const SizedBox(height: 14.0),
+                const SizedBox(height: 14),
                 LabeledTextField(
-                  label: "Verify Password",
+                  label: 'Verify Password',
                   inputType: TextInputType.text,
                   obscureText: true,
                   controller: _verifyController,
                   onChanged: _validateForm,
                 ),
-                const SizedBox(height: 40.0),
+                const SizedBox(height: 40),
                 _bottomButtons(context),
               ],
             ),
@@ -74,19 +74,19 @@ class _EmailSignUpPageState extends State<EmailSignUpPage> {
 
   Widget _headerText(BuildContext context) {
     return ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 256.0),
+      constraints: const BoxConstraints(maxWidth: 256),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Welcome!",
+            'Welcome!',
             style: Theme.of(context).textTheme.displayMedium,
           ),
-          const SizedBox(height: 6.0),
+          const SizedBox(height: 6),
           Text(
-            "Level up your scouting with the DevilScout platform",
+            'Level up your scouting with the DevilScout platform',
             style: Theme.of(context).textTheme.bodyLarge,
-          )
+          ),
         ],
       ),
     );
@@ -97,20 +97,20 @@ class _EmailSignUpPageState extends State<EmailSignUpPage> {
       children: [
         OutlinedButton(
           onPressed: router.pop,
-          child: Icon(Icons.arrow_back),
+          child: const Icon(Icons.arrow_back),
         ),
-        const SizedBox(width: 10.0),
+        const SizedBox(width: 10),
         Expanded(
           child: ElevatedButton(
             onPressed: _signupButtonActive ? () => _createUser(context) : null,
-            child: const Text("Sign Up"),
+            child: const Text('Sign Up'),
           ),
-        )
+        ),
       ],
     );
   }
 
-  void _createUser(BuildContext context) async {
+  Future<void> _createUser(BuildContext context) async {
     try {
       await Database.of(context).auth.signUpWithEmail(
             name: _nameController.text,
