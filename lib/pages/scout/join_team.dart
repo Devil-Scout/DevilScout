@@ -16,7 +16,7 @@ class JoinTeamPage extends StatefulWidget {
 }
 
 class _JoinTeamPageState extends State<JoinTeamPage> {
-  static const debounce = Duration(milliseconds: 500);
+  static const debounce = Duration(milliseconds: 100);
 
   final _controller = TextEditingController();
   Timer? _timer;
@@ -55,13 +55,19 @@ class _JoinTeamPageState extends State<JoinTeamPage> {
               controller: _controller,
               hintText: "Search for a team...",
             ),
-            Builder(builder: (context) {
-              if (_teams.isEmpty) {
-                return const _SearchMessage();
-              } else {
-                return _TeamList(teams: _teams);
-              }
-            }),
+            Padding(
+              padding: const EdgeInsets.only(top: 6.0),
+              child: Divider(),
+            ),
+            Expanded(
+              child: Builder(builder: (context) {
+                if (_teams.isEmpty) {
+                  return const _SearchMessage();
+                } else {
+                  return _TeamList(teams: _teams);
+                }
+              }),
+            ),
           ],
         ),
       ),
@@ -100,16 +106,12 @@ class _TeamList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const SizedBox(height: 16.0),
-        ListView.builder(
-          shrinkWrap: true,
-          itemCount: _teams.length,
-          itemBuilder: (context, index) => TeamCard(team: _teams[index]),
-        ),
-      ],
-    );
+    return ListView.separated(
+        shrinkWrap: true,
+        itemCount: _teams.length,
+        itemBuilder: (context, index) => TeamCard(team: _teams[index]),
+        separatorBuilder: (context, index) => const SizedBox(height: 6.0),
+        padding: EdgeInsets.symmetric(vertical: 6.0));
   }
 }
 
@@ -118,15 +120,13 @@ class _SearchMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Padding(
-        padding: EdgeInsets.only(bottom: kBottomNavigationBarHeight),
-        child: Center(
-          child: FullScreenMessage(
-            icon: Icons.search,
-            message:
-                "Search for a team by name or number using the search bar above.",
-          ),
+    return Padding(
+      padding: EdgeInsets.only(bottom: kBottomNavigationBarHeight),
+      child: Center(
+        child: FullScreenMessage(
+          icon: Icons.search,
+          message:
+              "Search for a team by name or number using the search bar above.",
         ),
       ),
     );
