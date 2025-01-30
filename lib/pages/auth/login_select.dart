@@ -60,7 +60,7 @@ class LoginSelectPage extends StatelessWidget {
       children: [
         Expanded(
           child: OutlinedButton.icon(
-            onPressed: () => _loginWithSso(context, provider),
+            onPressed: () async => _loginWithSso(context, provider),
             icon: SvgPicture.asset(
               provider.iconPath,
               width: 24,

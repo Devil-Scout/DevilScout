@@ -139,7 +139,6 @@ final ThemeData lightTheme = ThemeData(
     ),
   ),
   inputDecorationTheme: InputDecorationTheme(
-    filled: false,
     enabledBorder: const OutlineInputBorder(
       borderSide: BorderSide(color: _outlineBorderColorLight),
       borderRadius: BorderRadius.all(Radius.circular(10.7)),

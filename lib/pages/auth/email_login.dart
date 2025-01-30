@@ -95,8 +95,9 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
         Expanded(
           child: ElevatedButton(
             // TODO: style button when inactive using MaterialState.disabled
-            onPressed:
-                _loginButtonActive ? () => _loginWithEmail(context) : null,
+            onPressed: _loginButtonActive
+                ? () async => _loginWithEmail(context)
+                : null,
             child: const Text('Sign In'),
           ),
         ),

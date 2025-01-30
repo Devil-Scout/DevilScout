@@ -73,13 +73,13 @@ class FrcMatchesRepository {
   CacheAll<String, FrcMatch> _matchesCache(String eventKey) => CacheAll(
         expiration: const Duration(minutes: 30),
         origin: _service.getMatch,
-        originAll: () => _service.getEventMatches(eventKey),
+        originAll: () async => _service.getEventMatches(eventKey),
         key: (event) => event.key,
       );
 
   Cache<int, List<FrcMatch>> _teamMatchesCache(int teamNum) => Cache(
         expiration: const Duration(minutes: 30),
-        origin: (season) =>
+        origin: (season) async =>
             _service.getTeamMatches(season: season, teamNum: teamNum),
       );
 

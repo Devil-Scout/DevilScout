@@ -102,7 +102,8 @@ class _EmailSignUpPageState extends State<EmailSignUpPage> {
         const SizedBox(width: 10),
         Expanded(
           child: ElevatedButton(
-            onPressed: _signupButtonActive ? () => _createUser(context) : null,
+            onPressed:
+                _signupButtonActive ? () async => _createUser(context) : null,
             child: const Text('Sign Up'),
           ),
         ),
