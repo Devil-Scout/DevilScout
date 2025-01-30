@@ -13,6 +13,11 @@ class TeamCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final location = [
+      team.city,
+      team.province,
+      team.country,
+    ].nonNulls.join(', ');
     return Card.filled(
       color: Theme.of(context).colorScheme.surfaceContainer,
       shape: RoundedRectangleBorder(
@@ -28,7 +33,9 @@ class TeamCard extends StatelessWidget {
         titleTextStyle: Theme.of(context).textTheme.displaySmall!.copyWith(
               fontSize: 16.0,
             ),
-        subtitle: Text("Team ${team.number} | ${team.city}, ${team.province}"),
+        subtitle: location.isEmpty
+            ? Text("Team ${team.number}")
+            : Text("Team ${team.number} | $location", overflow: TextOverflow.ellipsis, maxLines: 1,),
         subtitleTextStyle: Theme.of(context).textTheme.bodySmall,
         trailing: team.registration == null
             ? Icon(Icons.error_outline,
