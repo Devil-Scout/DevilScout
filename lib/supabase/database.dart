@@ -8,8 +8,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'base/auth.dart';
 import 'base/current_user.dart';
 import 'core/team_requests.dart';
-import 'core/teams.dart';
 import 'core/team_users.dart';
+import 'core/teams.dart';
 import 'frc/districts.dart';
 import 'frc/events.dart';
 import 'frc/matches.dart';
@@ -150,7 +150,7 @@ class CacheAll<K extends Object, V extends Object> extends Cache<K, V> {
   @protected
   final Future<Iterable<V>> Function() originAll;
   @protected
-  CacheEntry<Null>? allValues;
+  CacheEntry<void>? allValues;
 
   CacheAll({
     required super.expiration,
@@ -169,15 +169,19 @@ class CacheAll<K extends Object, V extends Object> extends Cache<K, V> {
       final data = await originAll();
       cache
         ..clear()
-        ..addEntries(data.map(
-          (value) => MapEntry(keyMapper(value), CacheEntry(value)),
-        ));
+        ..addEntries(
+          data.map(
+            (value) => MapEntry(keyMapper(value), CacheEntry(value)),
+          ),
+        );
       allValues = CacheEntry(null);
     }
 
-    return UnmodifiableListView(cache.values.map(
-      (entry) => entry.data,
-    ));
+    return UnmodifiableListView(
+      cache.values.map(
+        (entry) => entry.data,
+      ),
+    );
   }
 }
 

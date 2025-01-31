@@ -12,19 +12,19 @@ class LoginSelectPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        minimum: const EdgeInsets.symmetric(horizontal: 32.0),
+        minimum: const EdgeInsets.symmetric(horizontal: 32),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _headerText(context),
-            const SizedBox(height: 40.0),
+            const SizedBox(height: 40),
             _ssoButton(context, provider: SsoProvider.google),
-            const SizedBox(height: 14.0),
+            const SizedBox(height: 14),
             _ssoButton(context, provider: SsoProvider.apple),
             _divider(context),
             _emailButton(context),
-            const SizedBox(height: 16.0),
+            const SizedBox(height: 16),
             _signInInfo(context),
           ],
         ),
@@ -34,7 +34,7 @@ class LoginSelectPage extends StatelessWidget {
 
   Widget _headerText(BuildContext context) {
     return ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 256.0),
+      constraints: const BoxConstraints(maxWidth: 256),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -42,11 +42,11 @@ class LoginSelectPage extends StatelessWidget {
             'Ready to scout?',
             style: Theme.of(context).textTheme.displayMedium,
           ),
-          const SizedBox(height: 6.0),
+          const SizedBox(height: 6),
           Text(
             'Choose your sign in method below to get started',
             style: Theme.of(context).textTheme.bodyLarge,
-          )
+          ),
         ],
       ),
     );
@@ -60,14 +60,14 @@ class LoginSelectPage extends StatelessWidget {
       children: [
         Expanded(
           child: OutlinedButton.icon(
-            onPressed: () => _loginWithSso(context, provider),
+            onPressed: () async => _loginWithSso(context, provider),
             icon: SvgPicture.asset(
               provider.iconPath,
-              width: 24.0,
-              height: 24.0,
+              width: 24,
+              height: 24,
             ),
             label: Padding(
-              padding: EdgeInsets.only(left: 6.0),
+              padding: const EdgeInsets.only(left: 6),
               child: Text('Sign in with ${provider.name}'),
             ),
           ),
@@ -78,18 +78,18 @@ class LoginSelectPage extends StatelessWidget {
 
   Widget _divider(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 32.0),
+      padding: const EdgeInsets.symmetric(vertical: 32),
       child: Row(
         children: [
           const Expanded(child: Divider()),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            padding: const EdgeInsets.symmetric(horizontal: 8),
             child: Text(
               'or',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
           ),
-          const Expanded(child: Divider())
+          const Expanded(child: Divider()),
         ],
       ),
     );
@@ -101,9 +101,9 @@ class LoginSelectPage extends StatelessWidget {
         Expanded(
           child: ElevatedButton.icon(
             onPressed: () => router.go('/login/email'),
-            icon: Icon(Icons.mail_outline),
+            icon: const Icon(Icons.mail_outline),
             label: const Padding(
-              padding: EdgeInsets.only(left: 6.0),
+              padding: EdgeInsets.only(left: 6),
               child: Text('Continue with Email'),
             ),
           ),
@@ -116,7 +116,7 @@ class LoginSelectPage extends StatelessWidget {
     return Center(
       child: TextButton.icon(
         onPressed: () {},
-        icon: Icon(Icons.help_outline, size: 22.0),
+        icon: const Icon(Icons.help_outline, size: 22),
         label: const Text('Why do I need to sign in?'),
         style: Theme.of(context).textButtonTheme.style!.copyWith(
               foregroundColor: WidgetStatePropertyAll(Colors.grey[600]),
@@ -127,7 +127,7 @@ class LoginSelectPage extends StatelessWidget {
               ),
               tapTargetSize: MaterialTapTargetSize.padded,
               visualDensity: VisualDensity.standard,
-              padding: const WidgetStatePropertyAll(EdgeInsets.all(12.0)),
+              padding: const WidgetStatePropertyAll(EdgeInsets.all(12)),
             ),
       ),
     );
@@ -136,7 +136,7 @@ class LoginSelectPage extends StatelessWidget {
   Future<void> _loginWithSso(BuildContext context, SsoProvider provider) async {
     try {
       await Database.of(context).auth.signInWithSso(provider);
-    } catch (e) {
+    } on Object {
       // TODO: notify user of error
     }
   }

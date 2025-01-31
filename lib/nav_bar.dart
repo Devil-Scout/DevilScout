@@ -21,8 +21,8 @@ class NavBarWrapper extends StatelessWidget {
                   .colorScheme
                   .onSurface
                   .withValues(alpha: 0.08),
-              blurRadius: 6.0,
-              offset: const Offset(0.0, -3.0),
+              blurRadius: 6,
+              offset: const Offset(0, -3),
             ),
           ],
         ),

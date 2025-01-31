@@ -1,3 +1,4 @@
+// JsonKey not designed for use on constructor parameters
 // ignore_for_file: invalid_annotation_target
 
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -56,14 +57,15 @@ class FrcEvent with _$FrcEvent {
 (double, double)? _pointFromString(String? json) => json == null
     ? null
     : (
-        double.parse(json.substring(
-          1,
-          json.indexOf(','),
-        )),
-        double.parse(json.substring(
-          json.indexOf(',') + 1,
-          json.length - 1,
-        ))
+        double.parse(
+          json.substring(1, json.indexOf(',')),
+        ),
+        double.parse(
+          json.substring(
+            json.indexOf(',') + 1,
+            json.length - 1,
+          ),
+        )
       );
 
 class FrcEventsRepository {
@@ -90,7 +92,7 @@ class FrcEventsRepository {
     required String eventKey,
     bool forceOrigin = false,
   }) {
-    int season = int.parse(eventKey.substring(0, 4));
+    final season = int.parse(eventKey.substring(0, 4));
     return _eventsCaches
         .putIfAbsent(season, () => _cache(season))
         .get(key: eventKey, forceOrigin: forceOrigin);

@@ -10,10 +10,12 @@ import 'theme.dart';
 
 Future<void> main() async {
   await Database.initSupabase();
-  runApp(Provider(
-    create: (context) => Database.supabase(Supabase.instance.client),
-    child: const MainApp(),
-  ));
+  runApp(
+    Provider(
+      create: (context) => Database.supabase(Supabase.instance.client),
+      child: const MainApp(),
+    ),
+  );
 }
 
 class MainApp extends StatefulWidget {
@@ -32,19 +34,15 @@ class _MainAppState extends State<MainApp> {
       switch (data.event) {
         case AuthChangeEvent.signedIn:
           router.go('/home');
-          break;
         case AuthChangeEvent.signedOut:
           router.go('/login');
-          break;
         case AuthChangeEvent.initialSession:
           router.go(data.session == null ? '/login' : '/home');
-          break;
         // case AuthChangeEvent.passwordRecovery:
         // case AuthChangeEvent.tokenRefreshed:
         // case AuthChangeEvent.userUpdated:
         // case AuthChangeEvent.mfaChallengeVerified:
-        default:
-          break;
+        default: // ignore the rest
       }
     });
   }
