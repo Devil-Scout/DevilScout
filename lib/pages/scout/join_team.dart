@@ -6,6 +6,7 @@ import '../../components/full_screen_message.dart';
 import '../../components/searchable_text_field.dart';
 import '../../components/team_avatar.dart';
 import '../../components/team_card.dart';
+import '../../router.dart';
 import '../../supabase/core/teams.dart';
 import '../../supabase/database.dart';
 
@@ -184,10 +185,7 @@ class JoinTeamDialog extends StatelessWidget {
               padding: EdgeInsets.symmetric(vertical: 8),
               child: Divider(),
             ),
-            if (team.registration == null)
-              _RegisterCluster()
-            else
-              _JoinCluster(),
+            _JoinActionCluster(team: team),
           ],
         ),
       ),
@@ -195,13 +193,22 @@ class JoinTeamDialog extends StatelessWidget {
   }
 }
 
-class _RegisterCluster extends StatelessWidget {
+class _JoinActionCluster extends StatelessWidget {
+  final Team team;
+
+  const _JoinActionCluster({required this.team});
+
+  String get _textContent => team.isRegistered
+      ? 'By joining this team, your name will be visible to other team members.'
+      : 'This team has not yet been registered. By registering this team, you will become its admin.';
+  String get _actionLabel => team.isRegistered ? 'Join Team' : 'Register Team';
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Text(
-          'This team has not yet been registered. By registering this team, you will become an admin.',
+          _textContent,
           style: Theme.of(context).textTheme.bodyMedium,
         ),
         const SizedBox(height: 12),
@@ -209,11 +216,11 @@ class _RegisterCluster extends StatelessWidget {
           children: [
             Expanded(
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () => _onAction(context),
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size.fromHeight(50),
                 ),
-                child: const Text('Register Team'),
+                child: Text(_actionLabel),
               ),
             ),
           ],
@@ -226,9 +233,7 @@ class _RegisterCluster extends StatelessWidget {
                 style: OutlinedButton.styleFrom(
                   minimumSize: const Size.fromHeight(50),
                 ),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
+                onPressed: router.pop,
                 child: const Text('Cancel'),
               ),
             ),
@@ -237,49 +242,20 @@ class _RegisterCluster extends StatelessWidget {
       ],
     );
   }
-}
 
-class _JoinCluster extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(
-          'By requesting to join this team, your name and email address will be shared with team admins.',
-          style: Theme.of(context).textTheme.bodyMedium,
-        ),
-        const SizedBox(height: 12),
-        Row(
-          children: [
-            Expanded(
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size.fromHeight(50),
-                ),
-                child: const Text('Request to Join'),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        Row(
-          children: [
-            Expanded(
-              child: OutlinedButton(
-                style: OutlinedButton.styleFrom(
-                  minimumSize: const Size.fromHeight(50),
-                ),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('Cancel'),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
+  Future<void> _onAction(BuildContext context) async {
+    if (team.isRegistered) {
+      await context.database.teamRequests.requestToJoin(teamNum: team.number);
+    } else {
+      await context.database.teams
+          .createTeam(teamNum: team.number, name: team.name);
+    }
+    print('success');
+    // TODO: display ui notice
+    router
+      ..pop()
+      ..pop()
+      ..pushReplacement('/scout');
   }
 }
 
@@ -296,7 +272,10 @@ class _TeamInformation extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        TeamAvatarImage(year: DateTime.now().year, teamNum: team.number),
+        TeamAvatarImage(
+          year: DateTime.now().year,
+          teamNum: team.number,
+        ),
         const SizedBox(width: 16),
         Expanded(
           child: Column(

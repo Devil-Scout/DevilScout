@@ -2,9 +2,25 @@ import 'package:flutter/material.dart';
 
 import '../../components/full_screen_message.dart';
 import '../../router.dart';
+import '../../supabase/database.dart';
 
 class ScoutHomePage extends StatelessWidget {
   const ScoutHomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    if (!context.database.currentUser.isOnTeam) {
+      return const _JoinTeamMessage();
+    }
+
+    return const Center(
+      child: Text('Scout Page'),
+    );
+  }
+}
+
+class _JoinTeamMessage extends StatelessWidget {
+  const _JoinTeamMessage();
 
   @override
   Widget build(BuildContext context) {

@@ -81,6 +81,10 @@ class Database {
   }
 }
 
+extension DatabaseContext on BuildContext {
+  Database get database => Provider.of<Database>(this, listen: false);
+}
+
 class Cache<K extends Object, V extends Object> {
   @protected
   final Future<V?> Function(K) origin;

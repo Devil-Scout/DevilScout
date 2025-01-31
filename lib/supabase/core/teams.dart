@@ -9,6 +9,8 @@ part 'teams.g.dart';
 @immutable
 @freezed
 class Team with _$Team {
+  const Team._();
+
   const factory Team({
     required int number,
     required String name,
@@ -19,6 +21,8 @@ class Team with _$Team {
   }) = _Team;
 
   factory Team.fromJson(JsonObject json) => _$TeamFromJson(json);
+
+  bool get isRegistered => registration != null;
 }
 
 @immutable
@@ -118,11 +122,13 @@ class TeamsService {
   Future<void> createTeam({
     required int teamNum,
     required String name,
-  }) =>
-      _supabase.from('teams').insert({
-        'number': teamNum,
-        'name': name,
-      });
+  }) async {
+    await _supabase.from('teams').insert({
+      'number': teamNum,
+      'name': name,
+    });
+    await _supabase.auth.refreshSession();
+  }
 
   Future<void> deleteTeam(int teamNum) =>
       _supabase.from('teams').delete().eq('number', teamNum);
