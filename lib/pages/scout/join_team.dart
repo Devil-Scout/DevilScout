@@ -286,7 +286,6 @@ class _JoinCluster extends StatelessWidget {
 
 class _TeamInformation extends StatelessWidget {
   const _TeamInformation({
-    super.key,
     required this.team,
     required this.location,
   });
