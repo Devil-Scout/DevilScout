@@ -28,7 +28,7 @@ class LabeledTextField extends StatelessWidget {
           label,
           style: Theme.of(context).textTheme.bodyLarge,
         ),
-        const SizedBox(height: 8.0),
+        const SizedBox(height: 8),
         TextField(
           autocorrect: autocorrect,
           keyboardType: inputType,

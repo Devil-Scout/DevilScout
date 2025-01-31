@@ -18,17 +18,16 @@ class FrcSeason with _$FrcSeason {
 }
 
 class FrcSeasonsRepository {
-  final FrcSeasonsService _service;
   final CacheAll<int, FrcSeason> _seasonsCache;
 
   FrcSeasonsRepository.supabase(SupabaseClient supabase)
       : this(FrcSeasonsService(supabase));
 
-  FrcSeasonsRepository(this._service)
+  FrcSeasonsRepository(FrcSeasonsService service)
       : _seasonsCache = CacheAll(
           expiration: const Duration(minutes: 30),
-          origin: _service.getSeason,
-          originAll: _service.getAllSeasons,
+          origin: service.getSeason,
+          originAll: service.getAllSeasons,
           key: (season) => season.year,
         );
 

@@ -64,15 +64,15 @@ class QuestionsRepository {
   CacheAll<Uuid, QuestionNode> _questionsCache(int season) => CacheAll(
         expiration: const Duration(minutes: 30),
         origin: _service.getQuestion,
-        originAll: () => _service.getSeasonQuestions(season),
+        originAll: () async => _service.getSeasonQuestions(season),
         key: (node) => node.id,
       );
 
   CacheAll<Uuid, QuestionDetails> _detailsCache(int season) => CacheAll(
         expiration: const Duration(minutes: 30),
-        origin: (questionId) =>
+        origin: (questionId) async =>
             _service.getDetails(season: season, questionId: questionId),
-        originAll: () => _service.getSeasonDetails(season),
+        originAll: () async => _service.getSeasonDetails(season),
         key: (details) => details.questionId,
       );
 

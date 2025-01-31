@@ -32,7 +32,7 @@ GoRouter _router() {
           _analyzeBranch(),
           _settingsBranch(),
         ],
-      )
+      ),
     ],
   );
 }
@@ -49,9 +49,9 @@ GoRoute _loginRoutes() {
           GoRoute(
             path: 'signup',
             builder: (context, state) => const EmailSignUpPage(),
-          )
+          ),
         ],
-      )
+      ),
     ],
   );
 }
@@ -63,7 +63,7 @@ StatefulShellBranch _homeBranch() {
       GoRoute(
         path: '/home',
         builder: (context, state) => const HomePage(),
-      )
+      ),
     ],
   );
 }
@@ -75,7 +75,7 @@ StatefulShellBranch _scoutBranch() {
       GoRoute(
         path: '/scout',
         builder: (context, state) => const ScoutHomePage(),
-      )
+      ),
     ],
   );
 }
@@ -87,7 +87,7 @@ StatefulShellBranch _analyzeBranch() {
       GoRoute(
         path: '/analyze',
         builder: (context, state) => const AnalyzeHomePage(),
-      )
+      ),
     ],
   );
 }
@@ -99,7 +99,7 @@ StatefulShellBranch _settingsBranch() {
       GoRoute(
         path: '/settings',
         builder: (context, state) => const ManageHomePage(),
-      )
+      ),
     ],
   );
 }

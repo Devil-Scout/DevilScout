@@ -73,13 +73,13 @@ class FrcMatchesRepository {
   CacheAll<String, FrcMatch> _matchesCache(String eventKey) => CacheAll(
         expiration: const Duration(minutes: 30),
         origin: _service.getMatch,
-        originAll: () => _service.getEventMatches(eventKey),
+        originAll: () async => _service.getEventMatches(eventKey),
         key: (event) => event.key,
       );
 
   Cache<int, List<FrcMatch>> _teamMatchesCache(int teamNum) => Cache(
         expiration: const Duration(minutes: 30),
-        origin: (season) =>
+        origin: (season) async =>
             _service.getTeamMatches(season: season, teamNum: teamNum),
       );
 
@@ -140,7 +140,9 @@ class FrcMatchesService {
   }) async {
     final data = await _supabase
         .from('frc_matches')
-        .select('*, teams:frc_match_teams!inner(*), result:frc_match_results(*)')
+        .select(
+          '*, teams:frc_match_teams!inner(*), result:frc_match_results(*)',
+        )
         .like('key', '$season%')
         .eq('teams.team_num', teamNum);
     return data.parse(FrcMatch.fromJson);
