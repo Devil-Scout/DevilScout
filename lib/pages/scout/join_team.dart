@@ -21,8 +21,8 @@ class _JoinTeamPageState extends State<JoinTeamPage> {
 
   final _controller = TextEditingController();
 
+  final _teams = ValueNotifier(Future.value(<Team>[]));
   Timer? _timer;
-  Future<List<Team>> _teams = Future.value([]);
 
   @override
   void initState() {
@@ -48,20 +48,16 @@ class _JoinTeamPageState extends State<JoinTeamPage> {
   }
 
   void _updateSearch() {
-    setState(() {
-      _teams = _getTeams(_controller.text);
-    });
+    _teams.value = _getTeams();
   }
 
-  Future<List<Team>> _getTeams([String query = '']) async {
-    if (query.trim().isEmpty) {
-      return [];
-    }
+  Future<List<Team>> _getTeams() async {
+    final query = _controller.text;
+    if (query.trim().isEmpty) return [];
 
     final teamsDb = Database.of(context).teams;
     final teamNums = await teamsDb.searchTeams(query: query);
-    final teams = await teamsDb.getTeams(teamNums: teamNums);
-    return teams;
+    return teamsDb.getTeams(teamNums: teamNums);
   }
 
   @override
@@ -86,20 +82,23 @@ class _JoinTeamPageState extends State<JoinTeamPage> {
               child: Divider(),
             ),
             Expanded(
-              child: FutureBuilder(
-                future: _teams,
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return const CircularProgressIndicator();
-                  }
+              child: ValueListenableBuilder(
+                valueListenable: _teams,
+                builder: (_, future, __) => FutureBuilder(
+                  future: future,
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return const CircularProgressIndicator();
+                    }
 
-                  final teams = snapshot.requireData;
-                  if (teams.isEmpty) {
-                    return const _SearchMessage();
-                  } else {
-                    return _TeamList(teams: snapshot.requireData);
-                  }
-                },
+                    final teams = snapshot.requireData;
+                    if (teams.isEmpty) {
+                      return const _SearchMessage();
+                    } else {
+                      return _TeamList(teams: snapshot.requireData);
+                    }
+                  },
+                ),
               ),
             ),
           ],

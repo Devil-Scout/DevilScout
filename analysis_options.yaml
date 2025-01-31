@@ -4,7 +4,6 @@ analyzer:
 linter:
   rules:
     - always_declare_return_types
-    - always_put_control_body_on_new_line
     - annotate_overrides
     - annotate_redeclares
     - avoid_annotating_with_dynamic
