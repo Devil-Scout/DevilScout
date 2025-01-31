@@ -26,7 +26,7 @@ const _textTheme = TextTheme(
   ),
   displaySmall: TextStyle(
     fontFamily: _displayFontFamily,
-    fontSize: 22,
+    fontSize: 16,
   ),
   labelLarge: TextStyle(
     fontFamily: _bodyFontFamily,

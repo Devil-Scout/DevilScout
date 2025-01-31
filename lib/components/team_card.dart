@@ -30,9 +30,7 @@ class TeamCard extends StatelessWidget {
           teamNum: team.number,
         ),
         title: Text(team.name),
-        titleTextStyle: Theme.of(context).textTheme.displaySmall!.copyWith(
-              fontSize: 16,
-            ),
+        titleTextStyle: Theme.of(context).textTheme.displaySmall,
         subtitle: Text(
           location.isEmpty
               ? 'Team ${team.number}'
