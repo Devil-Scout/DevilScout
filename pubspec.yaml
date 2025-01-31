@@ -28,7 +28,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   freezed: ^2.5.8
-  json_serializable: ^6.9.2
+  json_serializable: ^6.9.3
 
 flutter:
   uses-material-design: true
