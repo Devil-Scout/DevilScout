@@ -35,7 +35,7 @@ class TeamRequestsRepository {
           key: (request) => request.userId,
         );
 
-  Future<TeamRequest?> getTeam({
+  Future<TeamRequest?> getRequest({
     required String userId,
     bool forceOrigin = false,
   }) =>
