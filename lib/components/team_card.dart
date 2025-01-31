@@ -31,7 +31,7 @@ class TeamCard extends StatelessWidget {
         ),
         title: Text(team.name),
         titleTextStyle: Theme.of(context).textTheme.displaySmall!.copyWith(
-              fontSize: 16.0,
+              fontSize: 16,
             ),
         subtitle: Text(
           location.isEmpty
@@ -42,9 +42,11 @@ class TeamCard extends StatelessWidget {
         ),
         subtitleTextStyle: Theme.of(context).textTheme.bodySmall,
         trailing: team.registration == null
-            ? Icon(Icons.error_outline,
-                color: Theme.of(context).colorScheme.error)
-            : null,
+            ? const Icon(Icons.add)
+            : Icon(
+                Icons.person_add_alt,
+                color: Theme.of(context).colorScheme.primary,
+              ),
       ),
     );
   }

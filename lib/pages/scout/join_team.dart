@@ -16,7 +16,7 @@ class JoinTeamPage extends StatefulWidget {
 }
 
 class _JoinTeamPageState extends State<JoinTeamPage> {
-  static const debounce = Duration(milliseconds: 100);
+  static const debounce = Duration(milliseconds: 50);
 
   final _controller = TextEditingController();
 
@@ -53,7 +53,9 @@ class _JoinTeamPageState extends State<JoinTeamPage> {
   }
 
   Future<List<Team>> _getTeams([String query = '']) async {
-    if (query.trim().isEmpty) return [];
+    if (query.trim().isEmpty) {
+      return [];
+    }
 
     final teamsDb = Database.of(context).teams;
     final teamNums = await teamsDb.searchTeams(query: query);
@@ -65,12 +67,12 @@ class _JoinTeamPageState extends State<JoinTeamPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Join a Team'),
+        title: const Text('Join a Team'),
       ),
       body: SafeArea(
         minimum: const EdgeInsets.symmetric(
-          horizontal: 24.0,
-          vertical: 16.0,
+          horizontal: 24,
+          vertical: 16,
         ),
         child: Column(
           children: [
@@ -78,8 +80,8 @@ class _JoinTeamPageState extends State<JoinTeamPage> {
               controller: _controller,
               hintText: 'Search for a team...',
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 6.0),
+            const Padding(
+              padding: EdgeInsets.only(top: 6),
               child: Divider(),
             ),
             Expanded(
@@ -119,8 +121,8 @@ class _TeamList extends StatelessWidget {
       shrinkWrap: true,
       itemCount: _teams.length,
       itemBuilder: (context, index) => TeamCard(team: _teams[index]),
-      separatorBuilder: (context, index) => const SizedBox(height: 6.0),
-      padding: EdgeInsets.symmetric(vertical: 6.0),
+      separatorBuilder: (context, index) => const SizedBox(height: 6),
+      padding: const EdgeInsets.symmetric(vertical: 6),
     );
   }
 }
@@ -130,7 +132,7 @@ class _SearchMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return const Padding(
       padding: EdgeInsets.only(bottom: kBottomNavigationBarHeight),
       child: Center(
         child: FullScreenMessage(

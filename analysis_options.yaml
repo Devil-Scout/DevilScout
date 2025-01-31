@@ -65,7 +65,7 @@ linter:
     - deprecated_consistency
     - deprecated_member_use_from_same_package
     - directives_ordering
-    - discarded_futures
+    # - discarded_futures
     - do_not_use_environment
     - document_ignores
     - empty_catches

@@ -17,7 +17,7 @@ class SearchableTextField extends StatelessWidget {
       controller: controller,
       style: Theme.of(context).textTheme.bodyMedium,
       decoration: InputDecoration(
-        prefixIcon: Icon(Icons.search, size: 18.0),
+        prefixIcon: const Icon(Icons.search, size: 18),
         hintText: hintText,
         hintStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -27,11 +27,9 @@ class SearchableTextField extends StatelessWidget {
           builder: (_, value, child) =>
               value.text.isEmpty ? const SizedBox.shrink() : child!,
           child: IconButton(
-            onPressed: () {
-              controller.clear();
-            },
-            icon: Icon(Icons.clear),
-            iconSize: 18.0,
+            onPressed: controller.clear,
+            icon: const Icon(Icons.clear),
+            iconSize: 18,
           ),
         ),
       ),

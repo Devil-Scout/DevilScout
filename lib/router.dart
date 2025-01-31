@@ -79,7 +79,7 @@ StatefulShellBranch _scoutBranch() {
         routes: [
           GoRoute(
             path: 'join-team',
-            builder: (context, state) => JoinTeamPage(),
+            builder: (context, state) => const JoinTeamPage(),
           ),
         ],
       ),
