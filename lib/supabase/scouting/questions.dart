@@ -29,7 +29,7 @@ sealed class QuestionNode with _$QuestionNode {
     required String parentId,
     required int index,
     required DataType dataType,
-    required JsonObject config,
+    required QuestionConfig config,
   }) = Question;
 
   factory QuestionNode.fromJson(JsonObject json) {
@@ -37,6 +37,85 @@ sealed class QuestionNode with _$QuestionNode {
         ? QuestionGroup.fromJson(json)
         : Question.fromJson(json);
   }
+}
+
+enum QuestionStyle {
+  counter('counter'),
+  textField('field'),
+  checkbox('checkbox'),
+  yesNo('yes_no'),
+  radio('radio'),
+  dropdown('dropdown');
+
+  final String value;
+
+  const QuestionStyle(this.value);
+
+  @override
+  String toString() => value;
+
+  static final _jsonMap = Map.fromEntries(
+    QuestionStyle.values.map((e) => MapEntry(e.value, e)),
+  );
+  factory QuestionStyle.fromJson(String json) => _jsonMap[json]!;
+}
+
+mixin NumberConfig {
+  QuestionStyle get style;
+  num? get min;
+  num? get max;
+  num? get step;
+  String? get unit;
+}
+
+mixin BooleanConfig {
+  QuestionStyle get style;
+}
+
+mixin StringConfig {
+  QuestionStyle get style;
+  int? get maxLength;
+  String? get regex;
+  List<String>? get options;
+}
+
+mixin ArrayConfig {
+  QuestionStyle get style;
+  List<String>? get options;
+  int? get minSelected;
+  int? get maxSelected;
+}
+
+@immutable
+class QuestionConfig
+    with NumberConfig, BooleanConfig, StringConfig, ArrayConfig {
+  final JsonObject _json;
+
+  const QuestionConfig.fromJson(this._json);
+
+  JsonObject toJson() => _json;
+
+  @override
+  QuestionStyle get style => QuestionStyle.fromJson(_json['style'] as String);
+
+  @override
+  num? get min => _json['min'] as num?;
+  @override
+  num? get max => _json['max'] as num?;
+  @override
+  num? get step => _json['step'] as num?;
+  @override
+  String? get unit => _json['unit'] as String?;
+  @override
+  int? get maxLength => _json['len'] as int?;
+  @override
+  String? get regex => _json['regex'] as String?;
+  @override
+  List<String>? get options => (_json['options'] as List<dynamic>?)?.cast();
+  @override
+  int? get minSelected => _json['least'] as int?;
+  @override
+  int? get maxSelected => _json['most'] as int?;
 }
 
 @immutable
