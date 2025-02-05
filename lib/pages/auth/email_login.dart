@@ -5,18 +5,11 @@ import '../../components/labeled_text_field.dart';
 import '../../router.dart';
 import '../../supabase/database.dart';
 
-class EmailLoginPage extends StatefulWidget {
-  const EmailLoginPage({super.key});
+class EmailLoginPage extends StatelessWidget {
+  EmailLoginPage({super.key});
 
-  @override
-  State<EmailLoginPage> createState() => _EmailLoginPageState();
-}
-
-class _EmailLoginPageState extends State<EmailLoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-
-  bool _loginButtonActive = false;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +26,6 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
               label: 'Email',
               inputType: TextInputType.emailAddress,
               controller: _emailController,
-              onChanged: _validateForm,
             ),
             const SizedBox(height: 14),
             LabeledTextField(
@@ -41,7 +33,6 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
               inputType: TextInputType.text,
               obscureText: true,
               controller: _passwordController,
-              onChanged: _validateForm,
             ),
             const SizedBox(height: 14),
             _forgotPasswordButton(context),
@@ -93,12 +84,20 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
         ),
         const SizedBox(width: 10),
         Expanded(
-          child: ElevatedButton(
-            // TODO: style button when inactive using MaterialState.disabled
-            onPressed: _loginButtonActive
-                ? () async => _loginWithEmail(context)
-                : null,
-            child: const Text('Sign In'),
+          child: ListenableBuilder(
+            listenable: Listenable.merge([
+              _emailController,
+              _passwordController,
+            ]),
+            builder: (context, _) {
+              return ElevatedButton(
+                // TODO: style button when inactive using MaterialState.disabled
+                onPressed: _isFormValid()
+                    ? () async => _loginWithEmail(context)
+                    : null,
+                child: const Text('Sign In'),
+              );
+            },
           ),
         ),
       ],
@@ -121,12 +120,9 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
     );
   }
 
-  void _validateForm([String? _]) {
-    setState(() {
-      _loginButtonActive = EmailValidator.validate(_emailController.text) &&
-          _passwordController.text.isNotEmpty;
-    });
-  }
+  bool _isFormValid() =>
+      EmailValidator.validate(_emailController.text) &&
+      _passwordController.text.isNotEmpty;
 
   Future<void> _loginWithEmail(BuildContext context) async {
     try {
