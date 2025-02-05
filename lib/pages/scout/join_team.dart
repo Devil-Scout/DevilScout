@@ -199,9 +199,10 @@ class _JoinActionCluster extends StatelessWidget {
   const _JoinActionCluster({required this.team});
 
   String get _textContent => team.isRegistered
-      ? 'By joining this team, your name will be visible to other team members.'
+      ? 'By requesting to join this team, your name will be visible to all other team members.'
       : 'This team has not yet been registered. By registering this team, you will become its admin.';
-  String get _actionLabel => team.isRegistered ? 'Join Team' : 'Register Team';
+  String get _actionLabel =>
+      team.isRegistered ? 'Request to Join' : 'Register Team';
 
   @override
   Widget build(BuildContext context) {
