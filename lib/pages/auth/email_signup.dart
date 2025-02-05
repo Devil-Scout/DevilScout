@@ -99,7 +99,8 @@ class EmailSignUpPage extends StatelessWidget {
             ]),
             builder: (context, _) {
               return ElevatedButton(
-                onPressed: _isFormValid() ? () async => _createUser(context) : null,
+                onPressed:
+                    _isFormValid() ? () async => _createUser(context) : null,
                 child: const Text('Sign Up'),
               );
             },

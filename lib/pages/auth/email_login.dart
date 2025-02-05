@@ -92,8 +92,9 @@ class EmailLoginPage extends StatelessWidget {
             builder: (context, _) {
               return ElevatedButton(
                 // TODO: style button when inactive using MaterialState.disabled
-                onPressed:
-                    _isFormValid() ? () async => _loginWithEmail(context) : null,
+                onPressed: _isFormValid()
+                    ? () async => _loginWithEmail(context)
+                    : null,
                 child: const Text('Sign In'),
               );
             },
