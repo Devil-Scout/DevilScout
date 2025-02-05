@@ -250,12 +250,11 @@ class _JoinActionCluster extends StatelessWidget {
       await context.database.teams
           .createTeam(teamNum: team.number, name: team.name);
     }
-    print('success');
     // TODO: display ui notice
     router
       ..pop()
-      ..pop()
-      ..pushReplacement('/scout');
+      ..pop();
+    unawaited(router.pushReplacement('/scout'));
   }
 }
 
