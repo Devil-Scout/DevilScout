@@ -9,6 +9,8 @@ part 'teams.g.dart';
 @immutable
 @freezed
 class Team with _$Team {
+  const Team._();
+
   const factory Team({
     required int number,
     required String name,
@@ -19,6 +21,8 @@ class Team with _$Team {
   }) = _Team;
 
   factory Team.fromJson(JsonObject json) => _$TeamFromJson(json);
+
+  bool get isRegistered => registration != null;
 }
 
 @immutable
@@ -28,7 +32,6 @@ class TeamRegistration with _$TeamRegistration {
     required int number,
     required bool verified,
     required DateTime createdAt,
-    required Uuid createdBy,
     required String name,
   }) = _TeamRegistration;
 
@@ -47,6 +50,8 @@ class TeamsRepository {
       : _teamsCache = Cache(
           expiration: const Duration(minutes: 30),
           origin: _service.getTeam,
+          originMultiple: _service.getTeams,
+          key: (team) => team.number,
         );
 
   Future<Team?> getTeam({
@@ -54,6 +59,12 @@ class TeamsRepository {
     bool forceOrigin = false,
   }) =>
       _teamsCache.get(key: teamNum, forceOrigin: forceOrigin);
+
+  Future<List<Team>> getTeams({
+    required Iterable<int> teamNums,
+    bool forceOrigin = false,
+  }) =>
+      _teamsCache.getMultiple(keys: teamNums, forceOrigin: forceOrigin);
 
   Future<List<int>> searchTeams({
     required String query,
@@ -91,6 +102,14 @@ class TeamsService {
     return data?.parse(Team.fromJson);
   }
 
+  Future<List<Team>> getTeams(Iterable<int> teamNums) async {
+    final data = await _supabase
+        .from('frc_teams')
+        .select('number, name, country, province, city, registration:teams(*)')
+        .inFilter('number', teamNums.toList());
+    return data.parse(Team.fromJson);
+  }
+
   Future<List<int>> searchTeams({
     required String query,
     required int limit,
@@ -103,11 +122,13 @@ class TeamsService {
   Future<void> createTeam({
     required int teamNum,
     required String name,
-  }) =>
-      _supabase.from('teams').insert({
-        'number': teamNum,
-        'name': name,
-      });
+  }) async {
+    await _supabase.from('teams').insert({
+      'number': teamNum,
+      'name': name,
+    });
+    await _supabase.auth.refreshSession();
+  }
 
   Future<void> deleteTeam(int teamNum) =>
       _supabase.from('teams').delete().eq('number', teamNum);

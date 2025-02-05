@@ -9,6 +9,7 @@ const _errorColorLight = Color(0xFFF44336);
 const _onErrorColorLight = Colors.white;
 const _surfaceColorLight = Colors.white;
 const _onSurfaceColorLight = Colors.black;
+var _onSurfaceColorLightVariant = Colors.grey[500];
 const _outlineBorderColorLight = Color.fromARGB(25, 0, 0, 0);
 
 const _displayFontFamily = 'Montserrat';
@@ -25,7 +26,7 @@ const _textTheme = TextTheme(
   ),
   displaySmall: TextStyle(
     fontFamily: _displayFontFamily,
-    fontSize: 20,
+    fontSize: 16,
   ),
   labelLarge: TextStyle(
     fontFamily: _bodyFontFamily,
@@ -42,23 +43,23 @@ const _textTheme = TextTheme(
   bodyLarge: TextStyle(
     fontFamily: _bodyFontFamily,
     fontSize: 16,
-    height: 1.3,
+    height: 1.5,
   ),
   bodyMedium: TextStyle(
     fontFamily: _bodyFontFamily,
     fontSize: 14,
-    height: 1.3,
+    height: 1.5,
   ),
   bodySmall: TextStyle(
     fontFamily: _bodyFontFamily,
     fontSize: 12,
-    height: 1.3,
+    height: 1.5,
   ),
 );
 
 final ThemeData lightTheme = ThemeData(
   textTheme: _textTheme,
-  colorScheme: const ColorScheme(
+  colorScheme: ColorScheme(
     brightness: Brightness.light,
     primary: _primaryColor,
     onPrimary: _onPrimaryColor,
@@ -68,7 +69,17 @@ final ThemeData lightTheme = ThemeData(
     onError: _onErrorColorLight,
     surface: _surfaceColorLight,
     onSurface: _onSurfaceColorLight,
+    onSurfaceVariant: _onSurfaceColorLightVariant,
+    surfaceContainer: Colors.grey[200],
     surfaceTint: Colors.transparent,
+  ),
+  appBarTheme: AppBarTheme(
+    color: _surfaceColorLight,
+    elevation: 0,
+    iconTheme: const IconThemeData(color: _onSurfaceColorLight),
+    titleTextStyle: _textTheme.displaySmall!.copyWith(
+      color: _onSurfaceColorLight,
+    ),
   ),
   navigationBarTheme: NavigationBarThemeData(
     height: 70,

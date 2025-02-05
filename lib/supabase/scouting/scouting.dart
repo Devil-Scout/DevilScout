@@ -1,6 +1,3 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-
-@JsonEnum(valueField: 'value')
 enum ScoutingCategory {
   match('match'),
   pit('pit'),
@@ -12,9 +9,12 @@ enum ScoutingCategory {
 
   @override
   String toString() => value;
+
+  static final _jsonMap =
+      Map.fromEntries(ScoutingCategory.values.map((e) => MapEntry(e.value, e)));
+  factory ScoutingCategory.fromJson(String json) => _jsonMap[json]!;
 }
 
-@JsonEnum(valueField: 'value')
 enum DataType {
   number('number'),
   boolean('boolean'),
@@ -27,4 +27,8 @@ enum DataType {
 
   @override
   String toString() => value;
+
+  static final _jsonMap =
+      Map.fromEntries(DataType.values.map((e) => MapEntry(e.value, e)));
+  factory DataType.fromJson(String json) => _jsonMap[json]!;
 }

@@ -15,10 +15,14 @@ class CurrentUserRepository {
 
   Future<void> setName(String name) => _service.setName(name);
 
+  Future<void> refresh() => _service.refresh();
+
   User? get user => _service.user;
   String? get name => _service.name;
   int? get teamNum => _service.teamNum;
   Set<PermissionType>? get permissions => _service.permissions;
+
+  bool get isOnTeam => teamNum != null;
 
   bool hasPermission(PermissionType type) =>
       permissions?.contains(type) ?? false;
@@ -38,6 +42,8 @@ class CurrentUserService {
           data: {'full_name': name},
         ),
       );
+
+  Future<void> refresh() => _supabase.auth.refreshSession();
 
   int? get teamNum => _jwtClaims?['team_num'] as int?;
 

@@ -81,18 +81,30 @@ class Database {
   }
 }
 
-class Cache<K, V> {
-  @protected
-  final Map<K, CacheEntry<V>> cache = {};
+extension DatabaseContext on BuildContext {
+  Database get database => Provider.of<Database>(this, listen: false);
+}
+
+class Cache<K extends Object, V extends Object> {
   @protected
   final Future<V?> Function(K) origin;
   @protected
+  final Future<Iterable<V>> Function(Iterable<K>) originMultiple;
+  @protected
+  final K Function(V) keyMapper;
+  @protected
   final Duration expiration;
+
+  @protected
+  final Map<K, CacheEntry<V>> cache = {};
 
   Cache({
     required this.expiration,
     required this.origin,
-  });
+    K Function(V)? key,
+    Future<Iterable<V>> Function(Iterable<K>)? originMultiple,
+  })  : keyMapper = key ?? _identity,
+        originMultiple = originMultiple ?? ((keys) => _multiple(origin, keys));
 
   Future<V?> get({
     required K key,
@@ -110,22 +122,46 @@ class Cache<K, V> {
     return cache[key]?.data;
   }
 
+  Future<List<V>> getMultiple({
+    required Iterable<K> keys,
+    required bool forceOrigin,
+  }) async {
+    if (forceOrigin ||
+        keys.any((k) => cache[k]?.isExpired(expiration) ?? true)) {
+      final data = await originMultiple(keys);
+      for (final val in data) {
+        cache[keyMapper(val)] = CacheEntry(val);
+      }
+    }
+
+    return keys.map((k) => cache[k]?.data).nonNulls.toList();
+  }
+
   void clear() => cache.clear();
+
+  static K _identity<K, V>(V value) => value as K;
+
+  static Future<Iterable<V>> _multiple<K extends Object, V extends Object>(
+    Future<V?> Function(K) origin,
+    Iterable<K> keys,
+  ) {
+    return Future.wait([for (final key in keys) origin(key)])
+        .then((values) => values.nonNulls);
+  }
 }
 
-class CacheAll<K, V> extends Cache<K, V> {
+class CacheAll<K extends Object, V extends Object> extends Cache<K, V> {
   @protected
   final Future<Iterable<V>> Function() originAll;
-  @protected
-  final K Function(V) key;
   @protected
   CacheEntry<void>? allValues;
 
   CacheAll({
     required super.expiration,
     required super.origin,
+    super.key,
+    super.originMultiple,
     required this.originAll,
-    required this.key,
   });
 
   Future<List<V>> getAll({
@@ -139,7 +175,7 @@ class CacheAll<K, V> extends Cache<K, V> {
         ..clear()
         ..addEntries(
           data.map(
-            (value) => MapEntry(key(value), CacheEntry(value)),
+            (value) => MapEntry(keyMapper(value), CacheEntry(value)),
           ),
         );
       allValues = CacheEntry(null);

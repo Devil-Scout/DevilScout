@@ -1,6 +1,3 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-
-@JsonEnum(valueField: 'value')
 enum PermissionType {
   matchScouting('scout.match'),
   pitScouting('scout.pit'),
@@ -17,6 +14,5 @@ enum PermissionType {
 
   static final _jsonMap =
       Map.fromEntries(PermissionType.values.map((e) => MapEntry(e.value, e)));
-
   factory PermissionType.fromJson(String json) => _jsonMap[json]!;
 }

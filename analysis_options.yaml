@@ -4,7 +4,6 @@ analyzer:
 linter:
   rules:
     - always_declare_return_types
-    - always_put_control_body_on_new_line
     - annotate_overrides
     - annotate_redeclares
     - avoid_annotating_with_dynamic
@@ -65,7 +64,7 @@ linter:
     - deprecated_consistency
     - deprecated_member_use_from_same_package
     - directives_ordering
-    - discarded_futures
+    # - discarded_futures
     - do_not_use_environment
     - document_ignores
     - empty_catches

@@ -1,6 +1,3 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-
-@JsonEnum(valueField: 'value')
 enum FrcMatchLevel {
   qualification('qm'),
   elimination('em'),
@@ -14,13 +11,19 @@ enum FrcMatchLevel {
 
   @override
   String toString() => value;
+
+  static final _jsonMap =
+      Map.fromEntries(FrcMatchLevel.values.map((e) => MapEntry(e.value, e)));
+  factory FrcMatchLevel.fromJson(String json) => _jsonMap[json]!;
 }
 
-@JsonEnum()
 enum FrcAlliance {
   blue,
   red;
 
   @override
   String toString() => name;
+
+  static final _jsonMap = FrcAlliance.values.asNameMap();
+  factory FrcAlliance.fromJson(String json) => _jsonMap[json]!;
 }
