@@ -72,9 +72,8 @@ class TeamRequestsService {
   }
 
   Future<List<TeamRequest>> getAllRequests() async {
-    final data = await _supabase
-        .from('team_requests')
-        .select('*, profile:profiles(*)');
+    final data =
+        await _supabase.from('team_requests').select('*, profile:profiles(*)');
     return data.parse(TeamRequest.fromJson);
   }
 

@@ -17,41 +17,41 @@ const _bodyFontFamily = 'Noto Sans';
 const _textTheme = TextTheme(
   displayLarge: TextStyle(
     fontFamily: _displayFontFamily,
-    fontSize: 32.0,
+    fontSize: 32,
   ),
   displayMedium: TextStyle(
     fontFamily: _displayFontFamily,
-    fontSize: 28.0,
+    fontSize: 28,
   ),
   displaySmall: TextStyle(
     fontFamily: _displayFontFamily,
-    fontSize: 20.0,
+    fontSize: 20,
   ),
   labelLarge: TextStyle(
     fontFamily: _bodyFontFamily,
-    fontSize: 18.0,
+    fontSize: 18,
   ),
   labelMedium: TextStyle(
     fontFamily: _bodyFontFamily,
-    fontSize: 14.0,
+    fontSize: 14,
   ),
   labelSmall: TextStyle(
     fontFamily: _bodyFontFamily,
-    fontSize: 12.0,
+    fontSize: 12,
   ),
   bodyLarge: TextStyle(
     fontFamily: _bodyFontFamily,
-    fontSize: 16.0,
+    fontSize: 16,
     height: 1.3,
   ),
   bodyMedium: TextStyle(
     fontFamily: _bodyFontFamily,
-    fontSize: 14.0,
+    fontSize: 14,
     height: 1.3,
   ),
   bodySmall: TextStyle(
     fontFamily: _bodyFontFamily,
-    fontSize: 12.0,
+    fontSize: 12,
     height: 1.3,
   ),
 );
@@ -71,8 +71,8 @@ final ThemeData lightTheme = ThemeData(
     surfaceTint: Colors.transparent,
   ),
   navigationBarTheme: NavigationBarThemeData(
-    height: 70.0,
-    elevation: 4.0,
+    height: 70,
+    elevation: 4,
     backgroundColor: _surfaceColorLight,
     shadowColor: _onSurfaceColorLight.withValues(alpha: 0.1),
     indicatorColor: Colors.transparent,
@@ -84,7 +84,7 @@ final ThemeData lightTheme = ThemeData(
             )
           : _textTheme.bodyMedium,
     ),
-    iconTheme: WidgetStateProperty.fromMap(const {
+    iconTheme: const WidgetStateProperty.fromMap({
       WidgetState.selected: IconThemeData(color: _primaryColor),
     }),
   ),
@@ -94,15 +94,15 @@ final ThemeData lightTheme = ThemeData(
       backgroundColor: _surfaceColorLight,
       foregroundColor: _onSurfaceColorLight,
       iconColor: _onSurfaceColorLight,
-      iconSize: 22.0,
-      side: BorderSide(
+      iconSize: 22,
+      side: const BorderSide(
         color: _outlineBorderColorLight,
         width: 1.07,
       ),
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(10.7)),
       ),
-      minimumSize: Size.square(70.0),
+      minimumSize: const Size.square(70),
       alignment: Alignment.center,
     ),
   ),
@@ -115,14 +115,14 @@ final ThemeData lightTheme = ThemeData(
       foregroundColor: _onPrimaryColor,
       overlayColor: _secondaryColorLight.withValues(alpha: 0.1),
       iconColor: _onPrimaryColor,
-      iconSize: 28.0,
+      iconSize: 28,
       side: BorderSide.none,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(10.7)),
       ),
-      minimumSize: Size.square(70.0),
+      minimumSize: const Size.square(70),
       alignment: Alignment.center,
-      elevation: 0.0,
+      elevation: 0,
     ),
   ),
   textButtonTheme: TextButtonThemeData(
@@ -132,14 +132,13 @@ final ThemeData lightTheme = ThemeData(
         decoration: TextDecoration.underline,
       ),
       padding: EdgeInsets.zero,
-      minimumSize: Size(0.0, 0.0),
+      minimumSize: Size.zero,
       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       visualDensity: VisualDensity.compact,
       overlayColor: Colors.transparent,
     ),
   ),
   inputDecorationTheme: InputDecorationTheme(
-    filled: false,
     enabledBorder: const OutlineInputBorder(
       borderSide: BorderSide(color: _outlineBorderColorLight),
       borderRadius: BorderRadius.all(Radius.circular(10.7)),

@@ -15,30 +15,30 @@ class EmailLoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        minimum: const EdgeInsets.symmetric(horizontal: 32.0),
+        minimum: const EdgeInsets.symmetric(horizontal: 32),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _headerText(context),
-            const SizedBox(height: 40.0),
+            const SizedBox(height: 40),
             LabeledTextField(
-              label: "Email",
+              label: 'Email',
               inputType: TextInputType.emailAddress,
               controller: _emailController,
             ),
-            const SizedBox(height: 14.0),
+            const SizedBox(height: 14),
             LabeledTextField(
-              label: "Password",
+              label: 'Password',
               inputType: TextInputType.text,
               obscureText: true,
               controller: _passwordController,
             ),
-            const SizedBox(height: 14.0),
+            const SizedBox(height: 14),
             _forgotPasswordButton(context),
-            const SizedBox(height: 40.0),
+            const SizedBox(height: 40),
             _bottomButtons(context),
-            const SizedBox(height: 32.0),
+            const SizedBox(height: 32),
             _createAccountText(context),
           ],
         ),
@@ -48,19 +48,19 @@ class EmailLoginPage extends StatelessWidget {
 
   Widget _headerText(BuildContext context) {
     return ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 256.0),
+      constraints: const BoxConstraints(maxWidth: 256),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Ready to scout?",
+            'Ready to scout?',
             style: Theme.of(context).textTheme.displayMedium,
           ),
-          const SizedBox(height: 6.0),
+          const SizedBox(height: 6),
           Text(
-            "Enter your information to access your account",
+            'Enter your information to access your account',
             style: Theme.of(context).textTheme.bodyLarge,
-          )
+          ),
         ],
       ),
     );
@@ -69,7 +69,7 @@ class EmailLoginPage extends StatelessWidget {
   Widget _forgotPasswordButton(BuildContext context) {
     return TextButton(
       onPressed: () {},
-      child: const Text("Forgot password?"),
+      child: const Text('Forgot password?'),
     );
   }
 
@@ -82,7 +82,7 @@ class EmailLoginPage extends StatelessWidget {
             Icons.arrow_back,
           ),
         ),
-        const SizedBox(width: 10.0),
+        const SizedBox(width: 10),
         Expanded(
           child: ListenableBuilder(
             listenable: Listenable.merge([
@@ -93,12 +93,12 @@ class EmailLoginPage extends StatelessWidget {
               return ElevatedButton(
                 // TODO: style button when inactive using MaterialState.disabled
                 onPressed:
-                    _isFormValid() ? () => _loginWithEmail(context) : null,
+                    _isFormValid() ? () async => _loginWithEmail(context) : null,
                 child: const Text('Sign In'),
               );
             },
           ),
-        )
+        ),
       ],
     );
   }
@@ -110,11 +110,11 @@ class EmailLoginPage extends StatelessWidget {
           "Don't have an account?",
           style: Theme.of(context).textTheme.bodyMedium,
         ),
-        const SizedBox(width: 6.0),
+        const SizedBox(width: 6),
         TextButton(
           onPressed: () => router.go('/login/email/signup'),
-          child: const Text("Create one"),
-        )
+          child: const Text('Create one'),
+        ),
       ],
     );
   }
@@ -123,13 +123,13 @@ class EmailLoginPage extends StatelessWidget {
       EmailValidator.validate(_emailController.text) &&
       _passwordController.text.isNotEmpty;
 
-  void _loginWithEmail(BuildContext context) async {
+  Future<void> _loginWithEmail(BuildContext context) async {
     try {
       await Database.of(context).auth.signInWithEmail(
             email: _emailController.text,
             password: _passwordController.text,
           );
-    } catch (e) {
+    } on Object {
       // TODO: notify user of error
     }
   }

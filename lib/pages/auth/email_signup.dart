@@ -17,7 +17,7 @@ class EmailSignUpPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        minimum: const EdgeInsets.symmetric(horizontal: 32.0),
+        minimum: const EdgeInsets.symmetric(horizontal: 32),
         child: Center(
           child: SingleChildScrollView(
             child: Column(
@@ -25,33 +25,33 @@ class EmailSignUpPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _headerText(context),
-                const SizedBox(height: 40.0),
+                const SizedBox(height: 40),
                 LabeledTextField(
-                  label: "Full Name",
+                  label: 'Full Name',
                   inputType: TextInputType.name,
                   controller: _nameController,
                 ),
-                const SizedBox(height: 14.0),
+                const SizedBox(height: 14),
                 LabeledTextField(
-                  label: "Email",
+                  label: 'Email',
                   inputType: TextInputType.emailAddress,
                   controller: _emailController,
                 ),
-                const SizedBox(height: 14.0),
+                const SizedBox(height: 14),
                 LabeledTextField(
-                  label: "Password",
+                  label: 'Password',
                   inputType: TextInputType.text,
                   obscureText: true,
                   controller: _passwordController,
                 ),
-                const SizedBox(height: 14.0),
+                const SizedBox(height: 14),
                 LabeledTextField(
-                  label: "Verify Password",
+                  label: 'Verify Password',
                   inputType: TextInputType.text,
                   obscureText: true,
                   controller: _verifyController,
                 ),
-                const SizedBox(height: 40.0),
+                const SizedBox(height: 40),
                 _bottomButtons(context),
               ],
             ),
@@ -63,19 +63,19 @@ class EmailSignUpPage extends StatelessWidget {
 
   Widget _headerText(BuildContext context) {
     return ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 256.0),
+      constraints: const BoxConstraints(maxWidth: 256),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Welcome!",
+            'Welcome!',
             style: Theme.of(context).textTheme.displayMedium,
           ),
-          const SizedBox(height: 6.0),
+          const SizedBox(height: 6),
           Text(
-            "Level up your scouting with the DevilScout platform",
+            'Level up your scouting with the DevilScout platform',
             style: Theme.of(context).textTheme.bodyLarge,
-          )
+          ),
         ],
       ),
     );
@@ -86,9 +86,9 @@ class EmailSignUpPage extends StatelessWidget {
       children: [
         OutlinedButton(
           onPressed: router.pop,
-          child: Icon(Icons.arrow_back),
+          child: const Icon(Icons.arrow_back),
         ),
-        const SizedBox(width: 10.0),
+        const SizedBox(width: 10),
         Expanded(
           child: ListenableBuilder(
             listenable: Listenable.merge([
@@ -99,7 +99,7 @@ class EmailSignUpPage extends StatelessWidget {
             ]),
             builder: (context, _) {
               return ElevatedButton(
-                onPressed: _isFormValid() ? () => _createUser(context) : null,
+                onPressed: _isFormValid() ? () async => _createUser(context) : null,
                 child: const Text('Sign Up'),
               );
             },
@@ -109,14 +109,14 @@ class EmailSignUpPage extends StatelessWidget {
     );
   }
 
-  void _createUser(BuildContext context) async {
+  Future<void> _createUser(BuildContext context) async {
     try {
       await Database.of(context).auth.signUpWithEmail(
             name: _nameController.text,
             email: _emailController.text,
             password: _passwordController.text,
           );
-    } catch (e) {
+    } on Object {
       // TODO: notify user of error
     }
   }

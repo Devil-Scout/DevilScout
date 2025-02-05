@@ -4,40 +4,41 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  build-ios:
     runs-on: macos-latest
-    strategy:
-      matrix:
-        platform:
-          - iOS
-          - Android
     steps:
-    - name: Checkout branch
-      uses: actions/checkout@v4
-    - name: Set up Flutter environment
-      uses: subosito/flutter-action@v2
-      with:
-        channel: 'stable'
-        cache: true
-    - name: Download dart dependencies
-      run: flutter pub get
-    - name: Generate source files
-      run: dart run build_runner build --delete-conflicting-outputs
-    # - name: Generate app icons
-    #   run: dart run flutter_launcher_icons
-    - name: Set up JDK 17
-      if: matrix.platform == 'Android'
-      uses: actions/setup-java@v3
-      with:
-        distribution: 'temurin'
-        java-version: '17'
-    - name: Get build command for ${{ matrix.platform }}
-      uses: dkershner6/switch-case-action@v1
-      id: platform-build-command
-      with:
-        conditionals-with-values: |
-          ${{ matrix.platform == 'iOS' }} => flutter build ios --release --no-codesign
-          ${{ matrix.platform == 'Android' }} => flutter build appbundle --release
-        default: ''
-    - name: Build for ${{ matrix.platform }}
-      run: ${{ steps.platform-build-command.outputs.value }}
+      - name: Checkout branch
+        uses: actions/checkout@v4
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+      - name: Download dart dependencies
+        run: flutter pub get
+      - name: Generate source files
+        run: dart run build_runner build --delete-conflicting-outputs
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - name: Build for iOS
+        run: flutter build ios --release --no-codesign
+
+  build-android:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+      - name: Download dart dependencies
+        run: flutter pub get
+      - name: Generate source files
+        run: dart run build_runner build --delete-conflicting-outputs
+      - name: Build for Android
+        run: flutter build appbundle --release

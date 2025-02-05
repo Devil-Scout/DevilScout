@@ -31,7 +31,7 @@ class FrcDistrictsRepository {
   CacheAll<String, FrcDistrict> _cache(int season) => CacheAll(
         expiration: const Duration(minutes: 30),
         origin: _service.getDistrict,
-        originAll: () => _service.getSeasonDistricts(season),
+        originAll: () async => _service.getSeasonDistricts(season),
         key: (district) => district.name,
       );
 
