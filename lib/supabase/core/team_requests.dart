@@ -1,8 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../base/current_user.dart';
 import '../database.dart';
-import 'team_users.dart';
 
 part 'team_requests.freezed.dart';
 part 'team_requests.g.dart';

@@ -1,9 +1,26 @@
 import 'dart:async';
 
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../core/core.dart';
+import '../database.dart';
+
+part 'current_user.freezed.dart';
+part 'current_user.g.dart';
+
+@immutable
+@freezed
+class UserProfile with _$UserProfile {
+  const factory UserProfile({
+    required Uuid userId,
+    String? name,
+    required DateTime createdAt,
+  }) = _UserProfile;
+
+  factory UserProfile.fromJson(JsonObject json) => _$UserProfileFromJson(json);
+}
 
 class CurrentUserRepository {
   final CurrentUserService _service;
@@ -16,6 +33,8 @@ class CurrentUserRepository {
   Future<void> setName(String name) => _service.setName(name);
 
   Future<void> refresh() => _service.refresh();
+
+  Future<UserProfile?> getProfile() => _service.getProfile();
 
   User? get user => _service.user;
   String? get name => _service.name;
@@ -44,6 +63,18 @@ class CurrentUserService {
       );
 
   Future<void> refresh() => _supabase.auth.refreshSession();
+
+  Future<UserProfile?> getProfile() async {
+    final userId = _supabase.auth.currentUser?.id;
+    if (userId == null) return null;
+
+    final data = await _supabase
+        .from('profiles')
+        .select()
+        .eq('user_id', userId)
+        .maybeSingle();
+    return data?.parse(UserProfile.fromJson);
+  }
 
   int? get teamNum => _jwtClaims?['team_num'] as int?;
 
