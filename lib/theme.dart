@@ -26,6 +26,18 @@ const _textTheme = TextTheme(
   ),
   displaySmall: TextStyle(
     fontFamily: _displayFontFamily,
+    fontSize: 24,
+  ),
+  titleLarge: TextStyle(
+    fontFamily: _displayFontFamily,
+    fontSize: 22,
+  ),
+  titleMedium: TextStyle(
+    fontFamily: _displayFontFamily,
+    fontSize: 20,
+  ),
+  titleSmall: TextStyle(
+    fontFamily: _displayFontFamily,
     fontSize: 16,
   ),
   labelLarge: TextStyle(

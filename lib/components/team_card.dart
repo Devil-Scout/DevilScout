@@ -5,10 +5,12 @@ import 'team_avatar.dart';
 
 class TeamCard extends StatelessWidget {
   final Team team;
+  final bool showTrailingIcon;
 
   const TeamCard({
     super.key,
     required this.team,
+    this.showTrailingIcon = false,
   });
 
   @override
@@ -30,7 +32,7 @@ class TeamCard extends StatelessWidget {
           teamNum: team.number,
         ),
         title: Text(team.name),
-        titleTextStyle: Theme.of(context).textTheme.displaySmall,
+        titleTextStyle: Theme.of(context).textTheme.titleSmall,
         subtitle: Text(
           location.isEmpty
               ? 'Team ${team.number}'
@@ -39,12 +41,14 @@ class TeamCard extends StatelessWidget {
           maxLines: 1,
         ),
         subtitleTextStyle: Theme.of(context).textTheme.bodySmall,
-        trailing: team.registration == null
-            ? const Icon(Icons.add)
-            : Icon(
-                Icons.person_add_alt,
-                color: Theme.of(context).colorScheme.primary,
-              ),
+        trailing: showTrailingIcon
+            ? (team.registration == null
+                ? const Icon(Icons.add)
+                : Icon(
+                    Icons.person_add_alt,
+                    color: Theme.of(context).colorScheme.primary,
+                  ))
+            : null,
       ),
     );
   }

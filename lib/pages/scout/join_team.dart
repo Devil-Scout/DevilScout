@@ -126,7 +126,10 @@ class _TeamList extends StatelessWidget {
           context: context,
           builder: (context) => JoinTeamDialog(team: _teams[index]),
         ),
-        child: TeamCard(team: _teams[index]),
+        child: TeamCard(
+          team: _teams[index],
+          showTrailingIcon: true,
+        ),
       ),
       separatorBuilder: (context, index) => const SizedBox(height: 6),
       padding: const EdgeInsets.symmetric(vertical: 6),
