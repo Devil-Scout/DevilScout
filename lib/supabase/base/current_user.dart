@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:supabase/supabase.dart';
 
 import '../core/core.dart';
 import '../database.dart';
@@ -40,6 +40,7 @@ class CurrentUserRepository {
   String? get name => _service.name;
   int? get teamNum => _service.teamNum;
   Set<PermissionType>? get permissions => _service.permissions;
+  String? get teamName => _service.teamName;
 
   bool get isOnTeam => teamNum != null;
 
