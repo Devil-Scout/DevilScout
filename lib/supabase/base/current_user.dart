@@ -77,6 +77,7 @@ class CurrentUserService {
   }
 
   int? get teamNum => _jwtClaims?['team_num'] as int?;
+  String? get teamName => _jwtClaims?['team_name'] as String?;
 
   Set<PermissionType>? get permissions =>
       ((_jwtClaims?['permissions'] ?? []) as List<dynamic>?)
