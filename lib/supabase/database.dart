@@ -16,7 +16,6 @@ import 'frc/matches.dart';
 import 'frc/seasons.dart';
 import 'frc/teams.dart';
 import 'scouting/questions.dart';
-import 'scouting/submissions.dart';
 
 class Database {
   final SupabaseClient? supabase;
@@ -35,7 +34,6 @@ class Database {
   final FrcMatchesRepository frcMatches;
 
   final QuestionsRepository questions;
-  final SubmissionsRepository submissions;
 
   Database({
     this.supabase,
@@ -50,7 +48,6 @@ class Database {
     required this.frcEvents,
     required this.frcMatches,
     required this.questions,
-    required this.submissions,
   });
 
   Database.supabase(SupabaseClient supabase)
@@ -67,7 +64,6 @@ class Database {
           frcEvents: FrcEventsRepository.supabase(supabase),
           frcMatches: FrcMatchesRepository.supabase(supabase),
           questions: QuestionsRepository.supabase(supabase),
-          submissions: SubmissionsRepository.supabase(supabase),
         );
 
   factory Database.of(BuildContext context) =>
