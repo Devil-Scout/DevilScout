@@ -125,7 +125,7 @@ final ThemeData lightTheme = ThemeData(
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(10.7)),
       ),
-      minimumSize: const Size.square(70),
+      minimumSize: const Size.square(50),
       alignment: Alignment.center,
     ),
   ),
@@ -143,7 +143,7 @@ final ThemeData lightTheme = ThemeData(
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(10.7)),
       ),
-      minimumSize: const Size.square(70),
+      minimumSize: const Size.square(50),
       alignment: Alignment.center,
       elevation: 0,
     ),

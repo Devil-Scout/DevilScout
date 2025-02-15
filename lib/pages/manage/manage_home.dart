@@ -41,8 +41,8 @@ class _UserCard extends StatelessWidget {
             Row(
               children: [
                 const Icon(
-                  Icons.account_circle_outlined,
-                  size: 80,
+                  Icons.badge_outlined,
+                  size: 60,
                 ),
                 const SizedBox(width: 16),
                 Column(
@@ -73,6 +73,10 @@ class _UserCard extends StatelessWidget {
                 ),
               ],
             ),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 8),
+              child: Divider(),
+            ),
             _TeamInfo(),
           ],
         ),
@@ -86,41 +90,40 @@ class _TeamInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(vertical: 8),
-          child: Divider(),
-        ),
-        if (context.database.currentUser.isOnTeam)
-          FutureBuilder(
-            future: context.database.teams
-                .getTeam(teamNum: context.database.currentUser.teamNum!),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return Center(
-                  child: LoadingAnimationWidget.halfTriangleDot(
-                    color: Theme.of(context).colorScheme.onSurface,
-                    size: 50,
-                  ),
-                );
-              }
+        FutureBuilder(
+          future: context.database.teams
+              .getTeam(teamNum: context.database.currentUser.teamNum!),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return Center(
+                child: LoadingAnimationWidget.horizontalRotatingDots(
+                  color: Theme.of(context).colorScheme.onSurface,
+                  size: 50,
+                ),
+              );
+            }
 
-              final team = snapshot.requireData!;
-              return TeamCard(team: team);
-            },
-          ),
+            final team = snapshot.requireData!;
+            return TeamCard(team: team);
+          },
+        ),
         const SizedBox(height: 8),
         Row(
           children: [
             Expanded(
               child: OutlinedButton(
-                onPressed: () {},
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => const LeaveTeamDialog(),
+                  );
+                },
                 style: OutlinedButton.styleFrom(
                   backgroundColor:
                       Theme.of(context).colorScheme.surfaceContainer,
                   side: BorderSide(
                     color: Theme.of(context).colorScheme.error,
                   ),
-                  minimumSize: const Size.fromHeight(50),
                 ),
                 child: Text(
                   'Leave Team',
@@ -133,6 +136,54 @@ class _TeamInfo extends StatelessWidget {
           ],
         ),
       ],
+    );
+  }
+}
+
+class LeaveTeamDialog extends StatelessWidget {
+  const LeaveTeamDialog({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.7)),
+      icon: Icon(
+        Icons.error_outline,
+        size: 40,
+        color: Theme.of(context).colorScheme.onSurface,
+      ),
+      title: Text(
+        'Leave team?',
+        style: Theme.of(context).textTheme.titleLarge,
+      ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Text(
+            textAlign: TextAlign.center,
+            'Are you sure you want to leave this team? You will no longer be able to scout matches, and will have send a new request if you wish to rejoin.',
+          ),
+          const Padding(
+            padding: EdgeInsets.all(8),
+            child: Divider(),
+          ),
+          Row(
+            children: [
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).colorScheme.error,
+                  ),
+                  child: const Text('Leave Team'),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
