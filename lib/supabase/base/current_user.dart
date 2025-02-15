@@ -36,7 +36,8 @@ class CurrentUserRepository {
 
   Future<UserProfile?> getProfile() => _service.getProfile();
 
-  User? get user => _service.user;
+  // User? get user => _service.user;
+  Uuid? get id => _service.id;
   String? get name => _service.name;
   int? get teamNum => _service.teamNum;
   Set<PermissionType>? get permissions => _service.permissions;
@@ -53,9 +54,14 @@ class CurrentUserService {
 
   CurrentUserService(this._supabase);
 
-  User? get user => _supabase.auth.currentUser;
+  Uuid? get id => _supabase.auth.currentUser?.id;
 
-  String? get name => user?.userMetadata?['full_name'];
+  String? get name => _supabase.auth.currentUser?.userMetadata?['full_name'];
+
+  DateTime? get createdAt {
+    final createdAt = _supabase.auth.currentUser?.createdAt;
+    return createdAt == null ? null : DateTime.parse(createdAt);
+  }
 
   Future<void> setName(String name) => _supabase.auth.updateUser(
         UserAttributes(
