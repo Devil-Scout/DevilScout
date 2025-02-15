@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../../components/team_card.dart';
-import '../../router.dart';
 import '../../supabase/database.dart';
 
 class ManageHomePage extends StatelessWidget {
@@ -107,7 +106,7 @@ class _JoinTeamPlaceholder extends StatelessWidget {
               ),
             ),
           ],
-        )
+        ),
       ],
     );
   }
@@ -169,9 +168,7 @@ class _TeamInfo extends StatelessWidget {
 }
 
 class _LeaveTeamDialog extends StatelessWidget {
-  const _LeaveTeamDialog({
-    super.key,
-  });
+  const _LeaveTeamDialog();
 
   @override
   Widget build(BuildContext context) {

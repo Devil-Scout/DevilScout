@@ -7,8 +7,8 @@ import 'pages/auth/email_login.dart';
 import 'pages/auth/email_signup.dart';
 import 'pages/auth/login_select.dart';
 import 'pages/home/home.dart';
-import 'pages/manage/manage_home.dart';
 import 'pages/manage/join_team.dart';
+import 'pages/manage/manage_home.dart';
 import 'pages/scout/scout_home.dart';
 
 final _rootNavigator = GlobalKey<NavigatorState>();
