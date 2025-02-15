@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../../components/team_card.dart';
+import '../../router.dart';
 import '../../supabase/database.dart';
 
 class ManageHomePage extends StatelessWidget {
@@ -77,10 +78,37 @@ class _UserCard extends StatelessWidget {
               padding: EdgeInsets.symmetric(vertical: 8),
               child: Divider(),
             ),
-            _TeamInfo(),
+            if (context.database.currentUser.isOnTeam)
+              _TeamInfo()
+            else
+              _JoinTeamPlaceholder(),
           ],
         ),
       ),
+    );
+  }
+}
+
+class _JoinTeamPlaceholder extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const Text(
+          'Join a team to unlock the full functionality of DevilScout.',
+        ),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(
+              child: ElevatedButton(
+                onPressed: () {},
+                child: const Text('Join a Team'),
+              ),
+            ),
+          ],
+        )
+      ],
     );
   }
 }
@@ -115,7 +143,7 @@ class _TeamInfo extends StatelessWidget {
                 onPressed: () {
                   showDialog(
                     context: context,
-                    builder: (context) => const LeaveTeamDialog(),
+                    builder: (context) => const _LeaveTeamDialog(),
                   );
                 },
                 style: OutlinedButton.styleFrom(
@@ -140,8 +168,8 @@ class _TeamInfo extends StatelessWidget {
   }
 }
 
-class LeaveTeamDialog extends StatelessWidget {
-  const LeaveTeamDialog({
+class _LeaveTeamDialog extends StatelessWidget {
+  const _LeaveTeamDialog({
     super.key,
   });
 
@@ -163,7 +191,7 @@ class LeaveTeamDialog extends StatelessWidget {
         children: [
           const Text(
             textAlign: TextAlign.center,
-            'Are you sure you want to leave this team? You will no longer be able to scout matches, and will have send a new request if you wish to rejoin.',
+            'Are you sure you want to leave this team? You will no longer be able to scout matches and will have send a new request if you wish to rejoin.',
           ),
           const Padding(
             padding: EdgeInsets.all(8),
