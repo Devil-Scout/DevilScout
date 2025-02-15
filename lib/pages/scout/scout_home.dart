@@ -41,7 +41,7 @@ class _JoinTeamMessage extends StatelessWidget {
                 children: [
                   Expanded(
                     child: ElevatedButton(
-                      onPressed: () => router.go('/scout/join-team'),
+                      onPressed: () => router.go('/settings/join-team'),
                       child: const Text('Join a Team'),
                     ),
                   ),
