@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:supabase/supabase.dart';
 
 import '../../components/full_screen_message.dart';
 import '../../components/searchable_text_field.dart';
@@ -248,12 +249,19 @@ class _JoinActionCluster extends StatelessWidget {
   }
 
   Future<void> _onAction(BuildContext context) async {
-    if (team.isRegistered) {
-      await context.database.teamRequests.requestToJoin(teamNum: team.number);
-    } else {
-      await context.database.teams
-          .createTeam(teamNum: team.number, name: team.name);
+    try {
+      final db = context.database;
+      if (team.isRegistered) {
+        await db.teamRequests.requestToJoin(teamNum: team.number);
+      } else {
+        await db.teams.createTeam(teamNum: team.number, name: team.name);
+      }
+      await db.currentUser.refresh();
+    } on PostgrestException {
+      // TODO: display ui notice
+      return;
     }
+
     // TODO: display ui notice
     router
       ..pop() // dialog

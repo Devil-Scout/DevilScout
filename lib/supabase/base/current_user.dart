@@ -47,6 +47,7 @@ class CurrentUserRepository {
   bool get isOnTeam => teamNum != null;
 
   int? get requestedTeamNum => _service.requestedTeamNum;
+  String? get requestedTeamName => _service.requestedTeamName;
   bool get hasTeamRequest => requestedTeamNum != null;
 
   bool hasPermission(PermissionType type) =>
@@ -73,7 +74,11 @@ class CurrentUserService {
         ),
       );
 
-  Future<void> refresh() => _supabase.auth.refreshSession();
+  Future<void> refresh() async {
+    if (_supabase.auth.currentSession != null) {
+      await _supabase.auth.refreshSession();
+    }
+  }
 
   Future<UserProfile?> getProfile() async {
     final userId = _supabase.auth.currentUser?.id;
