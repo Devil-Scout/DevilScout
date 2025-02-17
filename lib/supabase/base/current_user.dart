@@ -42,6 +42,7 @@ class CurrentUserRepository {
   int? get teamNum => _service.teamNum;
   Set<PermissionType>? get permissions => _service.permissions;
   String? get teamName => _service.teamName;
+  DateTime? get createdAt => _service.createdAt;
 
   bool get isOnTeam => teamNum != null;
 

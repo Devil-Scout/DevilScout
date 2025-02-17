@@ -53,15 +53,9 @@ class _UserCard extends StatelessWidget {
                       style: Theme.of(context).textTheme.titleLarge,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    FutureBuilder(
-                      future: context.database.currentUser.getProfile(),
-                      builder: (context, snapshot) {
-                        if (!snapshot.hasData) {
-                          return const Text('Loading...');
-                        }
-
-                        final profile = snapshot.requireData!;
-                        final joinDate = profile.createdAt;
+                    Builder(
+                      builder: (context) {
+                        final joinDate = context.database.currentUser.createdAt!;
                         return Text(
                           'Joined on ${joinDate.month}/${joinDate.day}/${joinDate.year}',
                           style: Theme.of(context).textTheme.bodyMedium,
