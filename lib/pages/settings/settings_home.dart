@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:supabase/supabase.dart';
 
-import '../../components/action_dialog.dart';
+import '../../components/dialogs.dart';
 import '../../components/full_width.dart';
-import '../../components/team_card.dart';
+import '../../components/teams.dart';
 import '../../router.dart';
 import '../../supabase/database.dart';
 

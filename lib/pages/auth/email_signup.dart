@@ -2,7 +2,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 
 import '../../components/full_width.dart';
-import '../../components/labeled_text_field.dart';
+import '../../components/text_fields.dart';
 import '../../router.dart';
 import '../../supabase/database.dart';
 

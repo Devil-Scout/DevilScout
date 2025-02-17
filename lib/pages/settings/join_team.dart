@@ -3,11 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:supabase/supabase.dart';
 
-import '../../components/action_dialog.dart';
+import '../../components/dialogs.dart';
 import '../../components/full_screen_message.dart';
-import '../../components/searchable_text_field.dart';
-import '../../components/team_avatar.dart';
-import '../../components/team_card.dart';
+import '../../components/teams.dart';
+import '../../components/text_fields.dart';
 import '../../router.dart';
 import '../../supabase/core/teams.dart';
 import '../../supabase/database.dart';
