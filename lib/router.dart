@@ -7,9 +7,9 @@ import 'pages/auth/email_login.dart';
 import 'pages/auth/email_signup.dart';
 import 'pages/auth/login_select.dart';
 import 'pages/home/home.dart';
-import 'pages/manage/join_team.dart';
-import 'pages/manage/manage_home.dart';
 import 'pages/scout/scout_home.dart';
+import 'pages/settings/join_team.dart';
+import 'pages/settings/settings_home.dart';
 
 final _rootNavigator = GlobalKey<NavigatorState>();
 final _homeNavigator = GlobalKey<NavigatorState>();
@@ -99,7 +99,7 @@ StatefulShellBranch _settingsBranch() {
     routes: [
       GoRoute(
         path: '/settings',
-        builder: (context, state) => const ManageHomePage(),
+        builder: (context, state) => const SettingsHomePage(),
         routes: [
           GoRoute(
             path: 'join-team',

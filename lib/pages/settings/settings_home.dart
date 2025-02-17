@@ -4,8 +4,8 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import '../../components/team_card.dart';
 import '../../supabase/database.dart';
 
-class ManageHomePage extends StatelessWidget {
-  const ManageHomePage({super.key});
+class SettingsHomePage extends StatelessWidget {
+  const SettingsHomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
