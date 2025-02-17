@@ -66,9 +66,6 @@ class Database {
           questions: QuestionsRepository.supabase(supabase),
         );
 
-  factory Database.of(BuildContext context) =>
-      Provider.of<Database>(context, listen: false);
-
   static Future<void> initSupabase() async {
     const supabaseUrl = 'https://jlhplhsuiwwcmxrtbdhp.supabase.co';
     const supabaseAnonKey =

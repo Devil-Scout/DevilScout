@@ -56,7 +56,7 @@ class _JoinTeamPageState extends State<JoinTeamPage> {
     final query = _controller.text;
     if (query.trim().isEmpty) return [];
 
-    final teamsDb = Database.of(context).teams;
+    final teamsDb = context.database.teams;
     final teamNums = await teamsDb.searchTeams(query: query);
     return teamsDb.getTeams(teamNums: teamNums);
   }
@@ -256,9 +256,8 @@ class _JoinActionCluster extends StatelessWidget {
     }
     // TODO: display ui notice
     router
-      ..pop()
-      ..pop();
-    unawaited(router.pushReplacement('/scout'));
+      ..pop() // dialog
+      ..go('/settings');
   }
 }
 

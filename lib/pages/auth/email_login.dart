@@ -126,10 +126,10 @@ class EmailLoginPage extends StatelessWidget {
 
   Future<void> _loginWithEmail(BuildContext context) async {
     try {
-      await Database.of(context).auth.signInWithEmail(
-            email: _emailController.text,
-            password: _passwordController.text,
-          );
+      await context.database.auth.signInWithEmail(
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
     } on Object {
       // TODO: notify user of error
     }

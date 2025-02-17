@@ -30,7 +30,8 @@ class _MainAppState extends State<MainApp> {
   void initState() {
     super.initState();
 
-    Database.of(context).auth.addListener((data) {
+    context.database.currentUser.refresh();
+    context.database.auth.addListener((data) {
       switch (data.event) {
         case AuthChangeEvent.signedIn:
           router.go('/home');

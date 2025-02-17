@@ -39,12 +39,15 @@ class CurrentUserRepository {
   // User? get user => _service.user;
   Uuid? get id => _service.id;
   String? get name => _service.name;
-  int? get teamNum => _service.teamNum;
   Set<PermissionType>? get permissions => _service.permissions;
   String? get teamName => _service.teamName;
   DateTime? get createdAt => _service.createdAt;
 
+  int? get teamNum => _service.teamNum;
   bool get isOnTeam => teamNum != null;
+
+  int? get requestedTeamNum => _service.requestedTeamNum;
+  bool get hasTeamRequest => requestedTeamNum != null;
 
   bool hasPermission(PermissionType type) =>
       permissions?.contains(type) ?? false;
@@ -86,6 +89,9 @@ class CurrentUserService {
 
   int? get teamNum => _jwtClaims?['team_num'] as int?;
   String? get teamName => _jwtClaims?['team_name'] as String?;
+  int? get requestedTeamNum => _jwtClaims?['requested_team_num'] as int?;
+  String? get requestedTeamName =>
+      _jwtClaims?['requested_team_name'] as String?;
 
   Set<PermissionType>? get permissions =>
       ((_jwtClaims?['permissions'] ?? []) as List<dynamic>?)

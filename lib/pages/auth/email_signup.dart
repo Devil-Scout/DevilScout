@@ -112,11 +112,11 @@ class EmailSignUpPage extends StatelessWidget {
 
   Future<void> _createUser(BuildContext context) async {
     try {
-      await Database.of(context).auth.signUpWithEmail(
-            name: _nameController.text,
-            email: _emailController.text,
-            password: _passwordController.text,
-          );
+      await context.database.auth.signUpWithEmail(
+        name: _nameController.text,
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
     } on Object {
       // TODO: notify user of error
     }
