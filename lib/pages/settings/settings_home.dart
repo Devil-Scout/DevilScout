@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../../components/team_card.dart';
+import '../../router.dart';
 import '../../supabase/database.dart';
 
 class SettingsHomePage extends StatelessWidget {
@@ -55,7 +56,8 @@ class _UserCard extends StatelessWidget {
                     ),
                     Builder(
                       builder: (context) {
-                        final joinDate = context.database.currentUser.createdAt!;
+                        final joinDate =
+                            context.database.currentUser.createdAt!;
                         return Text(
                           'Joined on ${joinDate.month}/${joinDate.day}/${joinDate.year}',
                           style: Theme.of(context).textTheme.bodyMedium,
@@ -95,8 +97,8 @@ class _JoinTeamPlaceholder extends StatelessWidget {
           children: [
             Expanded(
               child: ElevatedButton(
-                onPressed: () {},
                 child: const Text('Join a Team'),
+                onPressed: () => router.go('/settings/join-team'),
               ),
             ),
           ],
