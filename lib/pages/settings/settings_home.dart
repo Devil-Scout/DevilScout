@@ -12,13 +12,51 @@ class SettingsHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: SafeArea(
-        minimum: EdgeInsets.all(16),
+        minimum: const EdgeInsets.all(16),
         child: SingleChildScrollView(
           child: Column(
             children: [
-              _UserCard(),
+              const _UserCard(),
+              FullWidth(
+                child: ElevatedButton(
+                  child: const Text('Delete Account'),
+                  onPressed: () async {
+                    await showDialog(
+                      context: context,
+                      builder: (context) => ActionDialog(
+                        title: 'Delete Account',
+                        content: const Text(
+                          'Are you sure you want to delete your account? You will be logged out immediately. All of your personal information and preferences will be deleted, but any previously submitted scouting data will be anonymized and retained.',
+                        ),
+                        actionButton: ElevatedButton(
+                          child: const Text('Delete Account'),
+                          onPressed: () async {
+                            router.pop();
+                            await showDialog(
+                              context: context,
+                              builder: (context) => ActionDialog(
+                                title: 'Delete Account',
+                                content: const Text(
+                                  'Are you absolutely sure? This action cannot be reversed.',
+                                ),
+                                actionButton: ElevatedButton(
+                                  child: const Text('Delete Account'),
+                                  onPressed: () async {
+                                    await context.database.auth.deleteAccount();
+                                    // listener will go to /login automatically
+                                  },
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
             ],
           ),
         ),
