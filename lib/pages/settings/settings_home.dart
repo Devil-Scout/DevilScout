@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:supabase/supabase.dart';
 
+import '../../components/action_dialog.dart';
 import '../../components/full_width.dart';
 import '../../components/team_card.dart';
 import '../../router.dart';
@@ -167,43 +169,29 @@ class _LeaveTeamDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.7)),
-      icon: Icon(
-        Icons.error_outline,
-        size: 40,
-        color: Theme.of(context).colorScheme.onSurface,
+    return ActionDialog(
+      title: 'Leave Team?',
+      content: const Text(
+        textAlign: TextAlign.center,
+        'Are you sure you want to leave this team? You will no longer be able to scout matches and will have send a new request if you wish to rejoin.',
       ),
-      title: Text(
-        'Leave team?',
-        style: Theme.of(context).textTheme.titleLarge,
-      ),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Text(
-            textAlign: TextAlign.center,
-            'Are you sure you want to leave this team? You will no longer be able to scout matches and will have send a new request if you wish to rejoin.',
-          ),
-          const Padding(
-            padding: EdgeInsets.all(8),
-            child: Divider(),
-          ),
-          FullWidth(
-            child: ElevatedButton(
-              onPressed: () {
-                context.database.teamUsers
-                    .removeUser(context.database.currentUser.id!);
-                // TODO: ui success
-                router.pop();
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.error,
-              ),
-              child: const Text('Leave Team'),
-            ),
-          ),
-        ],
+      actionButton: ElevatedButton(
+        onPressed: () async {
+          try {
+            await context.database.teamUsers
+                .removeUser(context.database.currentUser.id!);
+          } on PostgrestException {
+            // TODO: handle
+            return;
+          }
+
+          // TODO: ui success
+          router.pop();
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Theme.of(context).colorScheme.error,
+        ),
+        child: const Text('Leave Team'),
       ),
     );
   }
