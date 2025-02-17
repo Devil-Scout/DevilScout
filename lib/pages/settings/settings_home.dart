@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../components/full_width.dart';
 import '../../components/team_card.dart';
 import '../../router.dart';
 import '../../supabase/database.dart';
@@ -107,15 +108,11 @@ class _JoinTeamPlaceholder extends StatelessWidget {
           'Join a team to unlock the full functionality of DevilScout.',
         ),
         const SizedBox(height: 12),
-        Row(
-          children: [
-            Expanded(
-              child: ElevatedButton(
-                child: const Text('Join a Team'),
-                onPressed: () => router.go('/settings/join-team'),
-              ),
-            ),
-          ],
+        FullWidth(
+          child: ElevatedButton(
+            child: const Text('Join a Team'),
+            onPressed: () => router.go('/settings/join-team'),
+          ),
         ),
       ],
     );
@@ -134,36 +131,31 @@ class _TeamInfo extends StatelessWidget {
       children: [
         TeamCardFuture(teamNum: teamNum),
         const SizedBox(height: 8),
-        Row(
-          children: [
-            Expanded(
-              child: OutlinedButton(
-                onPressed: () {
-                  if (isMember) {
-                    showDialog(
-                      context: context,
-                      builder: (context) => const _LeaveTeamDialog(),
-                    );
-                  } else {
-                    // TODO: dialog for cancelling request
-                  }
-                },
-                style: OutlinedButton.styleFrom(
-                  backgroundColor:
-                      Theme.of(context).colorScheme.surfaceContainer,
-                  side: BorderSide(
-                    color: Theme.of(context).colorScheme.error,
-                  ),
-                ),
-                child: Text(
-                  isMember ? 'Leave Team' : 'Cancel Request',
-                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        color: Theme.of(context).colorScheme.error,
-                      ),
-                ),
+        FullWidth(
+          child: OutlinedButton(
+            onPressed: () {
+              if (isMember) {
+                showDialog(
+                  context: context,
+                  builder: (context) => const _LeaveTeamDialog(),
+                );
+              } else {
+                // TODO: dialog for cancelling request
+              }
+            },
+            style: OutlinedButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+              side: BorderSide(
+                color: Theme.of(context).colorScheme.error,
               ),
             ),
-          ],
+            child: Text(
+              isMember ? 'Leave Team' : 'Cancel Request',
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    color: Theme.of(context).colorScheme.error,
+                  ),
+            ),
+          ),
         ),
       ],
     );
@@ -197,23 +189,19 @@ class _LeaveTeamDialog extends StatelessWidget {
             padding: EdgeInsets.all(8),
             child: Divider(),
           ),
-          Row(
-            children: [
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: () {
-                    context.database.teamUsers
-                        .removeUser(context.database.currentUser.id!);
-                    // TODO: ui success
-                    router.pop();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.error,
-                  ),
-                  child: const Text('Leave Team'),
-                ),
+          FullWidth(
+            child: ElevatedButton(
+              onPressed: () {
+                context.database.teamUsers
+                    .removeUser(context.database.currentUser.id!);
+                // TODO: ui success
+                router.pop();
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).colorScheme.error,
               ),
-            ],
+              child: const Text('Leave Team'),
+            ),
           ),
         ],
       ),

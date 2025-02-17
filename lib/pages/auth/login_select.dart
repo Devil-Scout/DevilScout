@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
+import '../../components/full_width.dart';
 import '../../router.dart';
 import '../../supabase/base/auth.dart';
 import '../../supabase/database.dart';
@@ -56,23 +57,19 @@ class LoginSelectPage extends StatelessWidget {
     BuildContext context, {
     required SsoProvider provider,
   }) {
-    return Row(
-      children: [
-        Expanded(
-          child: OutlinedButton.icon(
-            onPressed: () async => _loginWithSso(context, provider),
-            icon: SvgPicture.asset(
-              provider.iconPath,
-              width: 24,
-              height: 24,
-            ),
-            label: Padding(
-              padding: const EdgeInsets.only(left: 6),
-              child: Text('Sign in with ${provider.name}'),
-            ),
-          ),
+    return FullWidth(
+      child: OutlinedButton.icon(
+        onPressed: () async => _loginWithSso(context, provider),
+        icon: SvgPicture.asset(
+          provider.iconPath,
+          width: 24,
+          height: 24,
         ),
-      ],
+        label: Padding(
+          padding: const EdgeInsets.only(left: 6),
+          child: Text('Sign in with ${provider.name}'),
+        ),
+      ),
     );
   }
 
@@ -96,19 +93,15 @@ class LoginSelectPage extends StatelessWidget {
   }
 
   Widget _emailButton(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: ElevatedButton.icon(
-            onPressed: () => router.go('/login/email'),
-            icon: const Icon(Icons.mail_outline),
-            label: const Padding(
-              padding: EdgeInsets.only(left: 6),
-              child: Text('Continue with Email'),
-            ),
-          ),
+    return FullWidth(
+      child: ElevatedButton.icon(
+        onPressed: () => router.go('/login/email'),
+        icon: const Icon(Icons.mail_outline),
+        label: const Padding(
+          padding: EdgeInsets.only(left: 6),
+          child: Text('Continue with Email'),
         ),
-      ],
+      ),
     );
   }
 

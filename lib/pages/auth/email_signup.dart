@@ -1,6 +1,7 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 
+import '../../components/full_width.dart';
 import '../../components/labeled_text_field.dart';
 import '../../router.dart';
 import '../../supabase/database.dart';
@@ -24,7 +25,23 @@ class EmailSignUpPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _headerText(context),
+                ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 256),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Welcome!',
+                        style: Theme.of(context).textTheme.displayMedium,
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        'Level up your scouting with the DevilScout platform',
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                    ],
+                  ),
+                ),
                 const SizedBox(height: 40),
                 LabeledTextField(
                   label: 'Full Name',
@@ -52,61 +69,33 @@ class EmailSignUpPage extends StatelessWidget {
                   controller: _verifyController,
                 ),
                 const SizedBox(height: 40),
-                _bottomButtons(context),
+                FullWidth(
+                  leading: OutlinedButton(
+                    onPressed: router.pop,
+                    child: const Icon(Icons.arrow_back),
+                  ),
+                  child: ListenableBuilder(
+                    listenable: Listenable.merge([
+                      _nameController,
+                      _emailController,
+                      _passwordController,
+                      _verifyController,
+                    ]),
+                    builder: (context, _) {
+                      return ElevatedButton(
+                        onPressed: _isFormValid()
+                            ? () async => _createUser(context)
+                            : null,
+                        child: const Text('Sign Up'),
+                      );
+                    },
+                  ),
+                ),
               ],
             ),
           ),
         ),
       ),
-    );
-  }
-
-  Widget _headerText(BuildContext context) {
-    return ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 256),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Welcome!',
-            style: Theme.of(context).textTheme.displayMedium,
-          ),
-          const SizedBox(height: 6),
-          Text(
-            'Level up your scouting with the DevilScout platform',
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _bottomButtons(BuildContext context) {
-    return Row(
-      children: [
-        OutlinedButton(
-          onPressed: router.pop,
-          child: const Icon(Icons.arrow_back),
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: ListenableBuilder(
-            listenable: Listenable.merge([
-              _nameController,
-              _emailController,
-              _passwordController,
-              _verifyController,
-            ]),
-            builder: (context, _) {
-              return ElevatedButton(
-                onPressed:
-                    _isFormValid() ? () async => _createUser(context) : null,
-                child: const Text('Sign Up'),
-              );
-            },
-          ),
-        ),
-      ],
     );
   }
 

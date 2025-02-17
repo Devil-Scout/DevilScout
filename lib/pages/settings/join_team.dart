@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:supabase/supabase.dart';
 
 import '../../components/full_screen_message.dart';
+import '../../components/full_width.dart';
 import '../../components/searchable_text_field.dart';
 import '../../components/team_avatar.dart';
 import '../../components/team_card.dart';
@@ -217,32 +218,24 @@ class _JoinActionCluster extends StatelessWidget {
           style: Theme.of(context).textTheme.bodyMedium,
         ),
         const SizedBox(height: 12),
-        Row(
-          children: [
-            Expanded(
-              child: ElevatedButton(
-                onPressed: () => _onAction(context),
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size.fromHeight(50),
-                ),
-                child: Text(_actionLabel),
-              ),
+        FullWidth(
+          child: ElevatedButton(
+            onPressed: () => _onAction(context),
+            style: ElevatedButton.styleFrom(
+              minimumSize: const Size.fromHeight(50),
             ),
-          ],
+            child: Text(_actionLabel),
+          ),
         ),
         const SizedBox(height: 8),
-        Row(
-          children: [
-            Expanded(
-              child: OutlinedButton(
-                style: OutlinedButton.styleFrom(
-                  minimumSize: const Size.fromHeight(50),
-                ),
-                onPressed: router.pop,
-                child: const Text('Cancel'),
-              ),
+        FullWidth(
+          child: OutlinedButton(
+            style: OutlinedButton.styleFrom(
+              minimumSize: const Size.fromHeight(50),
             ),
-          ],
+            onPressed: router.pop,
+            child: const Text('Cancel'),
+          ),
         ),
       ],
     );
