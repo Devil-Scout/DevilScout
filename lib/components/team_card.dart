@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../supabase/core/teams.dart';
+import '../supabase/database.dart';
 import 'team_avatar.dart';
 
 class TeamCard extends StatelessWidget {
@@ -50,6 +52,34 @@ class TeamCard extends StatelessWidget {
                   ))
             : null,
       ),
+    );
+  }
+}
+
+class TeamCardFuture extends StatelessWidget {
+  final int teamNum;
+
+  const TeamCardFuture({super.key, required this.teamNum});
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: context.database.teams.getTeam(teamNum: teamNum),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return Center(
+            child: LoadingAnimationWidget.horizontalRotatingDots(
+              color: Theme.of(context).colorScheme.onSurface,
+              size: 50,
+            ),
+          );
+        } else if (!snapshot.hasData) {
+          // TODO: what here?
+        }
+
+        final team = snapshot.requireData!;
+        return TeamCard(team: team);
+      },
     );
   }
 }

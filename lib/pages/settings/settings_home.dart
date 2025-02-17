@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../../components/team_card.dart';
 import '../../router.dart';
@@ -73,10 +72,23 @@ class _UserCard extends StatelessWidget {
               padding: EdgeInsets.symmetric(vertical: 8),
               child: Divider(),
             ),
-            if (context.database.currentUser.isOnTeam)
-              _TeamInfo()
-            else
-              _JoinTeamPlaceholder(),
+            Builder(
+              builder: (context) {
+                if (context.database.currentUser.isOnTeam) {
+                  return _TeamInfo(
+                    teamNum: context.database.currentUser.teamNum!,
+                    isMember: true,
+                  );
+                } else if (context.database.currentUser.hasTeamRequest) {
+                  return _TeamInfo(
+                    teamNum: context.database.currentUser.requestedTeamNum!,
+                    isMember: false,
+                  );
+                } else {
+                  return const _JoinTeamPlaceholder();
+                }
+              },
+            ),
           ],
         ),
       ),
@@ -85,6 +97,8 @@ class _UserCard extends StatelessWidget {
 }
 
 class _JoinTeamPlaceholder extends StatelessWidget {
+  const _JoinTeamPlaceholder();
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -109,37 +123,30 @@ class _JoinTeamPlaceholder extends StatelessWidget {
 }
 
 class _TeamInfo extends StatelessWidget {
+  final int teamNum;
+  final bool isMember;
+
+  const _TeamInfo({required this.teamNum, required this.isMember});
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        FutureBuilder(
-          future: context.database.teams
-              .getTeam(teamNum: context.database.currentUser.teamNum!),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return Center(
-                child: LoadingAnimationWidget.horizontalRotatingDots(
-                  color: Theme.of(context).colorScheme.onSurface,
-                  size: 50,
-                ),
-              );
-            }
-
-            final team = snapshot.requireData!;
-            return TeamCard(team: team);
-          },
-        ),
+        TeamCardFuture(teamNum: teamNum),
         const SizedBox(height: 8),
         Row(
           children: [
             Expanded(
               child: OutlinedButton(
                 onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) => const _LeaveTeamDialog(),
-                  );
+                  if (isMember) {
+                    showDialog(
+                      context: context,
+                      builder: (context) => const _LeaveTeamDialog(),
+                    );
+                  } else {
+                    // TODO: dialog for cancelling request
+                  }
                 },
                 style: OutlinedButton.styleFrom(
                   backgroundColor:
@@ -149,7 +156,7 @@ class _TeamInfo extends StatelessWidget {
                   ),
                 ),
                 child: Text(
-                  'Leave Team',
+                  isMember ? 'Leave Team' : 'Cancel Request',
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                         color: Theme.of(context).colorScheme.error,
                       ),
@@ -194,7 +201,12 @@ class _LeaveTeamDialog extends StatelessWidget {
             children: [
               Expanded(
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    context.database.teamUsers
+                        .removeUser(context.database.currentUser.id!);
+                    // TODO: ui success
+                    router.pop();
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Theme.of(context).colorScheme.error,
                   ),
