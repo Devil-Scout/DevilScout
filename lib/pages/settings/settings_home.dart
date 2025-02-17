@@ -12,54 +12,96 @@ class SettingsHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: SafeArea(
-        minimum: const EdgeInsets.all(16),
+        minimum: EdgeInsets.all(16),
         child: SingleChildScrollView(
           child: Column(
             children: [
-              const _UserCard(),
-              FullWidth(
-                child: ElevatedButton(
-                  child: const Text('Delete Account'),
-                  onPressed: () async {
-                    await showDialog(
-                      context: context,
-                      builder: (context) => ActionDialog(
-                        title: 'Delete Account',
-                        content: const Text(
-                          'Are you sure you want to delete your account? You will be logged out immediately. All of your personal information and preferences will be deleted, but any previously submitted scouting data will be anonymized and retained.',
-                        ),
-                        actionButton: ElevatedButton(
-                          child: const Text('Delete Account'),
-                          onPressed: () async {
-                            router.pop();
-                            await showDialog(
-                              context: context,
-                              builder: (context) => ActionDialog(
-                                title: 'Delete Account',
-                                content: const Text(
-                                  'Are you absolutely sure? This action cannot be reversed.',
-                                ),
-                                actionButton: ElevatedButton(
-                                  child: const Text('Delete Account'),
-                                  onPressed: () async {
-                                    await context.database.auth.deleteAccount();
-                                    // listener will go to /login automatically
-                                  },
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
+              _UserCard(),
+              _SignOutButton(),
+              SizedBox(height: 8),
+              _DeleteAccountButton(),
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _SignOutButton extends StatelessWidget {
+  const _SignOutButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return FullWidth(
+      child: ElevatedButton(
+        child: const Text('Sign Out'),
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) => ActionDialog(
+              title: 'Sign Out',
+              content: const Text('Are you sure you want to sign out?'),
+              actionButton: ElevatedButton(
+                child: const Text('Sign Out'),
+                onPressed: () {
+                  context.database.auth.signOut();
+                  // automatic redirect to /login
+                  // this should almost never fail
+                },
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _DeleteAccountButton extends StatelessWidget {
+  const _DeleteAccountButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return FullWidth(
+      child: ElevatedButton(
+        child: const Text('Delete Account'),
+        onPressed: () async {
+          await showDialog(
+            context: context,
+            builder: (context) => ActionDialog(
+              title: 'Delete Account',
+              content: const Text(
+                'Are you sure you want to delete your account? You will be logged out immediately. All of your personal information and preferences will be deleted, but any previously submitted scouting data will be anonymized and retained.',
+              ),
+              actionButton: ElevatedButton(
+                child: const Text('Delete Account'),
+                onPressed: () async {
+                  router.pop();
+                  await showDialog(
+                    context: context,
+                    builder: (context) => ActionDialog(
+                      title: 'Delete Account',
+                      content: const Text(
+                        'Are you absolutely sure? This action cannot be reversed.',
+                      ),
+                      actionButton: ElevatedButton(
+                        child: const Text('Delete Account'),
+                        onPressed: () async {
+                          await context.database.auth.deleteAccount();
+                          // TODO: error handling
+                          // automatic redirect to /login
+                        },
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          );
+        },
       ),
     );
   }
