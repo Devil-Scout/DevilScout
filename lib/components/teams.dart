@@ -98,8 +98,6 @@ class TeamCardFuture extends StatelessWidget {
               size: 50,
             ),
           );
-        } else if (!snapshot.hasData) {
-          // TODO: what here?
         }
 
         final team = snapshot.requireData!;

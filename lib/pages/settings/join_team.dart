@@ -210,14 +210,31 @@ class JoinTeamDialog extends StatelessWidget {
       }
       await db.currentUser.refresh();
     } on PostgrestException {
-      // TODO: display ui notice
+      if (!context.mounted) return;
+      await showDialog(
+        context: context,
+        builder: (context) => UnexpectedErrorDialog(
+          title: team.isRegistered ? 'Request Failed' : 'Registration Failed',
+        ),
+      );
       return;
     }
 
-    // TODO: display ui notice
-    router
-      ..pop() // dialog
-      ..go('/settings');
+    if (!context.mounted) return;
+    router.pop();
+    await showDialog(
+      context: context,
+      builder: (context) => TextDialog(
+        title: 'Success',
+        message: team.isRegistered
+            ? 'Your request to join Team ${team.number} has been submitted for approval.'
+            : 'Team ${team.number} has been registered.',
+      ),
+    );
+    // ignore: use_build_context_synchronously : safe for database
+    await context.database.currentUser.refresh();
+
+    router.go('/settings');
   }
 }
 

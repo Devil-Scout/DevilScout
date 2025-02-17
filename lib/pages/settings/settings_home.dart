@@ -135,16 +135,12 @@ class _TeamInfo extends StatelessWidget {
         const SizedBox(height: 8),
         FullWidth(
           child: OutlinedButton(
-            onPressed: () {
-              if (isMember) {
-                showDialog(
-                  context: context,
-                  builder: (context) => const _LeaveTeamDialog(),
-                );
-              } else {
-                // TODO: dialog for cancelling request
-              }
-            },
+            onPressed: () => showDialog(
+              context: context,
+              builder: (context) => isMember
+                  ? _LeaveTeamDialog(teamNum: teamNum)
+                  : _CancelRequestDialog(teamNum: teamNum),
+            ),
             style: OutlinedButton.styleFrom(
               backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
               side: BorderSide(
@@ -165,15 +161,17 @@ class _TeamInfo extends StatelessWidget {
 }
 
 class _LeaveTeamDialog extends StatelessWidget {
-  const _LeaveTeamDialog();
+  final int teamNum;
+
+  const _LeaveTeamDialog({required this.teamNum});
 
   @override
   Widget build(BuildContext context) {
     return ActionDialog(
-      title: 'Leave Team?',
+      title: 'Leave Team $teamNum?',
       content: const Text(
         textAlign: TextAlign.center,
-        'Are you sure you want to leave this team? You will no longer be able to scout matches and will have send a new request if you wish to rejoin.',
+        'Are you sure you want to leave this team? You will no longer be able to collect scouting data, and you will have send a new request if you wish to rejoin.',
       ),
       actionButton: ElevatedButton(
         onPressed: () async {
@@ -181,12 +179,74 @@ class _LeaveTeamDialog extends StatelessWidget {
             await context.database.teamUsers
                 .removeUser(context.database.currentUser.id!);
           } on PostgrestException {
-            // TODO: handle
+            if (!context.mounted) return;
+            await showDialog(
+              context: context,
+              builder: (context) =>
+                  const UnexpectedErrorDialog(title: 'Failed to leave team'),
+            );
             return;
           }
 
-          // TODO: ui success
+          if (!context.mounted) return;
+          await showDialog(
+            context: context,
+            builder: (context) => TextDialog(
+              title: 'Success',
+              message: 'You are no longer a member of Team $teamNum',
+            ),
+          );
+
+          if (!context.mounted) return;
           router.pop();
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Theme.of(context).colorScheme.error,
+        ),
+        child: const Text('Leave Team'),
+      ),
+    );
+  }
+}
+
+class _CancelRequestDialog extends StatelessWidget {
+  final int teamNum;
+
+  const _CancelRequestDialog({required this.teamNum});
+
+  @override
+  Widget build(BuildContext context) {
+    return ActionDialog(
+      title: 'Cancel Join Request',
+      content: Text(
+        textAlign: TextAlign.center,
+        "Are you sure you want to cancel your request to join Team $teamNum? Team admins won't be able to add you as a member.",
+      ),
+      actionButton: ElevatedButton(
+        onPressed: () async {
+          try {
+            await context.database.teamRequests
+                .deleteRequest(userId: context.database.currentUser.id!);
+          } on PostgrestException {
+            if (!context.mounted) return;
+            await showDialog(
+              context: context,
+              builder: (context) => const UnexpectedErrorDialog(
+                title: 'Failed to cancel request',
+              ),
+            );
+            return;
+          }
+
+          if (!context.mounted) return;
+          router.pop();
+          await showDialog(
+            context: context,
+            builder: (context) => const TextDialog(
+              title: 'Success',
+              message: 'Your join request was cancelled.',
+            ),
+          );
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: Theme.of(context).colorScheme.error,
