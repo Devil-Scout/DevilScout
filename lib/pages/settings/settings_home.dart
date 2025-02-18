@@ -14,11 +14,20 @@ class SettingsHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: SafeArea(
-        minimum: EdgeInsets.all(16),
+        minimum: EdgeInsets.symmetric(horizontal: 16, vertical: 32),
         child: SingleChildScrollView(
           child: Column(
             children: [
               _UserCard(),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 8),
+                child: Divider(),
+              ),
+              _TeamSection(),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 8),
+                child: Divider(),
+              ),
               _SignOutButton(),
               SizedBox(height: 8),
               _DeleteAccountButton(),
@@ -30,13 +39,38 @@ class SettingsHomePage extends StatelessWidget {
   }
 }
 
+class _TeamSection extends StatelessWidget {
+  const _TeamSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return Builder(
+      builder: (context) {
+        if (context.database.currentUser.isOnTeam) {
+          return _TeamInfo(
+            teamNum: context.database.currentUser.teamNum!,
+            isMember: true,
+          );
+        } else if (context.database.currentUser.hasTeamRequest) {
+          return _TeamInfo(
+            teamNum: context.database.currentUser.requestedTeamNum!,
+            isMember: false,
+          );
+        } else {
+          return const _JoinTeamPlaceholder();
+        }
+      },
+    );
+  }
+}
+
 class _SignOutButton extends StatelessWidget {
   const _SignOutButton();
 
   @override
   Widget build(BuildContext context) {
     return FullWidth(
-      child: ElevatedButton(
+      child: OutlinedButton(
         child: const Text('Sign Out'),
         onPressed: () {
           showDialog(
@@ -112,69 +146,34 @@ class _UserCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card.filled(
-      color: Theme.of(context).colorScheme.surfaceContainer,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.7),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
+    return Row(
+      children: [
+        const Icon(
+          Icons.badge_outlined,
+          size: 60,
+        ),
+        const SizedBox(width: 16),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                const Icon(
-                  Icons.badge_outlined,
-                  size: 60,
-                ),
-                const SizedBox(width: 16),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      context.database.currentUser.name ?? 'Name Not Found',
-                      style: Theme.of(context).textTheme.titleLarge,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    Builder(
-                      builder: (context) {
-                        final joinDate =
-                            context.database.currentUser.createdAt!;
-                        return Text(
-                          'Joined on ${joinDate.month}/${joinDate.day}/${joinDate.year}',
-                          style: Theme.of(context).textTheme.bodyMedium,
-                          overflow: TextOverflow.ellipsis,
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 8),
-              child: Divider(),
+            Text(
+              context.database.currentUser.name ?? 'Name Not Found',
+              style: Theme.of(context).textTheme.titleLarge,
+              overflow: TextOverflow.ellipsis,
             ),
             Builder(
               builder: (context) {
-                if (context.database.currentUser.isOnTeam) {
-                  return _TeamInfo(
-                    teamNum: context.database.currentUser.teamNum!,
-                    isMember: true,
-                  );
-                } else if (context.database.currentUser.hasTeamRequest) {
-                  return _TeamInfo(
-                    teamNum: context.database.currentUser.requestedTeamNum!,
-                    isMember: false,
-                  );
-                } else {
-                  return const _JoinTeamPlaceholder();
-                }
+                final joinDate = context.database.currentUser.createdAt!;
+                return Text(
+                  'Joined on ${joinDate.month}/${joinDate.day}/${joinDate.year}',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                  overflow: TextOverflow.ellipsis,
+                );
               },
             ),
           ],
         ),
-      ),
+      ],
     );
   }
 }
@@ -186,6 +185,11 @@ class _JoinTeamPlaceholder extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        const Icon(
+          Icons.info_outline,
+          size: 40,
+        ),
+        const SizedBox(height: 12),
         const Text(
           'Join a team to unlock the full functionality of DevilScout.',
         ),
@@ -210,7 +214,36 @@ class _TeamInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Row(
+          children: [
+            Text(
+              'Team Information',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(width: 8),
+            if (!isMember)
+              DecoratedBox(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary,
+                  borderRadius: BorderRadius.circular(100),
+                ),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+                  child: Text(
+                    'Requesting',
+                    style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                ),
+              ),
+          ],
+        ),
+        const SizedBox(height: 8),
         TeamCardFuture(teamNum: teamNum),
         const SizedBox(height: 8),
         FullWidth(
@@ -222,7 +255,6 @@ class _TeamInfo extends StatelessWidget {
                   : _CancelRequestDialog(teamNum: teamNum),
             ),
             style: OutlinedButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
               side: BorderSide(
                 color: Theme.of(context).colorScheme.error,
               ),
@@ -250,7 +282,7 @@ class _LeaveTeamDialog extends StatelessWidget {
     return ActionDialog(
       title: 'Leave Team $teamNum?',
       content: const Text(
-        textAlign: TextAlign.center,
+        textAlign: TextAlign.left,
         'Are you sure you want to leave this team? You will no longer be able to collect scouting data, and you will have send a new request if you wish to rejoin.',
       ),
       actionButton: ElevatedButton(
@@ -297,9 +329,9 @@ class _CancelRequestDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ActionDialog(
-      title: 'Cancel Join Request',
+      title: 'Cancel Request?',
       content: Text(
-        textAlign: TextAlign.center,
+        textAlign: TextAlign.left,
         "Are you sure you want to cancel your request to join Team $teamNum? Team admins won't be able to add you as a member.",
       ),
       actionButton: ElevatedButton(
@@ -331,7 +363,7 @@ class _CancelRequestDialog extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           backgroundColor: Theme.of(context).colorScheme.error,
         ),
-        child: const Text('Leave Team'),
+        child: const Text('Cancel Request'),
       ),
     );
   }

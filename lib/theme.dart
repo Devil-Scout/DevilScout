@@ -34,7 +34,7 @@ const _textTheme = TextTheme(
   ),
   titleMedium: TextStyle(
     fontFamily: _displayFontFamily,
-    fontSize: 20,
+    fontSize: 18,
   ),
   titleSmall: TextStyle(
     fontFamily: _displayFontFamily,
@@ -113,7 +113,7 @@ final ThemeData lightTheme = ThemeData(
   ),
   outlinedButtonTheme: OutlinedButtonThemeData(
     style: OutlinedButton.styleFrom(
-      textStyle: _textTheme.bodyLarge,
+      textStyle: _textTheme.bodyMedium,
       backgroundColor: _surfaceColorLight,
       foregroundColor: _onSurfaceColorLight,
       iconColor: _onSurfaceColorLight,
