@@ -80,12 +80,12 @@ class _UserSectionState extends State<_UserSection> {
         const SizedBox(height: 8),
         _AccountInfoSection(
           label: 'Full Name',
-          content: context.database.currentUser.name!,
+          content: context.database.currentUser.name,
         ),
         const SizedBox(height: 16),
         _AccountInfoSection(
           label: 'Email Address',
-          content: context.database.currentUser.email!,
+          content: context.database.currentUser.email,
         ),
         const SizedBox(height: 16),
         const _AccountInfoSection(
