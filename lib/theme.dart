@@ -153,7 +153,11 @@ final ThemeData lightTheme = ThemeData(
       foregroundColor: _onSurfaceColorLightVariant,
       overlayColor: _onSurfaceColorLightVariant!.withAlpha(45),
       iconColor: _onSurfaceColorLightVariant,
-      textStyle: const TextStyle(decoration: TextDecoration.none),
+      iconSize: 25,
+      textStyle: const TextStyle(
+        decoration: TextDecoration.none,
+        fontWeight: FontWeight.bold,
+      ),
       tapTargetSize: MaterialTapTargetSize.padded,
       visualDensity: VisualDensity.standard,
       padding: const EdgeInsets.all(12),

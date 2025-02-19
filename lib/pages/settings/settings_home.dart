@@ -30,13 +30,101 @@ class SettingsHomePage extends StatelessWidget {
                 padding: EdgeInsets.symmetric(vertical: 8),
                 child: Divider(),
               ),
+              _UserSection(),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 8),
+                child: Divider(),
+              ),
               _SignOutButton(),
-              SizedBox(height: 8),
-              _DeleteAccountButton(),
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class _UserSection extends StatefulWidget {
+  const _UserSection();
+
+  @override
+  State<_UserSection> createState() => _UserSectionState();
+}
+
+class _UserSectionState extends State<_UserSection> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text(
+              'Account Information',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const Spacer(),
+            TextButton.icon(
+              onPressed: () {},
+              icon: const Icon(Icons.edit_outlined),
+              label: const Text('Edit'),
+              style: TextButton.styleFrom(
+                foregroundColor: Theme.of(context).colorScheme.primary,
+                overlayColor:
+                    Theme.of(context).colorScheme.primary.withAlpha(45),
+                iconColor: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        _AccountInfoSection(
+          label: 'Full Name',
+          content: context.database.currentUser.name!,
+        ),
+        const SizedBox(height: 16),
+        _AccountInfoSection(
+          label: 'Email Address',
+          content: context.database.currentUser.email!,
+        ),
+        const SizedBox(height: 16),
+        const _AccountInfoSection(
+          label: 'Password',
+          content: '********',
+        ),
+        const SizedBox(height: 12),
+        const _DeleteAccountButton(),
+      ],
+    );
+  }
+}
+
+class _AccountInfoSection extends StatelessWidget {
+  final String label;
+  final String content;
+
+  const _AccountInfoSection({
+    required this.label,
+    required this.content,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+        ),
+        const SizedBox(height: 6),
+        Text(
+          content,
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+      ],
     );
   }
 }
@@ -94,9 +182,15 @@ class _SignOutButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FullWidth(
-      child: OutlinedButton(
-        child: const Text('Sign Out'),
+    return Center(
+      child: TextButton.icon(
+        style: TextButton.styleFrom(
+          foregroundColor: Theme.of(context).colorScheme.error,
+          iconColor: Theme.of(context).colorScheme.error,
+          overlayColor: Theme.of(context).colorScheme.error.withAlpha(45),
+        ),
+        icon: const Icon(Icons.logout),
+        label: const Text('Sign Out'),
         onPressed: () {
           showDialog(
             context: context,
@@ -124,29 +218,41 @@ class _DeleteAccountButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FullWidth(
-      child: ElevatedButton(
-        child: const Text('Delete Account'),
+    return Center(
+      child: TextButton.icon(
+        style: TextButton.styleFrom(
+          foregroundColor: Theme.of(context).colorScheme.error,
+          iconColor: Theme.of(context).colorScheme.error,
+          overlayColor: Theme.of(context).colorScheme.error.withAlpha(45),
+        ),
+        icon: const Icon(Icons.delete_forever_outlined),
+        label: const Text('Delete Account'),
         onPressed: () async {
           await showDialog(
             context: context,
             builder: (context) => ActionDialog(
-              title: 'Delete Account',
+              title: 'Delete account?',
               content: const Text(
                 'Are you sure you want to delete your account? You will be logged out immediately. All of your personal information and preferences will be deleted, but any previously submitted scouting data will be anonymized and retained.',
               ),
               actionButton: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.error,
+                ),
                 child: const Text('Delete Account'),
                 onPressed: () async {
                   router.pop();
                   await showDialog(
                     context: context,
                     builder: (context) => ActionDialog(
-                      title: 'Delete Account',
+                      title: 'Delete account?',
                       content: const Text(
                         'Are you absolutely sure? This action cannot be reversed.',
                       ),
                       actionButton: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(context).colorScheme.error,
+                        ),
                         child: const Text('Delete Account'),
                         onPressed: () async {
                           await context.database.auth.deleteAccount();
@@ -267,7 +373,7 @@ class _TeamInfo extends StatelessWidget {
         Row(
           children: [
             Text(
-              'Team Information',
+              'Current Team',
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const Spacer(),
@@ -281,7 +387,7 @@ class _TeamInfo extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
                   child: Text(
-                    'Request Sent',
+                    'Request Pending',
                     style: Theme.of(context).textTheme.bodySmall!.copyWith(
                           color: Theme.of(context).colorScheme.onPrimary,
                           fontWeight: FontWeight.bold,
@@ -291,27 +397,27 @@ class _TeamInfo extends StatelessWidget {
               ),
           ],
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 12),
         TeamCardFuture(teamNum: teamNum),
         const SizedBox(height: 8),
-        FullWidth(
-          child: OutlinedButton(
+        Center(
+          child: TextButton.icon(
             onPressed: () => showDialog(
               context: context,
               builder: (context) => isMember
                   ? _LeaveTeamDialog(teamNum: teamNum)
                   : _CancelRequestDialog(teamNum: teamNum),
             ),
-            style: OutlinedButton.styleFrom(
-              side: BorderSide(
-                color: Theme.of(context).colorScheme.error,
-              ),
+            style: TextButton.styleFrom(
+              foregroundColor: Theme.of(context).colorScheme.error,
+              overlayColor: Theme.of(context).colorScheme.error.withAlpha(45),
+              iconColor: Theme.of(context).colorScheme.error,
             ),
-            child: Text(
+            icon: isMember
+                ? const Icon(Icons.logout)
+                : const Icon(Icons.cancel_outlined),
+            label: Text(
               isMember ? 'Leave Team' : 'Cancel Request',
-              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                    color: Theme.of(context).colorScheme.error,
-                  ),
             ),
           ),
         ),
@@ -377,7 +483,7 @@ class _CancelRequestDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ActionDialog(
-      title: 'Cancel Request?',
+      title: 'Cancel request?',
       content: Text(
         textAlign: TextAlign.left,
         "Are you sure you want to cancel your request to join Team $teamNum? Team admins won't be able to add you as a member.",
