@@ -221,6 +221,9 @@ class JoinTeamDialog extends StatelessWidget {
     }
 
     if (!context.mounted) return;
+    await context.database.currentUser.refresh();
+
+    if (!context.mounted) return;
     router.pop();
     await showDialog(
       context: context,
@@ -231,8 +234,6 @@ class JoinTeamDialog extends StatelessWidget {
             : 'Team ${team.number} has been registered.',
       ),
     );
-    // ignore: use_build_context_synchronously : safe for database
-    await context.database.currentUser.refresh();
 
     router.go('/settings');
   }

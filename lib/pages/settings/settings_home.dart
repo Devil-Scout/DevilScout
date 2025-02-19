@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:supabase/supabase.dart';
 
@@ -39,8 +41,31 @@ class SettingsHomePage extends StatelessWidget {
   }
 }
 
-class _TeamSection extends StatelessWidget {
+class _TeamSection extends StatefulWidget {
   const _TeamSection();
+
+  @override
+  State<_TeamSection> createState() => _TeamSectionState();
+}
+
+class _TeamSectionState extends State<_TeamSection> {
+  late final StreamSubscription<AuthState> _authSub;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _authSub = context.database.auth.subscribe((state) {
+      if (state.event != AuthChangeEvent.tokenRefreshed) return;
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _authSub.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -141,8 +166,31 @@ class _DeleteAccountButton extends StatelessWidget {
   }
 }
 
-class _UserCard extends StatelessWidget {
+class _UserCard extends StatefulWidget {
   const _UserCard();
+
+  @override
+  State<_UserCard> createState() => _UserCardState();
+}
+
+class _UserCardState extends State<_UserCard> {
+  late final StreamSubscription<AuthState> _authSub;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _authSub = context.database.auth.subscribe((state) {
+      if (state.event != AuthChangeEvent.tokenRefreshed) return;
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _authSub.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -351,7 +399,12 @@ class _CancelRequestDialog extends StatelessWidget {
           }
 
           if (!context.mounted) return;
+          await context.database.currentUser.refresh();
+
+          if (!context.mounted) return;
           router.pop();
+
+          // TODO: UI: is this dialog needed? updates in background
           await showDialog(
             context: context,
             builder: (context) => const TextDialog(

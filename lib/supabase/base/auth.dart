@@ -34,7 +34,7 @@ class AuthRepository {
   AuthRepository.supabase(SupabaseClient supabase)
       : this(AuthService(supabase));
 
-  StreamSubscription<AuthState> addListener(
+  StreamSubscription<AuthState> subscribe(
     void Function(AuthState data) onData,
   ) =>
       _service.addListener(onData);
