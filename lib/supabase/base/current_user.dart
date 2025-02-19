@@ -52,11 +52,9 @@ class CurrentUserRepository {
   bool hasPermission(PermissionType type) =>
       permissions?.contains(type) ?? false;
 
-  Future<void> setEmail(String email) =>
-      _service.setEmail(email);
+  Future<void> setEmail(String email) => _service.setEmail(email);
 
-  Future<void> setPassword(String password) =>
-      _service.setPassword(password);
+  Future<void> setPassword(String password) => _service.setPassword(password);
 }
 
 class CurrentUserService {
