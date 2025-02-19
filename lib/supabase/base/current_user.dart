@@ -38,6 +38,7 @@ class CurrentUserRepository {
 
   Uuid? get id => _service.id;
   String? get name => _service.name;
+  String? get email => _service.email;
   Set<PermissionType>? get permissions => _service.permissions;
   String? get teamName => _service.teamName;
   DateTime? get createdAt => _service.createdAt;
@@ -65,6 +66,7 @@ class CurrentUserService {
   Uuid? get id => _supabase.auth.currentUser?.id;
 
   String? get name => _supabase.auth.currentUser?.userMetadata?['full_name'];
+  String? get email => _supabase.auth.currentUser?.email;
 
   DateTime? get createdAt {
     final createdAt = _supabase.auth.currentUser?.createdAt;
