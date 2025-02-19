@@ -150,15 +150,13 @@ final ThemeData lightTheme = ThemeData(
   ),
   textButtonTheme: TextButtonThemeData(
     style: TextButton.styleFrom(
-      textStyle: _textTheme.bodyMedium!.copyWith(
-        color: _primaryColor,
-        decoration: TextDecoration.underline,
-      ),
-      padding: EdgeInsets.zero,
-      minimumSize: Size.zero,
-      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      visualDensity: VisualDensity.compact,
-      overlayColor: Colors.transparent,
+      foregroundColor: _onSurfaceColorLightVariant,
+      overlayColor: _onSurfaceColorLightVariant!.withAlpha(45),
+      iconColor: _onSurfaceColorLightVariant,
+      textStyle: const TextStyle(decoration: TextDecoration.none),
+      tapTargetSize: MaterialTapTargetSize.padded,
+      visualDensity: VisualDensity.standard,
+      padding: const EdgeInsets.all(12),
     ),
   ),
   inputDecorationTheme: InputDecorationTheme(

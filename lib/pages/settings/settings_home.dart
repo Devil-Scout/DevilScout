@@ -270,7 +270,7 @@ class _TeamInfo extends StatelessWidget {
               'Team Information',
               style: Theme.of(context).textTheme.titleMedium,
             ),
-            const SizedBox(width: 8),
+            const Spacer(),
             if (!isMember)
               DecoratedBox(
                 decoration: BoxDecoration(
@@ -281,7 +281,7 @@ class _TeamInfo extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
                   child: Text(
-                    'Requesting',
+                    'Request Sent',
                     style: Theme.of(context).textTheme.bodySmall!.copyWith(
                           color: Theme.of(context).colorScheme.onPrimary,
                           fontWeight: FontWeight.bold,

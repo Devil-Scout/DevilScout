@@ -70,6 +70,15 @@ class EmailLoginPage extends StatelessWidget {
   Widget _forgotPasswordButton(BuildContext context) {
     return TextButton(
       onPressed: () {},
+      style: TextButton.styleFrom(
+        foregroundColor: Theme.of(context).colorScheme.primary,
+        textStyle: Theme.of(context).textTheme.bodyMedium,
+        padding: EdgeInsets.zero,
+        minimumSize: Size.zero,
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        visualDensity: VisualDensity.compact,
+        overlayColor: Colors.transparent,
+      ),
       child: const Text('Forgot password?'),
     );
   }
@@ -108,6 +117,15 @@ class EmailLoginPage extends StatelessWidget {
         const SizedBox(width: 6),
         TextButton(
           onPressed: () => router.go('/login/email/signup'),
+          style: TextButton.styleFrom(
+            foregroundColor: Theme.of(context).colorScheme.primary,
+            textStyle: Theme.of(context).textTheme.bodyMedium,
+            padding: EdgeInsets.zero,
+            minimumSize: Size.zero,
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            visualDensity: VisualDensity.compact,
+            overlayColor: Colors.transparent,
+          ),
           child: const Text('Create one'),
         ),
       ],

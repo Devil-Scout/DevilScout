@@ -111,17 +111,17 @@ class LoginSelectPage extends StatelessWidget {
         onPressed: () {},
         icon: const Icon(Icons.help_outline, size: 22),
         label: const Text('Why do I need to sign in?'),
-        style: Theme.of(context).textButtonTheme.style!.copyWith(
-              foregroundColor: WidgetStatePropertyAll(Colors.grey[600]),
-              overlayColor: WidgetStatePropertyAll(Colors.grey[200]),
-              iconColor: WidgetStatePropertyAll(Colors.grey[600]),
-              textStyle: const WidgetStatePropertyAll(
-                TextStyle(decoration: TextDecoration.none),
-              ),
-              tapTargetSize: MaterialTapTargetSize.padded,
-              visualDensity: VisualDensity.standard,
-              padding: const WidgetStatePropertyAll(EdgeInsets.all(12)),
-            ),
+        // style: Theme.of(context).textButtonTheme.style!.copyWith(
+        //       foregroundColor: WidgetStatePropertyAll(Colors.grey[600]),
+        //       overlayColor: WidgetStatePropertyAll(Colors.grey[200]),
+        //       iconColor: WidgetStatePropertyAll(Colors.grey[600]),
+        //       textStyle: const WidgetStatePropertyAll(
+        //         TextStyle(decoration: TextDecoration.none),
+        //       ),
+        //       tapTargetSize: MaterialTapTargetSize.padded,
+        //       visualDensity: VisualDensity.standard,
+        //       padding: const WidgetStatePropertyAll(EdgeInsets.all(12)),
+        //     ),
       ),
     );
   }
