@@ -36,7 +36,6 @@ class CurrentUserRepository {
 
   Future<UserProfile?> getProfile() => _service.getProfile();
 
-  // User? get user => _service.user;
   Uuid? get id => _service.id;
   String? get name => _service.name;
   Set<PermissionType>? get permissions => _service.permissions;
@@ -52,6 +51,12 @@ class CurrentUserRepository {
 
   bool hasPermission(PermissionType type) =>
       permissions?.contains(type) ?? false;
+
+  Future<void> setEmail(String email) =>
+      _service.setEmail(email);
+
+  Future<void> setPassword(String password) =>
+      _service.setPassword(password);
 }
 
 class CurrentUserService {
@@ -73,6 +78,12 @@ class CurrentUserService {
           data: {'full_name': name},
         ),
       );
+
+  Future<void> setEmail(String email) =>
+      _supabase.auth.updateUser(UserAttributes(email: email));
+
+  Future<void> setPassword(String password) =>
+      _supabase.auth.updateUser(UserAttributes(password: password));
 
   Future<void> refresh() async {
     if (_supabase.auth.currentSession != null) {
