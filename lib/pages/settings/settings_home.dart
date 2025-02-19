@@ -124,7 +124,7 @@ class _AccountInfoEditor extends StatelessWidget {
             child: const Text('Save Changes'),
           ),
         ),
-        SizedBox(height: 4),
+        const SizedBox(height: 4),
       ],
     );
   }
