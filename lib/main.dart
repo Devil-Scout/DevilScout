@@ -32,7 +32,10 @@ class _MainAppState extends State<MainApp> {
   void initState() {
     super.initState();
 
-    context.database.currentUser.refresh();
+    if (context.database.auth.isSignedIn) {
+      context.database.currentUser.refresh();
+    }
+
     _authSub = context.database.auth.subscribe((data) {
       switch (data.event) {
         case AuthChangeEvent.signedIn:

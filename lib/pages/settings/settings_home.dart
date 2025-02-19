@@ -205,13 +205,13 @@ class _UserCardState extends State<_UserCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              context.database.currentUser.name ?? 'Name Not Found',
+              context.database.currentUser.name,
               style: Theme.of(context).textTheme.titleLarge,
               overflow: TextOverflow.ellipsis,
             ),
             Builder(
               builder: (context) {
-                final joinDate = context.database.currentUser.createdAt!;
+                final joinDate = context.database.currentUser.createdAt;
                 return Text(
                   'Joined on ${joinDate.month}/${joinDate.day}/${joinDate.year}',
                   style: Theme.of(context).textTheme.bodyMedium,
@@ -337,7 +337,7 @@ class _LeaveTeamDialog extends StatelessWidget {
         onPressed: () async {
           try {
             await context.database.teamUsers
-                .removeUser(context.database.currentUser.id!);
+                .removeUser(context.database.currentUser.id);
           } on PostgrestException {
             if (!context.mounted) return;
             await showDialog(
@@ -386,7 +386,7 @@ class _CancelRequestDialog extends StatelessWidget {
         onPressed: () async {
           try {
             await context.database.teamRequests
-                .deleteRequest(userId: context.database.currentUser.id!);
+                .deleteRequest(userId: context.database.currentUser.id);
           } on PostgrestException {
             if (!context.mounted) return;
             await showDialog(

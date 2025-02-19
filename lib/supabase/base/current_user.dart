@@ -15,7 +15,7 @@ part 'current_user.g.dart';
 class UserProfile with _$UserProfile {
   const factory UserProfile({
     required Uuid userId,
-    String? name,
+    required String name,
     required DateTime createdAt,
   }) = _UserProfile;
 
@@ -34,24 +34,21 @@ class CurrentUserRepository {
 
   Future<void> refresh() => _service.refresh();
 
-  Future<UserProfile?> getProfile() => _service.getProfile();
+  Uuid get id => _service.id;
+  String get name => _service.name;
+  String get email => _service.email;
+  DateTime get createdAt => _service.createdAt;
+  Set<PermissionType> get permissions => _service.permissions;
 
-  Uuid? get id => _service.id;
-  String? get name => _service.name;
-  String? get email => _service.email;
-  Set<PermissionType>? get permissions => _service.permissions;
-  String? get teamName => _service.teamName;
-  DateTime? get createdAt => _service.createdAt;
-
-  int? get teamNum => _service.teamNum;
   bool get isOnTeam => teamNum != null;
+  int? get teamNum => _service.teamNum;
+  String? get teamName => _service.teamName;
 
+  bool get hasTeamRequest => requestedTeamNum != null;
   int? get requestedTeamNum => _service.requestedTeamNum;
   String? get requestedTeamName => _service.requestedTeamName;
-  bool get hasTeamRequest => requestedTeamNum != null;
 
-  bool hasPermission(PermissionType type) =>
-      permissions?.contains(type) ?? false;
+  bool hasPermission(PermissionType type) => permissions.contains(type);
 
   Future<void> setEmail(String email) => _service.setEmail(email);
 
@@ -63,15 +60,12 @@ class CurrentUserService {
 
   CurrentUserService(this._supabase);
 
-  Uuid? get id => _supabase.auth.currentUser?.id;
-
-  String? get name => _supabase.auth.currentUser?.userMetadata?['full_name'];
-  String? get email => _supabase.auth.currentUser?.email;
-
-  DateTime? get createdAt {
-    final createdAt = _supabase.auth.currentUser?.createdAt;
-    return createdAt == null ? null : DateTime.parse(createdAt);
-  }
+  Uuid get id => _supabase.auth.currentUser!.id;
+  String get name =>
+      _supabase.auth.currentUser!.userMetadata!['full_name'] as String;
+  String get email => _supabase.auth.currentUser!.email!;
+  DateTime get createdAt =>
+      DateTime.parse(_supabase.auth.currentUser!.createdAt);
 
   Future<void> setName(String name) => _supabase.auth.updateUser(
         UserAttributes(
@@ -85,38 +79,19 @@ class CurrentUserService {
   Future<void> setPassword(String password) =>
       _supabase.auth.updateUser(UserAttributes(password: password));
 
-  Future<void> refresh() async {
-    if (_supabase.auth.currentSession != null) {
-      await _supabase.auth.refreshSession();
-    }
-  }
+  Future<void> refresh() => _supabase.auth.refreshSession();
 
-  Future<UserProfile?> getProfile() async {
-    final userId = _supabase.auth.currentUser?.id;
-    if (userId == null) return null;
+  int? get teamNum => _jwtClaims['team_num'] as int?;
+  String? get teamName => _jwtClaims['team_name'] as String?;
+  int? get requestedTeamNum => _jwtClaims['requested_team_num'] as int?;
+  String? get requestedTeamName => _jwtClaims['requested_team_name'] as String?;
 
-    final data = await _supabase
-        .from('profiles')
-        .select()
-        .eq('user_id', userId)
-        .maybeSingle();
-    return data?.parse(UserProfile.fromJson);
-  }
-
-  int? get teamNum => _jwtClaims?['team_num'] as int?;
-  String? get teamName => _jwtClaims?['team_name'] as String?;
-  int? get requestedTeamNum => _jwtClaims?['requested_team_num'] as int?;
-  String? get requestedTeamName =>
-      _jwtClaims?['requested_team_name'] as String?;
-
-  Set<PermissionType>? get permissions =>
-      ((_jwtClaims?['permissions'] ?? []) as List<dynamic>?)
-          ?.cast<String>()
+  Set<PermissionType> get permissions =>
+      ((_jwtClaims['permissions'] ?? []) as List<dynamic>)
+          .cast<String>()
           .map(PermissionType.fromJson)
           .toSet();
 
-  Map<String, dynamic>? get _jwtClaims {
-    final token = _supabase.auth.currentSession?.accessToken;
-    return token == null ? null : JwtDecoder.decode(token);
-  }
+  Map<String, dynamic> get _jwtClaims =>
+      JwtDecoder.decode(_supabase.auth.currentSession!.accessToken);
 }
