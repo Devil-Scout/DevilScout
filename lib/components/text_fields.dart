@@ -36,6 +36,7 @@ class LabeledTextField extends StatelessWidget {
           obscureText: obscureText,
           controller: controller,
           onChanged: onChanged,
+          style: Theme.of(context).textTheme.bodyMedium,
         ),
       ],
     );

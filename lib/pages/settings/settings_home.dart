@@ -6,6 +6,7 @@ import 'package:supabase/supabase.dart';
 import '../../components/dialogs.dart';
 import '../../components/full_width.dart';
 import '../../components/teams.dart';
+import '../../components/text_fields.dart';
 import '../../router.dart';
 import '../../supabase/database.dart';
 
@@ -36,6 +37,7 @@ class SettingsHomePage extends StatelessWidget {
                 child: Divider(),
               ),
               _SignOutButton(),
+              SizedBox(height: 16),
             ],
           ),
         ),
@@ -52,6 +54,8 @@ class _UserSection extends StatefulWidget {
 }
 
 class _UserSectionState extends State<_UserSection> {
+  bool editMode = false;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -65,9 +69,14 @@ class _UserSectionState extends State<_UserSection> {
             ),
             const Spacer(),
             TextButton.icon(
-              onPressed: () {},
-              icon: const Icon(Icons.edit_outlined),
-              label: const Text('Edit'),
+              onPressed: () {
+                setState(() {
+                  editMode = !editMode;
+                });
+              },
+              icon:
+                  Icon(editMode ? Icons.cancel_outlined : Icons.edit_outlined),
+              label: Text(editMode ? 'Cancel' : 'Edit'),
               style: TextButton.styleFrom(
                 foregroundColor: Theme.of(context).colorScheme.primary,
                 overlayColor:
@@ -77,6 +86,58 @@ class _UserSectionState extends State<_UserSection> {
             ),
           ],
         ),
+        if (editMode) const _AccountInfoEditor() else const _AccountInfoView(),
+      ],
+    );
+  }
+}
+
+class _AccountInfoEditor extends StatelessWidget {
+  const _AccountInfoEditor();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const LabeledTextField(
+          label: 'Full Name',
+          inputType: TextInputType.text,
+          autocorrect: true,
+        ),
+        const SizedBox(height: 16),
+        const LabeledTextField(
+          label: 'Email',
+          inputType: TextInputType.text,
+          autocorrect: true,
+        ),
+        const SizedBox(height: 16),
+        const LabeledTextField(
+          label: 'Password',
+          inputType: TextInputType.text,
+          autocorrect: true,
+        ),
+        const SizedBox(height: 24),
+        FullWidth(
+          child: ElevatedButton(
+            onPressed: () {},
+            child: const Text('Save Changes'),
+          ),
+        ),
+        SizedBox(height: 4),
+      ],
+    );
+  }
+}
+
+class _AccountInfoView extends StatelessWidget {
+  const _AccountInfoView();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
         const SizedBox(height: 8),
         _AccountInfoSection(
           label: 'Full Name',
