@@ -36,53 +36,67 @@ class _EditAccountPageState extends State<EditAccountPage> {
       ),
       body: SafeArea(
         minimum: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            LabeledTextField(
-              label: 'Full Name',
-              inputType: TextInputType.text,
-              controller: _nameController,
-            ),
-            const SizedBox(height: 16),
-            LabeledTextField(
-              label: 'Email',
-              inputType: TextInputType.text,
-              controller: _emailController,
-            ),
-            const SizedBox(height: 16),
-            LabeledTextField(
-              label: 'Password',
-              inputType: TextInputType.text,
-              obscureText: true,
-              controller: _passwordController,
-            ),
-            const SizedBox(height: 16),
-            LabeledTextField(
-              label: 'Confirm Password',
-              inputType: TextInputType.text,
-              obscureText: true,
-              controller: _confirmPasswordController,
-            ),
-            const SizedBox(height: 16),
-            const _DeleteAccountButton(),
-            const Spacer(),
-            FullWidth(
-              child: ListenableBuilder(
-                listenable: Listenable.merge([
-                  _nameController,
-                  _emailController,
-                  _passwordController,
-                  _confirmPasswordController,
-                ]),
-                builder: (context, _) => ElevatedButton(
-                  onPressed: isValid() ? _saveChanges : null,
-                  child: const Text('Save Changes'),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: constraints.maxHeight,
+                ),
+                child: IntrinsicHeight(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      LabeledTextField(
+                        label: 'Full Name',
+                        inputType: TextInputType.text,
+                        controller: _nameController,
+                      ),
+                      const SizedBox(height: 16),
+                      LabeledTextField(
+                        label: 'Email',
+                        inputType: TextInputType.text,
+                        controller: _emailController,
+                      ),
+                      const SizedBox(height: 16),
+                      LabeledTextField(
+                        label: 'New Password',
+                        inputType: TextInputType.text,
+                        obscureText: true,
+                        controller: _passwordController,
+                      ),
+                      const SizedBox(height: 16),
+                      LabeledTextField(
+                        label: 'Confirm Password',
+                        inputType: TextInputType.text,
+                        obscureText: true,
+                        controller: _confirmPasswordController,
+                      ),
+                      const SizedBox(height: 16),
+                      const _DeleteAccountButton(),
+                      const SizedBox(height: 8),
+                      const Spacer(),
+                      FullWidth(
+                        child: ListenableBuilder(
+                          listenable: Listenable.merge([
+                            _nameController,
+                            _emailController,
+                            _passwordController,
+                            _confirmPasswordController,
+                          ]),
+                          builder: (context, _) => ElevatedButton(
+                            onPressed: isValid() ? _saveChanges : null,
+                            child: const Text('Save Changes'),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 16),
-          ],
+            );
+          },
         ),
       ),
     );
