@@ -1,5 +1,6 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../../components/dialogs.dart';
 import '../../components/full_width.dart';
@@ -15,11 +16,12 @@ class EditAccountPage extends StatefulWidget {
 }
 
 class _EditAccountPageState extends State<EditAccountPage> {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+
+  final _isSaving = ValueNotifier(false);
 
   @override
   void initState() {
@@ -79,15 +81,29 @@ class _EditAccountPageState extends State<EditAccountPage> {
                       FullWidth(
                         child: ListenableBuilder(
                           listenable: Listenable.merge([
+                            _isSaving,
                             _nameController,
                             _emailController,
                             _passwordController,
                             _confirmPasswordController,
                           ]),
-                          builder: (context, _) => ElevatedButton(
-                            onPressed: isValid() ? _saveChanges : null,
-                            child: const Text('Save Changes'),
-                          ),
+                          builder: (context, _) {
+                            final Widget child;
+                            if (_isSaving.value) {
+                              child =
+                                  LoadingAnimationWidget.horizontalRotatingDots(
+                                color: Theme.of(context).colorScheme.onSurface,
+                                size: 50,
+                              );
+                            } else {
+                              child = const Text('Save Changes');
+                            }
+
+                            return ElevatedButton(
+                              onPressed: canSave() ? _saveChanges : null,
+                              child: child,
+                            );
+                          },
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -102,33 +118,32 @@ class _EditAccountPageState extends State<EditAccountPage> {
     );
   }
 
-  bool isValid() {
-    return _nameController.text.trim().isNotEmpty &&
+  bool canSave() {
+    return !_isSaving.value &&
+        _nameController.text.trim().isNotEmpty &&
         EmailValidator.validate(_emailController.text) &&
         _passwordController.text == _confirmPasswordController.text;
   }
 
   Future<void> _saveChanges() async {
+    _isSaving.value = true;
+
     final currentName = context.database.currentUser.name;
     final newName = _nameController.text;
     final currentEmail = context.database.currentUser.email;
     final newEmail = _emailController.text;
     final newPassword = _passwordController.text;
 
-    if (newName != currentName) {
-      await context.database.currentUser.setName(newName);
-    }
-
-    if (mounted && newEmail != currentEmail) {
-      await context.database.currentUser.setEmail(newEmail);
-    }
-
-    if (mounted && newPassword.isNotEmpty) {
-      await context.database.currentUser.setPassword(newPassword);
-    }
+    await context.database.currentUser.updateUserDetails(
+      name: newName != currentName ? newName : null,
+      email: newEmail != currentEmail ? newEmail : null,
+      password: newPassword.isNotEmpty ? newPassword : null,
+    );
 
     if (!mounted) return;
     await context.database.currentUser.refresh();
+
+    _isSaving.value = false;
     router.go('/settings');
   }
 }

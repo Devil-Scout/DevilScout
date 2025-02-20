@@ -30,8 +30,6 @@ class CurrentUserRepository {
   CurrentUserRepository.supabase(SupabaseClient supabase)
       : this(CurrentUserService(supabase));
 
-  Future<void> setName(String name) => _service.setName(name);
-
   Future<void> refresh() => _service.refresh();
 
   Uuid get id => _service.id;
@@ -50,9 +48,16 @@ class CurrentUserRepository {
 
   bool hasPermission(PermissionType type) => permissions.contains(type);
 
-  Future<void> setEmail(String email) => _service.setEmail(email);
-
-  Future<void> setPassword(String password) => _service.setPassword(password);
+  Future<void> updateUserDetails({
+    String? name,
+    String? email,
+    String? password,
+  }) =>
+      _service.updateUserDetails(
+        name: name,
+        email: email,
+        password: password,
+      );
 }
 
 class CurrentUserService {
@@ -67,17 +72,18 @@ class CurrentUserService {
   DateTime get createdAt =>
       DateTime.parse(_supabase.auth.currentUser!.createdAt);
 
-  Future<void> setName(String name) => _supabase.auth.updateUser(
-        UserAttributes(
-          data: {'full_name': name},
-        ),
-      );
+  Future<void> updateUserDetails({
+    required String? name,
+    required String? email,
+    required String? password,
+  }) async {
+    final userData = UserAttributes(email: email, password: password);
+    if (name != null) {
+      userData.data = {'full_name': name};
+    }
 
-  Future<void> setEmail(String email) =>
-      _supabase.auth.updateUser(UserAttributes(email: email));
-
-  Future<void> setPassword(String password) =>
-      _supabase.auth.updateUser(UserAttributes(password: password));
+    await _supabase.auth.updateUser(userData);
+  }
 
   Future<void> refresh() => _supabase.auth.refreshSession();
 
