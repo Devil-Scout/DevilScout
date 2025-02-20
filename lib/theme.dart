@@ -89,7 +89,7 @@ final ThemeData lightTheme = ThemeData(
     color: _surfaceColorLight,
     elevation: 0,
     iconTheme: const IconThemeData(color: _onSurfaceColorLight),
-    titleTextStyle: _textTheme.displaySmall!.copyWith(
+    titleTextStyle: _textTheme.titleLarge!.copyWith(
       color: _onSurfaceColorLight,
     ),
   ),

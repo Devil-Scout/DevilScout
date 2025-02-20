@@ -49,9 +49,7 @@ class SettingsHomePage extends StatelessWidget {
 }
 
 class _BuildVersion extends StatefulWidget {
-  const _BuildVersion({
-    super.key,
-  });
+  const _BuildVersion();
 
   @override
   State<_BuildVersion> createState() => _BuildVersionState();
