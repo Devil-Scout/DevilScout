@@ -224,18 +224,9 @@ class JoinTeamDialog extends StatelessWidget {
     await context.database.currentUser.refresh();
 
     if (!context.mounted) return;
-    router.pop();
-    await showDialog(
-      context: context,
-      builder: (context) => TextDialog(
-        title: 'Success',
-        message: team.isRegistered
-            ? 'Your request to join Team ${team.number} has been submitted for approval.'
-            : 'Team ${team.number} has been registered.',
-      ),
-    );
-
-    router.go('/settings');
+    router
+      ..pop()
+      ..go('/settings');
   }
 }
 

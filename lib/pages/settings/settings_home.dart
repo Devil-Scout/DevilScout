@@ -48,47 +48,32 @@ class SettingsHomePage extends StatelessWidget {
   }
 }
 
-class _BuildVersion extends StatefulWidget {
+class _BuildVersion extends StatelessWidget {
   const _BuildVersion();
 
   @override
-  State<_BuildVersion> createState() => _BuildVersionState();
-}
-
-class _BuildVersionState extends State<_BuildVersion> {
-  PackageInfo _packageInfo = PackageInfo(
-    appName: '',
-    packageName: '',
-    version: '',
-    buildNumber: '',
-  );
-
-  @override
-  void initState() {
-    super.initState();
-    _initPackageInfo();
-  }
-
-  Future<void> _initPackageInfo() async {
-    final info = await PackageInfo.fromPlatform();
-    setState(() {
-      _packageInfo = info;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Text.rich(
-      TextSpan(
-        text: 'DevilScout Client',
-        style: const TextStyle(fontWeight: FontWeight.bold),
-        children: [
+    return FutureBuilder(
+      future: PackageInfo.fromPlatform(),
+      builder: (context, state) {
+        if (!state.hasData) {
+          return const Text('Checking version...');
+        }
+
+        final appInfo = state.requireData;
+        return Text.rich(
           TextSpan(
-            text: ' | Version ${_packageInfo.version}',
-            style: const TextStyle(fontWeight: FontWeight.normal),
+            text: appInfo.appName,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+            children: [
+              TextSpan(
+                text: ' | Version ${appInfo.version}',
+                style: const TextStyle(fontWeight: FontWeight.normal),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
