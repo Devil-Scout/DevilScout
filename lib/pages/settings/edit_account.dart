@@ -55,7 +55,7 @@ class _EditAccountPageState extends State<EditAccountPage> {
                       const SizedBox(height: 16),
                       LabeledTextField(
                         label: 'Email',
-                        inputType: TextInputType.text,
+                        inputType: TextInputType.emailAddress,
                         controller: _emailController,
                       ),
                       const SizedBox(height: 16),
