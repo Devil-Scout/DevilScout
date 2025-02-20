@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:supabase/supabase.dart';
 
@@ -54,20 +55,28 @@ class _BuildVersion extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: PackageInfo.fromPlatform(),
+      future: (
+        PackageInfo.fromPlatform(),
+        _gitCommitHash(),
+      ).wait,
       builder: (context, state) {
         if (!state.hasData) {
           return const Text('Checking version...');
         }
 
-        final appInfo = state.requireData;
+        final packageInfo = state.requireData.$1;
+        final commitHash = state.requireData.$2;
         return Text.rich(
           TextSpan(
-            text: appInfo.appName,
+            text: packageInfo.appName,
             style: const TextStyle(fontWeight: FontWeight.bold),
             children: [
               TextSpan(
-                text: ' | Version ${appInfo.version}',
+                text: ' v${packageInfo.version} ',
+                style: const TextStyle(fontWeight: FontWeight.normal),
+              ),
+              TextSpan(
+                text: '($commitHash)',
                 style: const TextStyle(fontWeight: FontWeight.normal),
               ),
             ],
@@ -75,6 +84,19 @@ class _BuildVersion extends StatelessWidget {
         );
       },
     );
+  }
+
+  Future<String> _gitCommitHash() async {
+    final head = await rootBundle.loadString('.git/HEAD');
+    final String fullHash;
+    if (head.startsWith('ref: ')) {
+      final branchName = head.split('/').last.trim();
+      fullHash = await rootBundle.loadString('.git/refs/heads/$branchName');
+    } else {
+      fullHash = head;
+    }
+
+    return fullHash.substring(0, 7);
   }
 }
 
