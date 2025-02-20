@@ -387,15 +387,6 @@ class _LeaveTeamDialog extends StatelessWidget {
           }
 
           if (!context.mounted) return;
-          await showDialog(
-            context: context,
-            builder: (context) => TextDialog(
-              title: 'Success',
-              message: 'You are no longer a member of Team $teamNum',
-            ),
-          );
-
-          if (!context.mounted) return;
           router.pop();
         },
         style: ElevatedButton.styleFrom(
@@ -441,15 +432,6 @@ class _CancelRequestDialog extends StatelessWidget {
 
           if (!context.mounted) return;
           router.pop();
-
-          // TODO: UI: is this dialog needed? updates in background
-          await showDialog(
-            context: context,
-            builder: (context) => const TextDialog(
-              title: 'Success',
-              message: 'Your join request was cancelled.',
-            ),
-          );
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: Theme.of(context).colorScheme.error,
