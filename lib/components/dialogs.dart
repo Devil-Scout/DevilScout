@@ -87,9 +87,10 @@ class UnexpectedErrorDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextDialog(
-      icon: const Icon(
+      icon: Icon(
         Icons.error_outline,
         size: 40,
+        color: Theme.of(context).colorScheme.onSurface,
       ),
       title: title,
       message: 'An unexpected error occured. Please try again later.',

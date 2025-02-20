@@ -6,7 +6,6 @@ import 'package:supabase/supabase.dart';
 import '../../components/dialogs.dart';
 import '../../components/full_width.dart';
 import '../../components/teams.dart';
-import '../../components/text_fields.dart';
 import '../../router.dart';
 import '../../supabase/database.dart';
 
@@ -17,175 +16,31 @@ class SettingsHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: SafeArea(
-        minimum: EdgeInsets.symmetric(horizontal: 16, vertical: 32),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              _UserCard(),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 8),
-                child: Divider(),
-              ),
-              _TeamSection(),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 8),
-                child: Divider(),
-              ),
-              _UserSection(),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 8),
-                child: Divider(),
-              ),
-              _SignOutButton(),
-              SizedBox(height: 16),
-            ],
-          ),
+        minimum: EdgeInsets.only(
+          left: 24,
+          right: 24,
+          top: 32,
+          bottom: kBottomNavigationBarHeight,
         ),
-      ),
-    );
-  }
-}
-
-class _UserSection extends StatefulWidget {
-  const _UserSection();
-
-  @override
-  State<_UserSection> createState() => _UserSectionState();
-}
-
-class _UserSectionState extends State<_UserSection> {
-  bool editMode = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
+        child: Column(
           children: [
-            Text(
-              'Account Information',
-              style: Theme.of(context).textTheme.titleMedium,
+            SizedBox(height: 16),
+            _UserCard(),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 8),
+              child: Divider(),
             ),
-            const Spacer(),
-            TextButton.icon(
-              onPressed: () {
-                setState(() {
-                  editMode = !editMode;
-                });
-              },
-              icon:
-                  Icon(editMode ? Icons.cancel_outlined : Icons.edit_outlined),
-              label: Text(editMode ? 'Cancel' : 'Edit'),
-              style: TextButton.styleFrom(
-                foregroundColor: Theme.of(context).colorScheme.primary,
-                overlayColor:
-                    Theme.of(context).colorScheme.primary.withAlpha(45),
-                iconColor: Theme.of(context).colorScheme.primary,
-              ),
+            _TeamSection(),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 8),
+              child: Divider(),
             ),
+            Spacer(),
+            _SignOutButton(),
+            SizedBox(height: 16),
           ],
         ),
-        if (editMode) const _AccountInfoEditor() else const _AccountInfoView(),
-      ],
-    );
-  }
-}
-
-class _AccountInfoEditor extends StatelessWidget {
-  const _AccountInfoEditor();
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const LabeledTextField(
-          label: 'Full Name',
-          inputType: TextInputType.text,
-          autocorrect: true,
-        ),
-        const SizedBox(height: 16),
-        const LabeledTextField(
-          label: 'Email',
-          inputType: TextInputType.text,
-          autocorrect: true,
-        ),
-        const SizedBox(height: 16),
-        const LabeledTextField(
-          label: 'Password',
-          inputType: TextInputType.text,
-          autocorrect: true,
-        ),
-        const SizedBox(height: 24),
-        FullWidth(
-          child: ElevatedButton(
-            onPressed: () {},
-            child: const Text('Save Changes'),
-          ),
-        ),
-        const SizedBox(height: 4),
-      ],
-    );
-  }
-}
-
-class _AccountInfoView extends StatelessWidget {
-  const _AccountInfoView();
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 8),
-        _AccountInfoSection(
-          label: 'Full Name',
-          content: context.database.currentUser.name,
-        ),
-        const SizedBox(height: 16),
-        _AccountInfoSection(
-          label: 'Email Address',
-          content: context.database.currentUser.email,
-        ),
-        const SizedBox(height: 16),
-        const _AccountInfoSection(
-          label: 'Password',
-          content: '********',
-        ),
-        const SizedBox(height: 12),
-        const _DeleteAccountButton(),
-      ],
-    );
-  }
-}
-
-class _AccountInfoSection extends StatelessWidget {
-  final String label;
-  final String content;
-
-  const _AccountInfoSection({
-    required this.label,
-    required this.content,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-        ),
-        const SizedBox(height: 6),
-        Text(
-          content,
-          style: Theme.of(context).textTheme.bodyMedium,
-        ),
-      ],
+      ),
     );
   }
 }
@@ -256,73 +111,17 @@ class _SignOutButton extends StatelessWidget {
           showDialog(
             context: context,
             builder: (context) => ActionDialog(
-              title: 'Sign Out',
+              title: 'Sign out?',
               content: const Text('Are you sure you want to sign out?'),
               actionButton: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.error,
+                ),
                 child: const Text('Sign Out'),
                 onPressed: () {
                   context.database.auth.signOut();
                   // automatic redirect to /login
                   // this should almost never fail
-                },
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
-
-class _DeleteAccountButton extends StatelessWidget {
-  const _DeleteAccountButton();
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: TextButton.icon(
-        style: TextButton.styleFrom(
-          foregroundColor: Theme.of(context).colorScheme.error,
-          iconColor: Theme.of(context).colorScheme.error,
-          overlayColor: Theme.of(context).colorScheme.error.withAlpha(45),
-        ),
-        icon: const Icon(Icons.delete_forever_outlined),
-        label: const Text('Delete Account'),
-        onPressed: () async {
-          await showDialog(
-            context: context,
-            builder: (context) => ActionDialog(
-              title: 'Delete account?',
-              content: const Text(
-                'Are you sure you want to delete your account? You will be logged out immediately. All of your personal information and preferences will be deleted, but any previously submitted scouting data will be anonymized and retained.',
-              ),
-              actionButton: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.error,
-                ),
-                child: const Text('Delete Account'),
-                onPressed: () async {
-                  router.pop();
-                  await showDialog(
-                    context: context,
-                    builder: (context) => ActionDialog(
-                      title: 'Delete account?',
-                      content: const Text(
-                        'Are you absolutely sure? This action cannot be reversed.',
-                      ),
-                      actionButton: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(context).colorScheme.error,
-                        ),
-                        child: const Text('Delete Account'),
-                        onPressed: () async {
-                          await context.database.auth.deleteAccount();
-                          // TODO: error handling
-                          // automatic redirect to /login
-                        },
-                      ),
-                    ),
-                  );
                 },
               ),
             ),
@@ -361,21 +160,44 @@ class _UserCardState extends State<_UserCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
       children: [
-        const Icon(
-          Icons.badge_outlined,
-          size: 60,
-        ),
-        const SizedBox(width: 16),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        Row(
           children: [
-            Text(
-              context.database.currentUser.name,
-              style: Theme.of(context).textTheme.titleLarge,
-              overflow: TextOverflow.ellipsis,
+            const Icon(
+              Icons.badge_outlined,
+              size: 60,
             ),
+            const SizedBox(width: 16),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  context.database.currentUser.name,
+                  style: Theme.of(context).textTheme.titleLarge,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  context.database.currentUser.email,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+            const Spacer(),
+            IconButton(
+              onPressed: () => router.go('/settings/edit-account'),
+              icon: const Icon(Icons.edit_outlined),
+              color: Theme.of(context).colorScheme.primary,
+              splashColor: Theme.of(context).colorScheme.primary.withAlpha(45),
+            )
+          ],
+        ),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            const Icon(Icons.schedule_outlined, size: 24),
+            const SizedBox(width: 6),
             Builder(
               builder: (context) {
                 final joinDate = context.database.currentUser.createdAt;
@@ -407,6 +229,7 @@ class _JoinTeamPlaceholder extends StatelessWidget {
         const SizedBox(height: 12),
         const Text(
           'Join a team to unlock the full functionality of DevilScout.',
+          textAlign: TextAlign.center,
         ),
         const SizedBox(height: 12),
         FullWidth(
@@ -434,7 +257,7 @@ class _TeamInfo extends StatelessWidget {
         Row(
           children: [
             Text(
-              'Current Team',
+              'Your Team',
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const Spacer(),
@@ -510,7 +333,7 @@ class _LeaveTeamDialog extends StatelessWidget {
             await showDialog(
               context: context,
               builder: (context) =>
-                  const UnexpectedErrorDialog(title: 'Failed to leave team'),
+                  const UnexpectedErrorDialog(title: 'Failed to Leave Team'),
             );
             return;
           }
@@ -559,7 +382,7 @@ class _CancelRequestDialog extends StatelessWidget {
             await showDialog(
               context: context,
               builder: (context) => const UnexpectedErrorDialog(
-                title: 'Failed to cancel request',
+                title: 'Failed to Cancel Request',
               ),
             );
             return;

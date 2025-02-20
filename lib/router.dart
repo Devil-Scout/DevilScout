@@ -8,6 +8,7 @@ import 'pages/auth/email_signup.dart';
 import 'pages/auth/login_select.dart';
 import 'pages/home/home.dart';
 import 'pages/scout/scout_home.dart';
+import 'pages/settings/edit_account.dart';
 import 'pages/settings/join_team.dart';
 import 'pages/settings/settings_home.dart';
 
@@ -105,6 +106,10 @@ StatefulShellBranch _settingsBranch() {
             path: 'join-team',
             builder: (context, state) => const JoinTeamPage(),
           ),
+          GoRoute(
+            path: 'edit-account',
+            builder: (context, state) => const EditAccountPage(),
+          )
         ],
       ),
     ],
