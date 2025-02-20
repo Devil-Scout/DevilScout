@@ -58,7 +58,7 @@ class _BuildVersion extends StatelessWidget {
     return FutureBuilder(
       future: (
         PackageInfo.fromPlatform(),
-        _gitCommitHash(),
+        _gitInfo(),
       ).wait,
       builder: (context, state) {
         if (!state.hasData) {
@@ -66,7 +66,8 @@ class _BuildVersion extends StatelessWidget {
         }
 
         final packageInfo = state.requireData.$1;
-        final commitHash = state.requireData.$2;
+        final (gitBranch, gitHash) = state.requireData.$2;
+
         return Text.rich(
           TextSpan(
             text: packageInfo.appName,
@@ -77,7 +78,9 @@ class _BuildVersion extends StatelessWidget {
                 style: const TextStyle(fontWeight: FontWeight.normal),
               ),
               TextSpan(
-                text: '($commitHash)',
+                text: gitBranch == null
+                    ? '($gitHash)'
+                    : '($gitBranch at $gitHash)',
                 style: const TextStyle(fontWeight: FontWeight.normal),
               ),
             ],
@@ -87,17 +90,19 @@ class _BuildVersion extends StatelessWidget {
     );
   }
 
-  Future<String> _gitCommitHash() async {
-    final head = await rootBundle.loadString('.git/HEAD');
+  Future<(String?, String)> _gitInfo() async {
     final String fullHash;
+    String? branch;
+
+    final head = await rootBundle.loadString('git/HEAD');
     if (head.startsWith('ref: ')) {
-      final branchName = head.split('/').last.trim();
-      fullHash = await rootBundle.loadString('.git/refs/heads/$branchName');
+      branch = head.split('/').last.trim();
+      fullHash = await rootBundle.loadString('git/branches/$branch');
     } else {
       fullHash = head;
     }
 
-    return fullHash.substring(0, 7);
+    return (branch, fullHash.substring(0, 7));
   }
 }
 

@@ -38,8 +38,8 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/logos/
-    - .git/HEAD
-    - .git/refs/heads/
+    - git/HEAD
+    - git/branches/
   fonts:
   - family: Montserrat
     fonts:
