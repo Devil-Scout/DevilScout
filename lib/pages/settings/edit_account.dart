@@ -1,3 +1,4 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 
 import '../../components/dialogs.dart';
@@ -6,17 +7,29 @@ import '../../components/text_fields.dart';
 import '../../router.dart';
 import '../../supabase/database.dart';
 
-class EditAccountPage extends StatelessWidget {
+class EditAccountPage extends StatefulWidget {
   const EditAccountPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final nameController =
-        TextEditingController(text: context.database.currentUser.name);
-    final emailController =
-        TextEditingController(text: context.database.currentUser.email);
-    final passwordController = TextEditingController();
+  State<EditAccountPage> createState() => _EditAccountPageState();
+}
 
+class _EditAccountPageState extends State<EditAccountPage> {
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController.text = context.database.currentUser.name;
+    _emailController.text = context.database.currentUser.email;
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Edit Account'),
@@ -29,28 +42,43 @@ class EditAccountPage extends StatelessWidget {
             LabeledTextField(
               label: 'Full Name',
               inputType: TextInputType.text,
-              controller: nameController,
+              controller: _nameController,
             ),
             const SizedBox(height: 16),
             LabeledTextField(
               label: 'Email',
               inputType: TextInputType.text,
-              controller: emailController,
+              controller: _emailController,
             ),
             const SizedBox(height: 16),
             LabeledTextField(
               label: 'Password',
               inputType: TextInputType.text,
               obscureText: true,
-              controller: passwordController,
+              controller: _passwordController,
+            ),
+            const SizedBox(height: 16),
+            LabeledTextField(
+              label: 'Confirm Password',
+              inputType: TextInputType.text,
+              obscureText: true,
+              controller: _confirmPasswordController,
             ),
             const SizedBox(height: 16),
             const _DeleteAccountButton(),
             const Spacer(),
             FullWidth(
-              child: ElevatedButton(
-                onPressed: () {},
-                child: const Text('Save Changes'),
+              child: ListenableBuilder(
+                listenable: Listenable.merge([
+                  _nameController,
+                  _emailController,
+                  _passwordController,
+                  _confirmPasswordController,
+                ]),
+                builder: (context, _) => ElevatedButton(
+                  onPressed: isValid() ? _saveChanges : null,
+                  child: const Text('Save Changes'),
+                ),
               ),
             ),
             const SizedBox(height: 16),
@@ -58,6 +86,36 @@ class EditAccountPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  bool isValid() {
+    return _nameController.text.trim().isNotEmpty &&
+        EmailValidator.validate(_emailController.text) &&
+        _passwordController.text == _confirmPasswordController.text;
+  }
+
+  Future<void> _saveChanges() async {
+    final currentName = context.database.currentUser.name;
+    final newName = _nameController.text;
+    final currentEmail = context.database.currentUser.email;
+    final newEmail = _emailController.text;
+    final newPassword = _passwordController.text;
+
+    if (newName != currentName) {
+      await context.database.currentUser.setName(newName);
+    }
+
+    if (mounted && newEmail != currentEmail) {
+      await context.database.currentUser.setEmail(newEmail);
+    }
+
+    if (mounted && newPassword.isNotEmpty) {
+      await context.database.currentUser.setPassword(newPassword);
+    }
+
+    if (!mounted) return;
+    await context.database.currentUser.refresh();
+    router.go('/settings');
   }
 }
 
