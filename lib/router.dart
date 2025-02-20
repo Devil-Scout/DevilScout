@@ -109,7 +109,7 @@ StatefulShellBranch _settingsBranch() {
           GoRoute(
             path: 'edit-account',
             builder: (context, state) => const EditAccountPage(),
-          )
+          ),
         ],
       ),
     ],

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:supabase/supabase.dart';
 
 import '../../components/dialogs.dart';
@@ -37,9 +38,58 @@ class SettingsHomePage extends StatelessWidget {
             ),
             Spacer(),
             _SignOutButton(),
-            SizedBox(height: 16),
+            SizedBox(height: 8),
+            _BuildVersion(),
+            SizedBox(height: 24),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _BuildVersion extends StatefulWidget {
+  const _BuildVersion({
+    super.key,
+  });
+
+  @override
+  State<_BuildVersion> createState() => _BuildVersionState();
+}
+
+class _BuildVersionState extends State<_BuildVersion> {
+  PackageInfo _packageInfo = PackageInfo(
+    appName: '',
+    packageName: '',
+    version: '',
+    buildNumber: '',
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    _initPackageInfo();
+  }
+
+  Future<void> _initPackageInfo() async {
+    final info = await PackageInfo.fromPlatform();
+    setState(() {
+      _packageInfo = info;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Text.rich(
+      TextSpan(
+        text: 'DevilScout Client',
+        style: const TextStyle(fontWeight: FontWeight.bold),
+        children: [
+          TextSpan(
+            text: ' | Version ${_packageInfo.version}',
+            style: const TextStyle(fontWeight: FontWeight.normal),
+          ),
+        ],
       ),
     );
   }
@@ -190,7 +240,7 @@ class _UserCardState extends State<_UserCard> {
               icon: const Icon(Icons.edit_outlined),
               color: Theme.of(context).colorScheme.primary,
               splashColor: Theme.of(context).colorScheme.primary.withAlpha(45),
-            )
+            ),
           ],
         ),
         const SizedBox(height: 12),
