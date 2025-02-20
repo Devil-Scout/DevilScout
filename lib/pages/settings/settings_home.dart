@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:supabase/supabase.dart';
 
@@ -256,8 +257,9 @@ class _UserCardState extends State<_UserCard> {
             Builder(
               builder: (context) {
                 final joinDate = context.database.currentUser.createdAt;
+                final joinDateStr = DateFormat.yMd().format(joinDate);
                 return Text(
-                  'Joined on ${joinDate.month}/${joinDate.day}/${joinDate.year}',
+                  'Scouting since $joinDateStr',
                   style: Theme.of(context).textTheme.bodyMedium,
                   overflow: TextOverflow.ellipsis,
                 );
