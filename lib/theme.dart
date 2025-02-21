@@ -26,6 +26,18 @@ const _textTheme = TextTheme(
   ),
   displaySmall: TextStyle(
     fontFamily: _displayFontFamily,
+    fontSize: 24,
+  ),
+  titleLarge: TextStyle(
+    fontFamily: _displayFontFamily,
+    fontSize: 22,
+  ),
+  titleMedium: TextStyle(
+    fontFamily: _displayFontFamily,
+    fontSize: 18,
+  ),
+  titleSmall: TextStyle(
+    fontFamily: _displayFontFamily,
     fontSize: 16,
   ),
   labelLarge: TextStyle(
@@ -77,7 +89,7 @@ final ThemeData lightTheme = ThemeData(
     color: _surfaceColorLight,
     elevation: 0,
     iconTheme: const IconThemeData(color: _onSurfaceColorLight),
-    titleTextStyle: _textTheme.displaySmall!.copyWith(
+    titleTextStyle: _textTheme.titleLarge!.copyWith(
       color: _onSurfaceColorLight,
     ),
   ),
@@ -101,7 +113,7 @@ final ThemeData lightTheme = ThemeData(
   ),
   outlinedButtonTheme: OutlinedButtonThemeData(
     style: OutlinedButton.styleFrom(
-      textStyle: _textTheme.bodyLarge,
+      textStyle: _textTheme.bodyMedium,
       backgroundColor: _surfaceColorLight,
       foregroundColor: _onSurfaceColorLight,
       iconColor: _onSurfaceColorLight,
@@ -113,7 +125,7 @@ final ThemeData lightTheme = ThemeData(
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(10.7)),
       ),
-      minimumSize: const Size.square(70),
+      minimumSize: const Size.square(50),
       alignment: Alignment.center,
     ),
   ),
@@ -131,22 +143,24 @@ final ThemeData lightTheme = ThemeData(
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(10.7)),
       ),
-      minimumSize: const Size.square(70),
+      minimumSize: const Size.square(50),
       alignment: Alignment.center,
       elevation: 0,
     ),
   ),
   textButtonTheme: TextButtonThemeData(
     style: TextButton.styleFrom(
-      textStyle: _textTheme.bodyMedium!.copyWith(
-        color: _primaryColor,
-        decoration: TextDecoration.underline,
+      foregroundColor: _onSurfaceColorLightVariant,
+      overlayColor: _onSurfaceColorLightVariant!.withAlpha(45),
+      iconColor: _onSurfaceColorLightVariant,
+      iconSize: 25,
+      textStyle: const TextStyle(
+        decoration: TextDecoration.none,
+        fontWeight: FontWeight.bold,
       ),
-      padding: EdgeInsets.zero,
-      minimumSize: Size.zero,
-      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      visualDensity: VisualDensity.compact,
-      overlayColor: Colors.transparent,
+      tapTargetSize: MaterialTapTargetSize.padded,
+      visualDensity: VisualDensity.standard,
+      padding: const EdgeInsets.all(12),
     ),
   ),
   inputDecorationTheme: InputDecorationTheme(

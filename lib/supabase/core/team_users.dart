@@ -1,23 +1,12 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:supabase/supabase.dart';
 
+import '../base/current_user.dart';
 import '../database.dart';
 import 'core.dart';
 
 part 'team_users.freezed.dart';
 part 'team_users.g.dart';
-
-@immutable
-@freezed
-class UserProfile with _$UserProfile {
-  const factory UserProfile({
-    required Uuid userId,
-    String? name,
-    required DateTime createdAt,
-  }) = _UserProfile;
-
-  factory UserProfile.fromJson(JsonObject json) => _$UserProfileFromJson(json);
-}
 
 @immutable
 @freezed

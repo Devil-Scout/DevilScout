@@ -66,9 +66,6 @@ class Database {
           questions: QuestionsRepository.supabase(supabase),
         );
 
-  factory Database.of(BuildContext context) =>
-      Provider.of<Database>(context, listen: false);
-
   static Future<void> initSupabase() async {
     const supabaseUrl = 'https://jlhplhsuiwwcmxrtbdhp.supabase.co';
     const supabaseAnonKey =
@@ -209,4 +206,59 @@ extension JsonParseObject on JsonObject {
 
 extension JsonParseList on JsonList {
   List<T> parse<T>(T Function(JsonObject) fromJson) => map(fromJson).toList();
+}
+
+enum DatabaseErrorClass {
+  success('00'),
+  warning('01'),
+  noData('02'),
+  notYetComplete('03'),
+  connection('08'),
+  trigger('09'),
+  unsupported('0A'),
+  transactionInitiation('0B'),
+  locator('0F'),
+  grantor('0L'),
+  role('0P'),
+  diagnostics('0Z'),
+  caseNotFound('20'),
+  cardinality('21'),
+  data('22'),
+  integrity('23'),
+  cursor('24'),
+  transactionState('25'),
+  statementName('26'),
+  triggerChange('27'),
+  authorization('28'),
+  dependentPrivilegeDescriptorsStillExist('2B'),
+  transactionTermination('2D'),
+  sqlRoutine('2F'),
+  cursorName('34'),
+  externalRoutine('38'),
+  externalRoutineInvocation('39'),
+  savepoint('3B'),
+  catalogName('3D'),
+  schemaName('3F'),
+  transactionRollback('40'),
+  syntaxOrAccess('42'),
+  checkViolation('44'),
+  insufficientResources('53'),
+  programLimitExceeded('54'),
+  prerequisiteState('55'),
+  operatorIntervention('57'),
+  externalSystem('58'),
+  config('F0'),
+  foerignData('HV'),
+  plpgsql('P0'),
+  internal('XX');
+
+  final String _prefix;
+
+  const DatabaseErrorClass(this._prefix);
+
+  static DatabaseErrorClass? of(String? prefix) => _map[prefix];
+
+  static final Map<String, DatabaseErrorClass> _map = Map.fromEntries(
+    DatabaseErrorClass.values.map((e) => MapEntry(e._prefix, e)),
+  );
 }

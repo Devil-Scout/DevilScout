@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
+import '../../components/full_width.dart';
 import '../../router.dart';
 import '../../supabase/base/auth.dart';
 import '../../supabase/database.dart';
@@ -56,23 +57,19 @@ class LoginSelectPage extends StatelessWidget {
     BuildContext context, {
     required SsoProvider provider,
   }) {
-    return Row(
-      children: [
-        Expanded(
-          child: OutlinedButton.icon(
-            onPressed: () async => _loginWithSso(context, provider),
-            icon: SvgPicture.asset(
-              provider.iconPath,
-              width: 24,
-              height: 24,
-            ),
-            label: Padding(
-              padding: const EdgeInsets.only(left: 6),
-              child: Text('Sign in with ${provider.name}'),
-            ),
-          ),
+    return FullWidth(
+      child: OutlinedButton.icon(
+        onPressed: () async => _loginWithSso(context, provider),
+        icon: SvgPicture.asset(
+          provider.iconPath,
+          width: 24,
+          height: 24,
         ),
-      ],
+        label: Padding(
+          padding: const EdgeInsets.only(left: 6),
+          child: Text('Sign in with ${provider.name}'),
+        ),
+      ),
     );
   }
 
@@ -96,19 +93,15 @@ class LoginSelectPage extends StatelessWidget {
   }
 
   Widget _emailButton(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: ElevatedButton.icon(
-            onPressed: () => router.go('/login/email'),
-            icon: const Icon(Icons.mail_outline),
-            label: const Padding(
-              padding: EdgeInsets.only(left: 6),
-              child: Text('Continue with Email'),
-            ),
-          ),
+    return FullWidth(
+      child: ElevatedButton.icon(
+        onPressed: () => router.go('/login/email'),
+        icon: const Icon(Icons.mail_outline),
+        label: const Padding(
+          padding: EdgeInsets.only(left: 6),
+          child: Text('Continue with Email'),
         ),
-      ],
+      ),
     );
   }
 
@@ -118,24 +111,13 @@ class LoginSelectPage extends StatelessWidget {
         onPressed: () {},
         icon: const Icon(Icons.help_outline, size: 22),
         label: const Text('Why do I need to sign in?'),
-        style: Theme.of(context).textButtonTheme.style!.copyWith(
-              foregroundColor: WidgetStatePropertyAll(Colors.grey[600]),
-              overlayColor: WidgetStatePropertyAll(Colors.grey[200]),
-              iconColor: WidgetStatePropertyAll(Colors.grey[600]),
-              textStyle: const WidgetStatePropertyAll(
-                TextStyle(decoration: TextDecoration.none),
-              ),
-              tapTargetSize: MaterialTapTargetSize.padded,
-              visualDensity: VisualDensity.standard,
-              padding: const WidgetStatePropertyAll(EdgeInsets.all(12)),
-            ),
       ),
     );
   }
 
   Future<void> _loginWithSso(BuildContext context, SsoProvider provider) async {
     try {
-      await Database.of(context).auth.signInWithSso(provider);
+      await context.database.auth.signInWithSso(provider);
     } on Object {
       // TODO: notify user of error
     }

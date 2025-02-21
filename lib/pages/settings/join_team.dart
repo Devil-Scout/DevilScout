@@ -1,11 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:supabase/supabase.dart';
 
+import '../../components/dialogs.dart';
 import '../../components/full_screen_message.dart';
-import '../../components/searchable_text_field.dart';
-import '../../components/team_avatar.dart';
-import '../../components/team_card.dart';
+import '../../components/teams.dart';
+import '../../components/text_fields.dart';
 import '../../router.dart';
 import '../../supabase/core/teams.dart';
 import '../../supabase/database.dart';
@@ -56,7 +57,7 @@ class _JoinTeamPageState extends State<JoinTeamPage> {
     final query = _controller.text;
     if (query.trim().isEmpty) return [];
 
-    final teamsDb = Database.of(context).teams;
+    final teamsDb = context.database.teams;
     final teamNums = await teamsDb.searchTeams(query: query);
     return teamsDb.getTeams(teamNums: teamNums);
   }
@@ -126,7 +127,10 @@ class _TeamList extends StatelessWidget {
           context: context,
           builder: (context) => JoinTeamDialog(team: _teams[index]),
         ),
-        child: TeamCard(team: _teams[index]),
+        child: TeamCard(
+          team: _teams[index],
+          showTrailingIcon: true,
+        ),
       ),
       separatorBuilder: (context, index) => const SizedBox(height: 6),
       padding: const EdgeInsets.symmetric(vertical: 6),
@@ -160,113 +164,78 @@ class JoinTeamDialog extends StatelessWidget {
     required this.team,
   });
 
+  String get _textContent => team.isRegistered
+      ? 'By requesting to join this team, your name will be visible to all other team members.'
+      : 'This team has not yet been registered. By registering this team, you will become its admin.';
+  String get _actionLabel =>
+      team.isRegistered ? 'Request to Join' : 'Register Team';
+  String get _title => team.isRegistered
+      ? 'Join Team ${team.number}?'
+      : 'Register Team ${team.number}?';
+
   @override
   Widget build(BuildContext context) {
-    final location = [
-      team.city,
-      team.province,
-      team.country,
-    ].nonNulls.join(', ');
-
-    return AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.7)),
-      contentPadding: const EdgeInsets.all(18),
+    return ActionDialog(
+      title: _title,
       content: ConstrainedBox(
         constraints: BoxConstraints(
           maxWidth: MediaQuery.of(context).size.width * 0.85,
           minWidth: MediaQuery.of(context).size.width * 0.85,
         ),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _TeamInformation(team: team, location: location),
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 8),
-              child: Divider(),
-            ),
-            _JoinActionCluster(team: team),
+            _TeamInformation(team: team),
+            const SizedBox(height: 8),
+            Text(_textContent),
           ],
         ),
       ),
-    );
-  }
-}
-
-class _JoinActionCluster extends StatelessWidget {
-  final Team team;
-
-  const _JoinActionCluster({required this.team});
-
-  String get _textContent => team.isRegistered
-      ? 'By requesting to join this team, your name will be visible to all other team members.'
-      : 'This team has not yet been registered. By registering this team, you will become its admin.';
-  String get _actionLabel =>
-      team.isRegistered ? 'Request to Join' : 'Register Team';
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(
-          _textContent,
-          style: Theme.of(context).textTheme.bodyMedium,
+      actionButton: ElevatedButton(
+        onPressed: () => _onAction(context),
+        style: ElevatedButton.styleFrom(
+          minimumSize: const Size.fromHeight(50),
         ),
-        const SizedBox(height: 12),
-        Row(
-          children: [
-            Expanded(
-              child: ElevatedButton(
-                onPressed: () => _onAction(context),
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size.fromHeight(50),
-                ),
-                child: Text(_actionLabel),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        Row(
-          children: [
-            Expanded(
-              child: OutlinedButton(
-                style: OutlinedButton.styleFrom(
-                  minimumSize: const Size.fromHeight(50),
-                ),
-                onPressed: router.pop,
-                child: const Text('Cancel'),
-              ),
-            ),
-          ],
-        ),
-      ],
+        child: Text(_actionLabel),
+      ),
     );
   }
 
   Future<void> _onAction(BuildContext context) async {
-    if (team.isRegistered) {
-      await context.database.teamRequests.requestToJoin(teamNum: team.number);
-    } else {
-      await context.database.teams
-          .createTeam(teamNum: team.number, name: team.name);
+    try {
+      final db = context.database;
+      if (team.isRegistered) {
+        await db.teamRequests.requestToJoin(teamNum: team.number);
+      } else {
+        await db.teams.createTeam(teamNum: team.number, name: team.name);
+      }
+      await db.currentUser.refresh();
+    } on PostgrestException {
+      if (!context.mounted) return;
+      await showDialog(
+        context: context,
+        builder: (context) => UnexpectedErrorDialog(
+          title: team.isRegistered ? 'Request Failed' : 'Registration Failed',
+        ),
+      );
+      return;
     }
-    // TODO: display ui notice
+
+    if (!context.mounted) return;
+    await context.database.currentUser.refresh();
+
+    if (!context.mounted) return;
     router
       ..pop()
-      ..pop();
-    unawaited(router.pushReplacement('/scout'));
+      ..go('/settings');
   }
 }
 
 class _TeamInformation extends StatelessWidget {
   const _TeamInformation({
     required this.team,
-    required this.location,
   });
 
   final Team team;
-  final String location;
 
   @override
   Widget build(BuildContext context) {
@@ -288,10 +257,20 @@ class _TeamInformation extends StatelessWidget {
                     ),
                 overflow: TextOverflow.ellipsis,
               ),
-              Text(
-                'Team ${team.number} | $location',
-                style: Theme.of(context).textTheme.bodySmall,
-                overflow: TextOverflow.ellipsis,
+              Builder(
+                builder: (context) {
+                  final location = [
+                    team.city,
+                    team.province,
+                    team.country,
+                  ].nonNulls.join(', ');
+
+                  return Text(
+                    'Team ${team.number} | $location',
+                    style: Theme.of(context).textTheme.bodySmall,
+                    overflow: TextOverflow.ellipsis,
+                  );
+                },
               ),
             ],
           ),
