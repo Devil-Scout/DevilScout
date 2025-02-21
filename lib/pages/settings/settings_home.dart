@@ -78,9 +78,7 @@ class _BuildVersion extends StatelessWidget {
                 style: const TextStyle(fontWeight: FontWeight.normal),
               ),
               TextSpan(
-                text: gitBranch == null
-                    ? '($gitHash)'
-                    : '($gitBranch at $gitHash)',
+                text: '($gitHash)',
                 style: const TextStyle(fontWeight: FontWeight.normal),
               ),
             ],
@@ -230,22 +228,24 @@ class _UserCardState extends State<_UserCard> {
               size: 60,
             ),
             const SizedBox(width: 16),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  context.database.currentUser.name,
-                  style: Theme.of(context).textTheme.titleLarge,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Text(
-                  context.database.currentUser.email,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    context.database.currentUser.name,
+                    style: Theme.of(context).textTheme.titleLarge,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Text(
+                    context.database.currentUser.email,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
             ),
-            const Spacer(),
+            const SizedBox(width: 12),
             IconButton(
               onPressed: () => router.go('/settings/edit-account'),
               icon: const Icon(Icons.edit_outlined),
