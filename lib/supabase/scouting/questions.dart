@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:convert';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -17,16 +18,16 @@ sealed class QuestionNode with _$QuestionNode {
     required int season,
     required ScoutingCategory category,
     String? prompt,
-    String? parentId,
+    Uuid? parentId,
     int? index,
   }) = QuestionGroup;
 
   const factory QuestionNode.question({
-    required String id,
+    required Uuid id,
     required int season,
     required ScoutingCategory category,
     required String prompt,
-    required String parentId,
+    required Uuid parentId,
     required int index,
     required DataType dataType,
     required QuestionConfig config,
@@ -43,7 +44,7 @@ enum QuestionStyle {
   counter('counter'),
   textField('field'),
   checkbox('checkbox'),
-  yesNo('yes_no'),
+  segmented('segmented'),
   radio('radio'),
   dropdown('dropdown');
 
@@ -66,24 +67,49 @@ mixin NumberConfig {
   num? get max;
   num? get step;
   String? get unit;
+
+  bool validateNumber(num value) {
+    if (!value.isFinite) return false;
+    if (min != null && value < min!) return false;
+    if (max != null && value > max!) return false;
+    if (step != null && (value % step!) != 0) return false;
+    return true;
+  }
 }
 
 mixin BooleanConfig {
   QuestionStyle get style;
+
+  // ignore: avoid_positional_boolean_parameters for function reference
+  bool validateBool(bool value) => true;
 }
 
 mixin StringConfig {
   QuestionStyle get style;
   int? get maxLength;
-  String? get regex;
-  List<String>? get options;
+  RegExp? get regex;
+  Set<String>? get options;
+
+  bool validateString(String value) {
+    if (maxLength != null && value.length > maxLength!) return false;
+    if (options != null && !options!.contains(value)) return false;
+    if (regex != null && !regex!.hasMatch(value)) return false;
+    return true;
+  }
 }
 
 mixin ArrayConfig {
   QuestionStyle get style;
-  List<String>? get options;
+  Set<String>? get options;
   int? get minSelected;
   int? get maxSelected;
+
+  bool validateArray(Iterable<String> value) {
+    if (minSelected != null && value.length < minSelected!) return false;
+    if (maxSelected != null && value.length > maxSelected!) return false;
+    if (options != null && !options!.containsAll(value)) return false;
+    return true;
+  }
 }
 
 @immutable
@@ -91,31 +117,41 @@ class QuestionConfig
     with NumberConfig, BooleanConfig, StringConfig, ArrayConfig {
   final JsonObject _json;
 
-  const QuestionConfig.fromJson(this._json);
+  QuestionConfig.fromJson(this._json);
 
   JsonObject toJson() => _json;
 
   @override
-  QuestionStyle get style => QuestionStyle.fromJson(_json['style'] as String);
+  late final style = QuestionStyle.fromJson(_json['style'] as String);
 
   @override
-  num? get min => _json['min'] as num?;
+  late final min = _json['min'] as num?;
   @override
-  num? get max => _json['max'] as num?;
+  late final max = _json['max'] as num?;
   @override
-  num? get step => _json['step'] as num?;
+  late final step = _json['step'] as num?;
   @override
-  String? get unit => _json['unit'] as String?;
+  late final unit = _json['unit'] as String?;
   @override
-  int? get maxLength => _json['len'] as int?;
+  late final maxLength = _json['len'] as int?;
   @override
-  String? get regex => _json['regex'] as String?;
+  late final regex =
+      _json.containsKey('regex') ? RegExp(_json['regex'] as String) : null;
   @override
-  List<String>? get options => (_json['options'] as List<dynamic>?)?.cast();
+  late final options = _json.containsKey('options')
+      ? LinkedHashSet.from(_json['options'] as List<dynamic>)
+      : null;
   @override
-  int? get minSelected => _json['least'] as int?;
+  late final minSelected = _json['least'] as int?;
   @override
-  int? get maxSelected => _json['most'] as int?;
+  late final maxSelected = _json['most'] as int?;
+
+  bool validate(DataType type, dynamic value) => switch (type) {
+        DataType.boolean => validateBool(value as bool),
+        DataType.number => validateNumber(value as num),
+        DataType.string => validateString(value as String),
+        DataType.stringArray => validateArray(value as Iterable<String>),
+      };
 }
 
 @immutable
@@ -130,22 +166,18 @@ class QuestionDetails with _$QuestionDetails {
 class QuestionsRepository {
   final QuestionsService _service;
 
-  final Map<int, CacheAll<Uuid, QuestionNode>> _questionsCaches;
+  final Cache<int, List<QuestionNode>> _questions;
   final Map<int, CacheAll<Uuid, QuestionDetails>> _detailsCaches;
 
   QuestionsRepository.supabase(SupabaseClient supabase)
       : this(QuestionsService(supabase));
 
   QuestionsRepository(this._service)
-      : _questionsCaches = {},
-        _detailsCaches = {};
-
-  CacheAll<Uuid, QuestionNode> _questionsCache(int season) => CacheAll(
-        expiration: const Duration(minutes: 30),
-        origin: _service.getQuestion,
-        originAll: () async => _service.getSeasonQuestions(season),
-        key: (node) => node.id,
-      );
+      : _detailsCaches = {},
+        _questions = Cache(
+          expiration: const Duration(minutes: 30),
+          origin: _service.getSeasonQuestions,
+        );
 
   CacheAll<Uuid, QuestionDetails> _detailsCache(int season) => CacheAll(
         expiration: const Duration(minutes: 30),
@@ -155,22 +187,11 @@ class QuestionsRepository {
         key: (details) => details.questionId,
       );
 
-  Future<QuestionNode?> getQuestion({
-    required int season,
-    required Uuid questionId,
-    bool forceOrigin = false,
-  }) =>
-      _questionsCaches
-          .putIfAbsent(season, () => _questionsCache(season))
-          .get(key: questionId, forceOrigin: forceOrigin);
-
-  Future<List<QuestionNode>> getSeasonQuestions({
+  Future<List<QuestionNode>?> getQuestions({
     required int season,
     bool forceOrigin = false,
   }) =>
-      _questionsCaches
-          .putIfAbsent(season, () => _questionsCache(season))
-          .getAll(forceOrigin: forceOrigin);
+      _questions.get(key: season, forceOrigin: forceOrigin);
 
   Future<QuestionDetails?> getDetails({
     required int season,
