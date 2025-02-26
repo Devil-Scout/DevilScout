@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../components/full_screen_message.dart';
+import '../../components/full_width.dart';
 import '../../router.dart';
 import '../../supabase/database.dart';
 
@@ -37,15 +38,11 @@ class _JoinTeamMessage extends StatelessWidget {
                 message: 'You must join a team before you can start scouting.',
               ),
               const SizedBox(height: 24),
-              Row(
-                children: [
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () => router.go('/scout/join-team'),
-                      child: const Text('Join a Team'),
-                    ),
-                  ),
-                ],
+              FullWidth(
+                child: ElevatedButton(
+                  onPressed: () => router.go('/settings/join-team'),
+                  child: const Text('Join a Team'),
+                ),
               ),
             ],
           ),

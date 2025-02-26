@@ -15,11 +15,15 @@ dependencies:
   freezed_annotation: ^2.4.4
   go_router: ^14.7.2
   google_sign_in: ^6.2.2
+  intl: ^0.20.2
   json_annotation: ^4.9.0
   jwt_decoder: ^2.0.1
+  loading_animation_widget: ^1.3.0
+  package_info_plus: ^8.2.1
   persistent_bottom_nav_bar_v2: ^5.3.1
   provider: ^6.1.2
   sign_in_with_apple: ^6.1.4
+  supabase: any
   supabase_flutter: ^2.8.3
 
 dev_dependencies:
@@ -33,6 +37,8 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/logos/
+    - git/HEAD
+    - git/branches/
   fonts:
   - family: Montserrat
     fonts:

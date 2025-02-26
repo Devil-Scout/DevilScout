@@ -31,10 +31,12 @@ class AuthRepository {
 
   AuthRepository(this._service);
 
+  bool get isSignedIn => _service.isSignedIn;
+
   AuthRepository.supabase(SupabaseClient supabase)
       : this(AuthService(supabase));
 
-  StreamSubscription<AuthState> addListener(
+  StreamSubscription<AuthState> subscribe(
     void Function(AuthState data) onData,
   ) =>
       _service.addListener(onData);
@@ -64,6 +66,8 @@ class AuthService {
   final SupabaseClient _supabase;
 
   AuthService(this._supabase);
+
+  bool get isSignedIn => _supabase.auth.currentSession != null;
 
   StreamSubscription<AuthState> addListener(
     void Function(AuthState data) onData,

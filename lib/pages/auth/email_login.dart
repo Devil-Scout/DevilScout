@@ -1,7 +1,8 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 
-import '../../components/labeled_text_field.dart';
+import '../../components/full_width.dart';
+import '../../components/text_fields.dart';
 import '../../router.dart';
 import '../../supabase/database.dart';
 
@@ -69,38 +70,40 @@ class EmailLoginPage extends StatelessWidget {
   Widget _forgotPasswordButton(BuildContext context) {
     return TextButton(
       onPressed: () {},
+      style: TextButton.styleFrom(
+        foregroundColor: Theme.of(context).colorScheme.primary,
+        textStyle: Theme.of(context).textTheme.bodyMedium,
+        padding: EdgeInsets.zero,
+        minimumSize: Size.zero,
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        visualDensity: VisualDensity.compact,
+        overlayColor: Colors.transparent,
+      ),
       child: const Text('Forgot password?'),
     );
   }
 
   Widget _bottomButtons(BuildContext context) {
-    return Row(
-      children: [
-        OutlinedButton(
-          onPressed: router.pop,
-          child: const Icon(
-            Icons.arrow_back,
-          ),
+    return FullWidth(
+      leading: OutlinedButton(
+        onPressed: router.pop,
+        child: const Icon(
+          Icons.arrow_back,
         ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: ListenableBuilder(
-            listenable: Listenable.merge([
-              _emailController,
-              _passwordController,
-            ]),
-            builder: (context, _) {
-              return ElevatedButton(
-                // TODO: style button when inactive using MaterialState.disabled
-                onPressed: _isFormValid()
-                    ? () async => _loginWithEmail(context)
-                    : null,
-                child: const Text('Sign In'),
-              );
-            },
-          ),
-        ),
-      ],
+      ),
+      child: ListenableBuilder(
+        listenable: Listenable.merge([
+          _emailController,
+          _passwordController,
+        ]),
+        builder: (context, _) {
+          return ElevatedButton(
+            onPressed:
+                _isFormValid() ? () async => _loginWithEmail(context) : null,
+            child: const Text('Sign In'),
+          );
+        },
+      ),
     );
   }
 
@@ -114,6 +117,15 @@ class EmailLoginPage extends StatelessWidget {
         const SizedBox(width: 6),
         TextButton(
           onPressed: () => router.go('/login/email/signup'),
+          style: TextButton.styleFrom(
+            foregroundColor: Theme.of(context).colorScheme.primary,
+            textStyle: Theme.of(context).textTheme.bodyMedium,
+            padding: EdgeInsets.zero,
+            minimumSize: Size.zero,
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            visualDensity: VisualDensity.compact,
+            overlayColor: Colors.transparent,
+          ),
           child: const Text('Create one'),
         ),
       ],
@@ -126,10 +138,10 @@ class EmailLoginPage extends StatelessWidget {
 
   Future<void> _loginWithEmail(BuildContext context) async {
     try {
-      await Database.of(context).auth.signInWithEmail(
-            email: _emailController.text,
-            password: _passwordController.text,
-          );
+      await context.database.auth.signInWithEmail(
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
     } on Object {
       // TODO: notify user of error
     }

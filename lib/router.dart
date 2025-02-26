@@ -7,9 +7,10 @@ import 'pages/auth/email_login.dart';
 import 'pages/auth/email_signup.dart';
 import 'pages/auth/login_select.dart';
 import 'pages/home/home.dart';
-import 'pages/manage/manage_home.dart';
-import 'pages/scout/join_team.dart';
 import 'pages/scout/scout_home.dart';
+import 'pages/settings/edit_account.dart';
+import 'pages/settings/join_team.dart';
+import 'pages/settings/settings_home.dart';
 
 final _rootNavigator = GlobalKey<NavigatorState>();
 final _homeNavigator = GlobalKey<NavigatorState>();
@@ -76,12 +77,6 @@ StatefulShellBranch _scoutBranch() {
       GoRoute(
         path: '/scout',
         builder: (context, state) => const ScoutHomePage(),
-        routes: [
-          GoRoute(
-            path: 'join-team',
-            builder: (context, state) => const JoinTeamPage(),
-          ),
-        ],
       ),
     ],
   );
@@ -105,7 +100,17 @@ StatefulShellBranch _settingsBranch() {
     routes: [
       GoRoute(
         path: '/settings',
-        builder: (context, state) => const ManageHomePage(),
+        builder: (context, state) => const SettingsHomePage(),
+        routes: [
+          GoRoute(
+            path: 'join-team',
+            builder: (context, state) => const JoinTeamPage(),
+          ),
+          GoRoute(
+            path: 'edit-account',
+            builder: (context, state) => const EditAccountPage(),
+          ),
+        ],
       ),
     ],
   );

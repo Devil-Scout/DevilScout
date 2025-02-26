@@ -26,11 +26,17 @@ class MainApp extends StatefulWidget {
 }
 
 class _MainAppState extends State<MainApp> {
+  late final StreamSubscription<AuthState> _authSub;
+
   @override
   void initState() {
     super.initState();
 
-    Database.of(context).auth.addListener((data) {
+    if (context.database.auth.isSignedIn) {
+      context.database.currentUser.refresh();
+    }
+
+    _authSub = context.database.auth.subscribe((data) {
       switch (data.event) {
         case AuthChangeEvent.signedIn:
           router.go('/home');
@@ -45,6 +51,12 @@ class _MainAppState extends State<MainApp> {
         default: // ignore the rest
       }
     });
+  }
+
+  @override
+  void dispose() {
+    _authSub.cancel();
+    super.dispose();
   }
 
   @override
