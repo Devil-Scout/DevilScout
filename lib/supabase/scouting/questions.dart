@@ -10,6 +10,26 @@ import 'scouting.dart';
 part 'questions.freezed.dart';
 part 'questions.g.dart';
 
+class QuestionTree {
+  final QuestionNode node;
+  final List<QuestionTree> children;
+
+  QuestionGroup get group => node as QuestionGroup;
+  Question get question => node as Question;
+  bool get isQuestion => node is Question;
+
+  QuestionTree({required this.node, required this.children});
+
+  factory QuestionTree.build(Iterable<QuestionNode> nodes, QuestionNode root) {
+    final children = nodes
+        .where((n) => n.parentId == root.id)
+        .map((n) => QuestionTree.build(nodes, n))
+        .toList()
+      ..sort((a, b) => a.node.index.compareTo(b.node.index));
+    return QuestionTree(node: root, children: children);
+  }
+}
+
 @immutable
 @Freezed(fromJson: true, toJson: true)
 sealed class QuestionNode with _$QuestionNode {
@@ -17,18 +37,18 @@ sealed class QuestionNode with _$QuestionNode {
     required Uuid id,
     required int season,
     required ScoutingCategory category,
-    String? prompt,
+    required int index,
     Uuid? parentId,
-    int? index,
+    String? label,
   }) = QuestionGroup;
 
   const factory QuestionNode.question({
     required Uuid id,
     required int season,
     required ScoutingCategory category,
-    required String prompt,
-    required Uuid parentId,
     required int index,
+    required Uuid parentId,
+    required String label,
     required DataType dataType,
     required QuestionConfig config,
   }) = Question;

@@ -51,6 +51,37 @@ class ResponseData<T> with ChangeNotifier {
   }
 }
 
+class QuestionGroupView extends StatelessWidget {
+  final QuestionTree tree;
+  final SubmissionData data;
+
+  const QuestionGroupView({super.key, required this.tree, required this.data});
+
+  @override
+  Widget build(BuildContext context) {
+    if (tree.isQuestion) {
+      return QuestionView(question: tree.question, data: data);
+    }
+
+    final label = tree.group.label;
+
+    // TODO: special rules for layout
+    // ex: two counters side by side
+
+    // fallback
+    return Column(
+      children: [
+        if (label != null) Text(label),
+        Column(
+          children: tree.children
+              .map((c) => QuestionGroupView(tree: c, data: data))
+              .toList(),
+        ),
+      ],
+    );
+  }
+}
+
 class QuestionView extends StatelessWidget {
   final Question question;
   final SubmissionData data;
@@ -65,10 +96,22 @@ class QuestionView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(question.prompt),
+        Row(
+          children: [
+            Text(question.label),
+            IconButton(
+              onPressed: _showQuestionDetails,
+              icon: const Icon(Icons.help_outline_rounded),
+            ),
+          ],
+        ),
         _questionWidget(),
       ],
     );
+  }
+
+  void _showQuestionDetails() {
+    // TODO: dialog/page rendering question details
   }
 
   Widget _questionWidget() =>
@@ -117,14 +160,17 @@ class YesNoQuestion extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SegmentedButton<bool>(
-      segments: const [
-        ButtonSegment(value: true, label: Text('Yes')),
-        ButtonSegment(value: false, label: Text('No')),
-      ],
-      selected: response.hasValue ? {} : {response.value},
-      emptySelectionAllowed: true,
-      onSelectionChanged: (newValue) => response.value = newValue.single,
+    return ListenableBuilder(
+      listenable: response,
+      builder: (context, child) => SegmentedButton<bool>(
+        segments: const [
+          ButtonSegment(value: true, label: Text('Yes')),
+          ButtonSegment(value: false, label: Text('No')),
+        ],
+        selected: response.hasValue ? {} : {response.value},
+        emptySelectionAllowed: true,
+        onSelectionChanged: (newValue) => response.value = newValue.single,
+      ),
     );
   }
 }
