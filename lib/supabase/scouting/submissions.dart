@@ -21,7 +21,30 @@ class Submission with _$Submission {
     String? matchKey,
   }) = _Submission;
 
-  factory Submission.fromJson(JsonObject json) => _$SubmissionFromJson(json);
+  factory Submission.fromJson(JsonObject json) => _Submission.fromJson(json);
+}
+
+@immutable
+@freezed
+class SubmissionData with _$SubmissionData {
+  const SubmissionData._();
+
+  const factory SubmissionData({
+    required Uuid submissionId,
+    required Uuid questionId,
+    num? dataNum,
+    bool? dataBool,
+    String? dataStr,
+    List<String>? dataArr,
+  }) = _SubmissionData;
+
+  factory SubmissionData.fromJson(JsonObject json) =>
+      _SubmissionData.fromJson(json);
+
+  bool get isNum => dataNum != null;
+  bool get isBool => dataBool != null;
+  bool get isString => dataStr != null;
+  bool get isArray => dataArr != null;
 }
 
 class SubmissionsRepository {
