@@ -19,7 +19,7 @@ class UserProfile with _$UserProfile {
     required DateTime createdAt,
   }) = _UserProfile;
 
-  factory UserProfile.fromJson(JsonObject json) => _$UserProfileFromJson(json);
+  factory UserProfile.fromJson(JsonObject json) => _UserProfile.fromJson(json);
 }
 
 class CurrentUserRepository {

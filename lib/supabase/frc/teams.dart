@@ -20,7 +20,7 @@ class FrcTeam with _$FrcTeam {
     String? website,
   }) = _FrcTeam;
 
-  factory FrcTeam.fromJson(JsonObject json) => _$FrcTeamFromJson(json);
+  factory FrcTeam.fromJson(JsonObject json) => _FrcTeam.fromJson(json);
 }
 
 class FrcTeamsRepository {

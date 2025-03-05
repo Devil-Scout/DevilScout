@@ -20,7 +20,7 @@ class Team with _$Team {
     TeamRegistration? registration,
   }) = _Team;
 
-  factory Team.fromJson(JsonObject json) => _$TeamFromJson(json);
+  factory Team.fromJson(JsonObject json) => _Team.fromJson(json);
 
   bool get isRegistered => registration != null;
 }
@@ -36,7 +36,7 @@ class TeamRegistration with _$TeamRegistration {
   }) = _TeamRegistration;
 
   factory TeamRegistration.fromJson(JsonObject json) =>
-      _$TeamRegistrationFromJson(json);
+      _TeamRegistration.fromJson(json);
 }
 
 class TeamsRepository {

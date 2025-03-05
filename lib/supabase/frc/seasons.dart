@@ -14,7 +14,7 @@ class FrcSeason with _$FrcSeason {
     required String name,
   }) = _FrcSeason;
 
-  factory FrcSeason.fromJson(JsonObject json) => _$FrcSeasonFromJson(json);
+  factory FrcSeason.fromJson(JsonObject json) => _FrcSeason.fromJson(json);
 }
 
 class FrcSeasonsRepository {

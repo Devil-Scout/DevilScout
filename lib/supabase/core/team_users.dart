@@ -20,7 +20,7 @@ class TeamUser with _$TeamUser {
     required List<UserPermission> permissions,
   }) = _TeamUser;
 
-  factory TeamUser.fromJson(JsonObject json) => _$TeamUserFromJson(json);
+  factory TeamUser.fromJson(JsonObject json) => _TeamUser.fromJson(json);
 }
 
 @immutable
@@ -35,7 +35,7 @@ class UserPermission with _$UserPermission {
   }) = _UserPermission;
 
   factory UserPermission.fromJson(JsonObject json) =>
-      _$UserPermissionFromJson(json);
+      _UserPermission.fromJson(json);
 }
 
 class TeamUsersRepository {

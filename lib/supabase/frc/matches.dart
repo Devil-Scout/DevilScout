@@ -23,7 +23,7 @@ class FrcMatch with _$FrcMatch {
     FrcMatchResult? result,
   }) = _FrcMatch;
 
-  factory FrcMatch.fromJson(JsonObject json) => _$FrcMatchFromJson(json);
+  factory FrcMatch.fromJson(JsonObject json) => _FrcMatch.fromJson(json);
 }
 
 @immutable
@@ -39,7 +39,7 @@ class FrcMatchTeam with _$FrcMatchTeam {
   }) = _FrcMatchTeam;
 
   factory FrcMatchTeam.fromJson(JsonObject json) =>
-      _$FrcMatchTeamFromJson(json);
+      _FrcMatchTeam.fromJson(json);
 }
 
 @immutable
@@ -54,7 +54,7 @@ class FrcMatchResult with _$FrcMatchResult {
   }) = _FrcMatchResult;
 
   factory FrcMatchResult.fromJson(JsonObject json) =>
-      _$FrcMatchResultFromJson(json);
+      _FrcMatchResult.fromJson(json);
 }
 
 class FrcMatchesRepository {

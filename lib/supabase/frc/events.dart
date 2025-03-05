@@ -23,7 +23,7 @@ class FrcEventType with _$FrcEventType {
   }) = _FrcEventType;
 
   factory FrcEventType.fromJson(JsonObject json) =>
-      _$FrcEventTypeFromJson(json);
+      _FrcEventType.fromJson(json);
 }
 
 @immutable
@@ -51,7 +51,7 @@ class FrcEvent with _$FrcEvent {
     String? postalCode,
   }) = _FrcEvent;
 
-  factory FrcEvent.fromJson(JsonObject json) => _$FrcEventFromJson(json);
+  factory FrcEvent.fromJson(JsonObject json) => _FrcEvent.fromJson(json);
 }
 
 (double, double)? _pointFromString(String? json) => json == null

@@ -16,7 +16,7 @@ class FrcDistrict with _$FrcDistrict {
     required String name,
   }) = _FrcDistrict;
 
-  factory FrcDistrict.fromJson(JsonObject json) => _$FrcDistrictFromJson(json);
+  factory FrcDistrict.fromJson(JsonObject json) => _FrcDistrict.fromJson(json);
 }
 
 class FrcDistrictsRepository {

@@ -17,7 +17,7 @@ class TeamRequest with _$TeamRequest {
     required UserProfile profile,
   }) = _TeamRequest;
 
-  factory TeamRequest.fromJson(JsonObject json) => _$TeamRequestFromJson(json);
+  factory TeamRequest.fromJson(JsonObject json) => _TeamRequest.fromJson(json);
 }
 
 class TeamRequestsRepository {
