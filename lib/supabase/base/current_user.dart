@@ -12,12 +12,20 @@ part 'current_user.g.dart';
 
 @immutable
 @freezed
-sealed class UserProfile with _$UserProfile {
-  const factory UserProfile({
-    required Uuid userId,
-    required String name,
-    required DateTime createdAt,
-  }) = _UserProfile;
+@JsonSerializable()
+final class UserProfile with _$UserProfile {
+  @override
+  final Uuid userId;
+  @override
+  final String name;
+  @override
+  final DateTime createdAt;
+
+  const UserProfile({
+    required this.userId,
+    required this.name,
+    required this.createdAt,
+  });
 
   factory UserProfile.fromJson(JsonObject json) => _$UserProfileFromJson(json);
 }

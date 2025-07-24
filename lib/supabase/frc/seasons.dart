@@ -8,11 +8,17 @@ part 'seasons.g.dart';
 
 @immutable
 @freezed
-sealed class FrcSeason with _$FrcSeason {
-  const factory FrcSeason({
-    required int year,
-    required String name,
-  }) = _FrcSeason;
+@JsonSerializable()
+final class FrcSeason with _$FrcSeason {
+  @override
+  final int year;
+  @override
+  final String name;
+
+  const FrcSeason({
+    required this.year,
+    required this.name,
+  });
 
   factory FrcSeason.fromJson(JsonObject json) => _$FrcSeasonFromJson(json);
 }

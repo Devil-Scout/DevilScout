@@ -8,17 +8,29 @@ part 'teams.g.dart';
 
 @immutable
 @freezed
-sealed class Team with _$Team {
-  const Team._();
+@JsonSerializable()
+final class Team with _$Team {
+  @override
+  final int number;
+  @override
+  final String name;
+  @override
+  final String? country;
+  @override
+  final String? province;
+  @override
+  final String? city;
+  @override
+  final TeamRegistration? registration;
 
-  const factory Team({
-    required int number,
-    required String name,
-    String? country,
-    String? province,
-    String? city,
-    TeamRegistration? registration,
-  }) = _Team;
+  const Team({
+    required this.number,
+    required this.name,
+    this.country,
+    this.province,
+    this.city,
+    this.registration,
+  });
 
   factory Team.fromJson(JsonObject json) => _$TeamFromJson(json);
 
@@ -27,13 +39,23 @@ sealed class Team with _$Team {
 
 @immutable
 @freezed
-sealed class TeamRegistration with _$TeamRegistration {
-  const factory TeamRegistration({
-    required int number,
-    required bool verified,
-    required DateTime createdAt,
-    required String name,
-  }) = _TeamRegistration;
+@JsonSerializable()
+final class TeamRegistration with _$TeamRegistration {
+  @override
+  final int number;
+  @override
+  final bool verified;
+  @override
+  final DateTime createdAt;
+  @override
+  final String name;
+
+  const TeamRegistration({
+    required this.number,
+    required this.verified,
+    required this.createdAt,
+    required this.name,
+  });
 
   factory TeamRegistration.fromJson(JsonObject json) =>
       _$TeamRegistrationFromJson(json);

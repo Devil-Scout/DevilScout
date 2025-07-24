@@ -11,16 +11,32 @@ part 'events.g.dart';
 
 @immutable
 @freezed
-sealed class FrcEventType with _$FrcEventType {
-  const factory FrcEventType({
-    required int id,
-    required bool isDistrict,
-    required bool isChampionship,
-    required bool isDivision,
-    required bool isOffseason,
-    required String name,
-    required String nameShort,
-  }) = _FrcEventType;
+@JsonSerializable()
+final class FrcEventType with _$FrcEventType {
+  @override
+  final int id;
+  @override
+  final bool isDistrict;
+  @override
+  final bool isChampionship;
+  @override
+  final bool isDivision;
+  @override
+  final bool isOffseason;
+  @override
+  final String name;
+  @override
+  final String nameShort;
+
+  const FrcEventType({
+    required this.id,
+    required this.isDistrict,
+    required this.isChampionship,
+    required this.isDivision,
+    required this.isOffseason,
+    required this.name,
+    required this.nameShort,
+  });
 
   factory FrcEventType.fromJson(JsonObject json) =>
       _$FrcEventTypeFromJson(json);
@@ -28,28 +44,69 @@ sealed class FrcEventType with _$FrcEventType {
 
 @immutable
 @freezed
-sealed class FrcEvent with _$FrcEvent {
-  const factory FrcEvent({
-    required int season,
-    required FrcEventType eventType,
-    required DateTime startDate,
-    required DateTime endDate,
-    @JsonKey(fromJson: _pointFromString) (double, double)? coordinates,
-    int? week,
-    required String key,
-    required String code,
-    required String name,
-    String? nameShort,
-    String? districtKey,
-    String? timezone,
-    String? country,
-    String? province,
-    String? city,
-    String? address,
-    String? location,
-    String? website,
-    String? postalCode,
-  }) = _FrcEvent;
+@JsonSerializable()
+final class FrcEvent with _$FrcEvent {
+  @override
+  final int season;
+  @override
+  final FrcEventType eventType;
+  @override
+  final DateTime startDate;
+  @override
+  final DateTime endDate;
+  @override
+  @JsonKey(fromJson: _pointFromString)
+  final (double, double)? coordinates;
+  @override
+  final int? week;
+  @override
+  final String key;
+  @override
+  final String code;
+  @override
+  final String name;
+  @override
+  final String? nameShort;
+  @override
+  final String? districtKey;
+  @override
+  final String? timezone;
+  @override
+  final String? country;
+  @override
+  final String? province;
+  @override
+  final String? city;
+  @override
+  final String? address;
+  @override
+  final String? location;
+  @override
+  final String? website;
+  @override
+  final String? postalCode;
+
+  const FrcEvent({
+    required this.season,
+    required this.eventType,
+    required this.startDate,
+    required this.endDate,
+    this.coordinates,
+    this.week,
+    required this.key,
+    required this.code,
+    required this.name,
+    this.nameShort,
+    this.districtKey,
+    this.timezone,
+    this.country,
+    this.province,
+    this.city,
+    this.address,
+    this.location,
+    this.website,
+    this.postalCode,
+  });
 
   factory FrcEvent.fromJson(JsonObject json) => _$FrcEventFromJson(json);
 }

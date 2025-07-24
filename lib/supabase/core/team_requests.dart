@@ -9,13 +9,23 @@ part 'team_requests.g.dart';
 
 @immutable
 @freezed
-sealed class TeamRequest with _$TeamRequest {
-  const factory TeamRequest({
-    required Uuid userId,
-    required DateTime requestedAt,
-    required int teamNum,
-    required UserProfile profile,
-  }) = _TeamRequest;
+@JsonSerializable()
+final class TeamRequest with _$TeamRequest {
+  @override
+  final Uuid userId;
+  @override
+  final DateTime requestedAt;
+  @override
+  final int teamNum;
+  @override
+  final UserProfile profile;
+
+  const TeamRequest({
+    required this.userId,
+    required this.requestedAt,
+    required this.teamNum,
+    required this.profile,
+  });
 
   factory TeamRequest.fromJson(JsonObject json) => _$TeamRequestFromJson(json);
 }

@@ -8,13 +8,23 @@ part 'districts.g.dart';
 
 @immutable
 @freezed
-sealed class FrcDistrict with _$FrcDistrict {
-  const factory FrcDistrict({
-    required int season,
-    required String key,
-    required String code,
-    required String name,
-  }) = _FrcDistrict;
+@JsonSerializable()
+final class FrcDistrict with _$FrcDistrict {
+  @override
+  final int season;
+  @override
+  final String key;
+  @override
+  final String code;
+  @override
+  final String name;
+
+  const FrcDistrict({
+    required this.season,
+    required this.key,
+    required this.code,
+    required this.name,
+  });
 
   factory FrcDistrict.fromJson(JsonObject json) => _$FrcDistrictFromJson(json);
 }

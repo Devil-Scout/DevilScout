@@ -9,34 +9,70 @@ part 'matches.g.dart';
 
 @immutable
 @freezed
-sealed class FrcMatch with _$FrcMatch {
-  const factory FrcMatch({
-    required int number,
-    required int set,
-    required FrcMatchLevel level,
-    required String eventKey,
-    required String key,
-    DateTime? scheduledTime,
-    DateTime? predictedTime,
-    DateTime? actualTime,
-    required List<FrcMatchTeam> teams,
-    FrcMatchResult? result,
-  }) = _FrcMatch;
+@JsonSerializable()
+final class FrcMatch with _$FrcMatch {
+  @override
+  final int number;
+  @override
+  final int set;
+  @override
+  final FrcMatchLevel level;
+  @override
+  final String eventKey;
+  @override
+  final String key;
+  @override
+  final DateTime? scheduledTime;
+  @override
+  final DateTime? predictedTime;
+  @override
+  final DateTime? actualTime;
+  @override
+  final List<FrcMatchTeam> teams;
+  @override
+  final FrcMatchResult? result;
+
+  const FrcMatch({
+    required this.number,
+    required this.set,
+    required this.level,
+    required this.eventKey,
+    required this.key,
+    this.scheduledTime,
+    this.predictedTime,
+    this.actualTime,
+    required this.teams,
+    this.result,
+  });
 
   factory FrcMatch.fromJson(JsonObject json) => _$FrcMatchFromJson(json);
 }
 
 @immutable
 @freezed
-sealed class FrcMatchTeam with _$FrcMatchTeam {
-  const factory FrcMatchTeam({
-    required int teamNum,
-    required int station,
-    required FrcAlliance alliance,
-    required bool isSurrogate,
-    required bool isDisqualified,
-    required String matchKey,
-  }) = _FrcMatchTeam;
+@JsonSerializable()
+final class FrcMatchTeam with _$FrcMatchTeam {
+  @override
+  final int teamNum;
+  @override
+  final int station;
+  @override
+  final FrcAlliance alliance;
+  @override
+  final bool isSurrogate;
+  @override
+  final bool isDisqualified;
+  @override
+  final String matchKey;
+
+  const FrcMatchTeam({
+    required this.teamNum,
+    required this.station,
+    required this.alliance,
+    required this.isSurrogate,
+    required this.isDisqualified,
+    required this.matchKey,
+  });
 
   factory FrcMatchTeam.fromJson(JsonObject json) =>
       _$FrcMatchTeamFromJson(json);
@@ -44,14 +80,26 @@ sealed class FrcMatchTeam with _$FrcMatchTeam {
 
 @immutable
 @freezed
-sealed class FrcMatchResult with _$FrcMatchResult {
-  const factory FrcMatchResult({
-    required int redScore,
-    required int blueScore,
-    required FrcAlliance? winningAlliance,
-    required String matchKey,
-    required JsonList videos,
-  }) = _FrcMatchResult;
+@JsonSerializable()
+final class FrcMatchResult with _$FrcMatchResult {
+  @override
+  final int redScore;
+  @override
+  final int blueScore;
+  @override
+  final FrcAlliance? winningAlliance;
+  @override
+  final String matchKey;
+  @override
+  final JsonList videos;
+
+  const FrcMatchResult({
+    required this.redScore,
+    required this.blueScore,
+    required this.winningAlliance,
+    required this.matchKey,
+    required this.videos,
+  });
 
   factory FrcMatchResult.fromJson(JsonObject json) =>
       _$FrcMatchResultFromJson(json);

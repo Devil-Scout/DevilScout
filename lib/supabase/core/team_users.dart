@@ -10,29 +10,55 @@ part 'team_users.g.dart';
 
 @immutable
 @freezed
-sealed class TeamUser with _$TeamUser {
-  const factory TeamUser({
-    required Uuid userId,
-    required int teamNum,
-    Uuid? addedBy,
-    required DateTime addedAt,
-    required UserProfile profile,
-    required List<UserPermission> permissions,
-  }) = _TeamUser;
+@JsonSerializable()
+final class TeamUser with _$TeamUser {
+  @override
+  final Uuid userId;
+  @override
+  final int teamNum;
+  @override
+  final Uuid? addedBy;
+  @override
+  final DateTime addedAt;
+  @override
+  final UserProfile profile;
+  @override
+  final List<UserPermission> permissions;
+
+  const TeamUser({
+    required this.userId,
+    required this.teamNum,
+    this.addedBy,
+    required this.addedAt,
+    required this.profile,
+    required this.permissions,
+  });
 
   factory TeamUser.fromJson(JsonObject json) => _$TeamUserFromJson(json);
 }
 
 @immutable
 @freezed
-sealed class UserPermission with _$UserPermission {
-  const factory UserPermission({
-    required Uuid userId,
-    required int teamNum,
-    required DateTime grantedAt,
-    required Uuid grantedBy,
-    required PermissionType type,
-  }) = _UserPermission;
+@JsonSerializable()
+final class UserPermission with _$UserPermission {
+  @override
+  final Uuid userId;
+  @override
+  final int teamNum;
+  @override
+  final DateTime grantedAt;
+  @override
+  final Uuid grantedBy;
+  @override
+  final PermissionType type;
+
+  const UserPermission({
+    required this.userId,
+    required this.teamNum,
+    required this.grantedAt,
+    required this.grantedBy,
+    required this.type,
+  });
 
   factory UserPermission.fromJson(JsonObject json) =>
       _$UserPermissionFromJson(json);
