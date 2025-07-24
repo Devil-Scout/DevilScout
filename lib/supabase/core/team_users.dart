@@ -10,7 +10,7 @@ part 'team_users.g.dart';
 
 @immutable
 @freezed
-class TeamUser with _$TeamUser {
+sealed class TeamUser with _$TeamUser {
   const factory TeamUser({
     required Uuid userId,
     required int teamNum,
@@ -25,7 +25,7 @@ class TeamUser with _$TeamUser {
 
 @immutable
 @freezed
-class UserPermission with _$UserPermission {
+sealed class UserPermission with _$UserPermission {
   const factory UserPermission({
     required Uuid userId,
     required int teamNum,

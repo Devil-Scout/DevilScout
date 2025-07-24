@@ -8,7 +8,7 @@ part 'districts.g.dart';
 
 @immutable
 @freezed
-class FrcDistrict with _$FrcDistrict {
+sealed class FrcDistrict with _$FrcDistrict {
   const factory FrcDistrict({
     required int season,
     required String key,

@@ -9,7 +9,7 @@ part 'matches.g.dart';
 
 @immutable
 @freezed
-class FrcMatch with _$FrcMatch {
+sealed class FrcMatch with _$FrcMatch {
   const factory FrcMatch({
     required int number,
     required int set,
@@ -28,7 +28,7 @@ class FrcMatch with _$FrcMatch {
 
 @immutable
 @freezed
-class FrcMatchTeam with _$FrcMatchTeam {
+sealed class FrcMatchTeam with _$FrcMatchTeam {
   const factory FrcMatchTeam({
     required int teamNum,
     required int station,
@@ -44,7 +44,7 @@ class FrcMatchTeam with _$FrcMatchTeam {
 
 @immutable
 @freezed
-class FrcMatchResult with _$FrcMatchResult {
+sealed class FrcMatchResult with _$FrcMatchResult {
   const factory FrcMatchResult({
     required int redScore,
     required int blueScore,

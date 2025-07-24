@@ -11,7 +11,7 @@ part 'events.g.dart';
 
 @immutable
 @freezed
-class FrcEventType with _$FrcEventType {
+sealed class FrcEventType with _$FrcEventType {
   const factory FrcEventType({
     required int id,
     required bool isDistrict,
@@ -28,7 +28,7 @@ class FrcEventType with _$FrcEventType {
 
 @immutable
 @freezed
-class FrcEvent with _$FrcEvent {
+sealed class FrcEvent with _$FrcEvent {
   const factory FrcEvent({
     required int season,
     required FrcEventType eventType,

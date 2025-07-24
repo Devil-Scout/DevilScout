@@ -12,7 +12,7 @@ part 'current_user.g.dart';
 
 @immutable
 @freezed
-class UserProfile with _$UserProfile {
+sealed class UserProfile with _$UserProfile {
   const factory UserProfile({
     required Uuid userId,
     required String name,

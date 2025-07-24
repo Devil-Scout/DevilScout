@@ -8,7 +8,7 @@ part 'seasons.g.dart';
 
 @immutable
 @freezed
-class FrcSeason with _$FrcSeason {
+sealed class FrcSeason with _$FrcSeason {
   const factory FrcSeason({
     required int year,
     required String name,

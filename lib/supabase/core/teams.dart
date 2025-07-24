@@ -8,7 +8,7 @@ part 'teams.g.dart';
 
 @immutable
 @freezed
-class Team with _$Team {
+sealed class Team with _$Team {
   const Team._();
 
   const factory Team({
@@ -27,7 +27,7 @@ class Team with _$Team {
 
 @immutable
 @freezed
-class TeamRegistration with _$TeamRegistration {
+sealed class TeamRegistration with _$TeamRegistration {
   const factory TeamRegistration({
     required int number,
     required bool verified,

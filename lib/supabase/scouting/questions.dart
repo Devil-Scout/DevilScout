@@ -41,7 +41,7 @@ sealed class QuestionNode with _$QuestionNode {
 
 @immutable
 @freezed
-class QuestionDetails with _$QuestionDetails {
+sealed class QuestionDetails with _$QuestionDetails {
   const factory QuestionDetails({
     required Uuid questionId,
     required String markdown,

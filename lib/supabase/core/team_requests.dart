@@ -9,7 +9,7 @@ part 'team_requests.g.dart';
 
 @immutable
 @freezed
-class TeamRequest with _$TeamRequest {
+sealed class TeamRequest with _$TeamRequest {
   const factory TeamRequest({
     required Uuid userId,
     required DateTime requestedAt,

@@ -8,7 +8,7 @@ part 'teams.g.dart';
 
 @immutable
 @freezed
-class FrcTeam with _$FrcTeam {
+sealed class FrcTeam with _$FrcTeam {
   const factory FrcTeam({
     required int number,
     int? rookieSeason,
