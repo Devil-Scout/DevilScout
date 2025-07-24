@@ -14,9 +14,7 @@ class ScoutHomePage extends StatelessWidget {
       return const _JoinTeamMessage();
     }
 
-    return const Center(
-      child: Text('Scout Page'),
-    );
+    return const Center(child: Text('Scout Page'));
   }
 }
 

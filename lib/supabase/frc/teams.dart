@@ -46,29 +46,25 @@ class FrcTeamsRepository {
   final Cache<String, List<FrcTeam>> _eventTeamsCache;
 
   FrcTeamsRepository.supabase(SupabaseClient supabase)
-      : this(FrcTeamsService(supabase));
+    : this(FrcTeamsService(supabase));
 
   FrcTeamsRepository(FrcTeamsService service)
-      : _teamsCache = Cache(
-          expiration: const Duration(minutes: 30),
-          origin: service.getTeam,
-        ),
-        _eventTeamsCache = Cache(
-          expiration: const Duration(minutes: 30),
-          origin: service.getTeamsAtEvent,
-        );
+    : _teamsCache = Cache(
+        expiration: const Duration(minutes: 30),
+        origin: service.getTeam,
+      ),
+      _eventTeamsCache = Cache(
+        expiration: const Duration(minutes: 30),
+        origin: service.getTeamsAtEvent,
+      );
 
-  Future<FrcTeam?> getTeam({
-    required int teamNum,
-    bool forceOrigin = false,
-  }) =>
+  Future<FrcTeam?> getTeam({required int teamNum, bool forceOrigin = false}) =>
       _teamsCache.get(key: teamNum, forceOrigin: forceOrigin);
 
   Future<List<FrcTeam>?> getTeamsAtEvent({
     required String eventKey,
     bool forceOrigin = false,
-  }) =>
-      _eventTeamsCache.get(key: eventKey, forceOrigin: forceOrigin);
+  }) => _eventTeamsCache.get(key: eventKey, forceOrigin: forceOrigin);
 }
 
 class FrcTeamsService {

@@ -15,10 +15,7 @@ final class FrcSeason with _$FrcSeason {
   @override
   final String name;
 
-  const FrcSeason({
-    required this.year,
-    required this.name,
-  });
+  const FrcSeason({required this.year, required this.name});
 
   factory FrcSeason.fromJson(JsonObject json) => _$FrcSeasonFromJson(json);
 }
@@ -27,20 +24,17 @@ class FrcSeasonsRepository {
   final CacheAll<int, FrcSeason> _seasonsCache;
 
   FrcSeasonsRepository.supabase(SupabaseClient supabase)
-      : this(FrcSeasonsService(supabase));
+    : this(FrcSeasonsService(supabase));
 
   FrcSeasonsRepository(FrcSeasonsService service)
-      : _seasonsCache = CacheAll(
-          expiration: const Duration(minutes: 30),
-          origin: service.getSeason,
-          originAll: service.getAllSeasons,
-          key: (season) => season.year,
-        );
+    : _seasonsCache = CacheAll(
+        expiration: const Duration(minutes: 30),
+        origin: service.getSeason,
+        originAll: service.getAllSeasons,
+        key: (season) => season.year,
+      );
 
-  Future<FrcSeason?> getSeason({
-    required int year,
-    bool forceOrigin = false,
-  }) =>
+  Future<FrcSeason?> getSeason({required int year, bool forceOrigin = false}) =>
       _seasonsCache.get(key: year, forceOrigin: forceOrigin);
 
   Future<List<FrcSeason>> getAllSeasons({bool forceOrigin = false}) =>

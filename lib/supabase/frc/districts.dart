@@ -34,16 +34,16 @@ class FrcDistrictsRepository {
   final Map<int, CacheAll<String, FrcDistrict>> _districtsCaches;
 
   FrcDistrictsRepository.supabase(SupabaseClient supabase)
-      : this(FrcDistrictsService(supabase));
+    : this(FrcDistrictsService(supabase));
 
   FrcDistrictsRepository(this._service) : _districtsCaches = {};
 
   CacheAll<String, FrcDistrict> _cache(int season) => CacheAll(
-        expiration: const Duration(minutes: 30),
-        origin: _service.getDistrict,
-        originAll: () async => _service.getSeasonDistricts(season),
-        key: (district) => district.name,
-      );
+    expiration: const Duration(minutes: 30),
+    origin: _service.getDistrict,
+    originAll: () async => _service.getSeasonDistricts(season),
+    key: (district) => district.name,
+  );
 
   Future<FrcDistrict?> getDistrict({
     required String districtKey,
@@ -58,10 +58,9 @@ class FrcDistrictsRepository {
   Future<List<FrcDistrict>?> getSeasonDistricts({
     required int season,
     bool forceOrigin = false,
-  }) =>
-      _districtsCaches
-          .putIfAbsent(season, () => _cache(season))
-          .getAll(forceOrigin: forceOrigin);
+  }) => _districtsCaches
+      .putIfAbsent(season, () => _cache(season))
+      .getAll(forceOrigin: forceOrigin);
 }
 
 class FrcDistrictsService {
@@ -79,8 +78,10 @@ class FrcDistrictsService {
   }
 
   Future<List<FrcDistrict>> getSeasonDistricts(int season) async {
-    final data =
-        await _supabase.from('frc_districts').select().eq('season', season);
+    final data = await _supabase
+        .from('frc_districts')
+        .select()
+        .eq('season', season);
     return data.parse(FrcDistrict.fromJson);
   }
 }

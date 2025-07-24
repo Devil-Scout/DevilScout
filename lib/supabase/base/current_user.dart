@@ -36,7 +36,7 @@ class CurrentUserRepository {
   CurrentUserRepository(this._service);
 
   CurrentUserRepository.supabase(SupabaseClient supabase)
-      : this(CurrentUserService(supabase));
+    : this(CurrentUserService(supabase));
 
   Future<void> refresh() => _service.refresh();
 
@@ -61,11 +61,7 @@ class CurrentUserRepository {
     String? email,
     String? password,
   }) =>
-      _service.updateUserDetails(
-        name: name,
-        email: email,
-        password: password,
-      );
+      _service.updateUserDetails(name: name, email: email, password: password);
 }
 
 class CurrentUserService {

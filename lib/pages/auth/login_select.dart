@@ -53,18 +53,11 @@ class LoginSelectPage extends StatelessWidget {
     );
   }
 
-  Widget _ssoButton(
-    BuildContext context, {
-    required SsoProvider provider,
-  }) {
+  Widget _ssoButton(BuildContext context, {required SsoProvider provider}) {
     return FullWidth(
       child: OutlinedButton.icon(
         onPressed: () async => _loginWithSso(context, provider),
-        icon: SvgPicture.asset(
-          provider.iconPath,
-          width: 24,
-          height: 24,
-        ),
+        icon: SvgPicture.asset(provider.iconPath, width: 24, height: 24),
         label: Padding(
           padding: const EdgeInsets.only(left: 6),
           child: Text('Sign in with ${provider.name}'),
@@ -81,10 +74,7 @@ class LoginSelectPage extends StatelessWidget {
           const Expanded(child: Divider()),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text(
-              'or',
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
+            child: Text('or', style: Theme.of(context).textTheme.bodyMedium),
           ),
           const Expanded(child: Divider()),
         ],

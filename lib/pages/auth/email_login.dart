@@ -87,19 +87,15 @@ class EmailLoginPage extends StatelessWidget {
     return FullWidth(
       leading: OutlinedButton(
         onPressed: router.pop,
-        child: const Icon(
-          Icons.arrow_back,
-        ),
+        child: const Icon(Icons.arrow_back),
       ),
       child: ListenableBuilder(
-        listenable: Listenable.merge([
-          _emailController,
-          _passwordController,
-        ]),
+        listenable: Listenable.merge([_emailController, _passwordController]),
         builder: (context, _) {
           return ElevatedButton(
-            onPressed:
-                _isFormValid() ? () async => _loginWithEmail(context) : null,
+            onPressed: _isFormValid()
+                ? () async => _loginWithEmail(context)
+                : null,
             child: const Text('Sign In'),
           );
         },

@@ -65,24 +65,16 @@ class _JoinTeamPageState extends State<JoinTeamPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Join a Team'),
-      ),
+      appBar: AppBar(title: const Text('Join a Team')),
       body: SafeArea(
-        minimum: const EdgeInsets.symmetric(
-          horizontal: 24,
-          vertical: 16,
-        ),
+        minimum: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         child: Column(
           children: [
             SearchableTextField(
               controller: _controller,
               hintText: 'Search for a team...',
             ),
-            const Padding(
-              padding: EdgeInsets.only(top: 6),
-              child: Divider(),
-            ),
+            const Padding(padding: EdgeInsets.only(top: 6), child: Divider()),
             Expanded(
               child: ValueListenableBuilder(
                 valueListenable: _teams,
@@ -111,9 +103,7 @@ class _JoinTeamPageState extends State<JoinTeamPage> {
 }
 
 class _TeamList extends StatelessWidget {
-  const _TeamList({
-    required List<Team> teams,
-  }) : _teams = teams;
+  const _TeamList({required List<Team> teams}) : _teams = teams;
 
   final List<Team> _teams;
 
@@ -127,10 +117,7 @@ class _TeamList extends StatelessWidget {
           context: context,
           builder: (context) => JoinTeamDialog(team: _teams[index]),
         ),
-        child: TeamCard(
-          team: _teams[index],
-          showTrailingIcon: true,
-        ),
+        child: TeamCard(team: _teams[index], showTrailingIcon: true),
       ),
       separatorBuilder: (context, index) => const SizedBox(height: 6),
       padding: const EdgeInsets.symmetric(vertical: 6),
@@ -159,10 +146,7 @@ class _SearchMessage extends StatelessWidget {
 class JoinTeamDialog extends StatelessWidget {
   final Team team;
 
-  const JoinTeamDialog({
-    super.key,
-    required this.team,
-  });
+  const JoinTeamDialog({super.key, required this.team});
 
   String get _textContent => team.isRegistered
       ? 'By requesting to join this team, your name will be visible to all other team members.'
@@ -192,9 +176,7 @@ class JoinTeamDialog extends StatelessWidget {
       ),
       actionButton: ElevatedButton(
         onPressed: () => _onAction(context),
-        style: ElevatedButton.styleFrom(
-          minimumSize: const Size.fromHeight(50),
-        ),
+        style: ElevatedButton.styleFrom(minimumSize: const Size.fromHeight(50)),
         child: Text(_actionLabel),
       ),
     );
@@ -231,9 +213,7 @@ class JoinTeamDialog extends StatelessWidget {
 }
 
 class _TeamInformation extends StatelessWidget {
-  const _TeamInformation({
-    required this.team,
-  });
+  const _TeamInformation({required this.team});
 
   final Team team;
 
@@ -241,10 +221,7 @@ class _TeamInformation extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        TeamAvatarImage(
-          year: DateTime.now().year,
-          teamNum: team.number,
-        ),
+        TeamAvatarImage(year: DateTime.now().year, teamNum: team.number),
         const SizedBox(width: 16),
         Expanded(
           child: Column(
@@ -252,9 +229,9 @@ class _TeamInformation extends StatelessWidget {
             children: [
               Text(
                 team.name,
-                style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                      fontSize: 18,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.displaySmall!.copyWith(fontSize: 18),
                 overflow: TextOverflow.ellipsis,
               ),
               Builder(

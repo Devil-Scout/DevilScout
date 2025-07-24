@@ -62,10 +62,7 @@ StatefulShellBranch _homeBranch() {
   return StatefulShellBranch(
     navigatorKey: _homeNavigator,
     routes: [
-      GoRoute(
-        path: '/home',
-        builder: (context, state) => const HomePage(),
-      ),
+      GoRoute(path: '/home', builder: (context, state) => const HomePage()),
     ],
   );
 }

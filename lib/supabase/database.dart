@@ -51,30 +51,27 @@ class Database {
   });
 
   Database.supabase(SupabaseClient supabase)
-      : this(
-          supabase: supabase,
-          auth: AuthRepository.supabase(supabase),
-          currentUser: CurrentUserRepository.supabase(supabase),
-          teams: TeamsRepository.supabase(supabase),
-          teamUsers: TeamUsersRepository.supabase(supabase),
-          teamRequests: TeamRequestsRepository.supabase(supabase),
-          frcSeasons: FrcSeasonsRepository.supabase(supabase),
-          frcTeams: FrcTeamsRepository.supabase(supabase),
-          frcDistricts: FrcDistrictsRepository.supabase(supabase),
-          frcEvents: FrcEventsRepository.supabase(supabase),
-          frcMatches: FrcMatchesRepository.supabase(supabase),
-          questions: QuestionsRepository.supabase(supabase),
-        );
+    : this(
+        supabase: supabase,
+        auth: AuthRepository.supabase(supabase),
+        currentUser: CurrentUserRepository.supabase(supabase),
+        teams: TeamsRepository.supabase(supabase),
+        teamUsers: TeamUsersRepository.supabase(supabase),
+        teamRequests: TeamRequestsRepository.supabase(supabase),
+        frcSeasons: FrcSeasonsRepository.supabase(supabase),
+        frcTeams: FrcTeamsRepository.supabase(supabase),
+        frcDistricts: FrcDistrictsRepository.supabase(supabase),
+        frcEvents: FrcEventsRepository.supabase(supabase),
+        frcMatches: FrcMatchesRepository.supabase(supabase),
+        questions: QuestionsRepository.supabase(supabase),
+      );
 
   static Future<void> initSupabase() async {
     const supabaseUrl = 'https://jlhplhsuiwwcmxrtbdhp.supabase.co';
     const supabaseAnonKey =
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpsaHBsaHN1aXd3Y214cnRiZGhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjU4MjA3ODQsImV4cCI6MjA0MTM5Njc4NH0.QKbKHdYoSGC71hrOaHYyJNIJWvwE4ehpNOWVJUYng0M';
 
-    await Supabase.initialize(
-      url: supabaseUrl,
-      anonKey: supabaseAnonKey,
-    );
+    await Supabase.initialize(url: supabaseUrl, anonKey: supabaseAnonKey);
   }
 }
 
@@ -100,13 +97,10 @@ class Cache<K extends Object, V extends Object> {
     required this.origin,
     K Function(V)? key,
     Future<Iterable<V>> Function(Iterable<K>)? originMultiple,
-  })  : keyMapper = key ?? _identity,
-        originMultiple = originMultiple ?? ((keys) => _multiple(origin, keys));
+  }) : keyMapper = key ?? _identity,
+       originMultiple = originMultiple ?? ((keys) => _multiple(origin, keys));
 
-  Future<V?> get({
-    required K key,
-    required bool forceOrigin,
-  }) async {
+  Future<V?> get({required K key, required bool forceOrigin}) async {
     if (forceOrigin || (cache[key]?.isExpired(expiration) ?? true)) {
       final data = await origin(key);
       if (data != null) {
@@ -142,8 +136,9 @@ class Cache<K extends Object, V extends Object> {
     Future<V?> Function(K) origin,
     Iterable<K> keys,
   ) {
-    return Future.wait([for (final key in keys) origin(key)])
-        .then((values) => values.nonNulls);
+    return Future.wait([
+      for (final key in keys) origin(key),
+    ]).then((values) => values.nonNulls);
   }
 }
 
@@ -161,9 +156,7 @@ class CacheAll<K extends Object, V extends Object> extends Cache<K, V> {
     required this.originAll,
   });
 
-  Future<List<V>> getAll({
-    required bool forceOrigin,
-  }) async {
+  Future<List<V>> getAll({required bool forceOrigin}) async {
     if (forceOrigin ||
         (allValues?.isExpired(expiration) ?? true) ||
         cache.values.where((e) => !e.isExpired(expiration)).isNotEmpty) {
@@ -171,18 +164,12 @@ class CacheAll<K extends Object, V extends Object> extends Cache<K, V> {
       cache
         ..clear()
         ..addEntries(
-          data.map(
-            (value) => MapEntry(keyMapper(value), CacheEntry(value)),
-          ),
+          data.map((value) => MapEntry(keyMapper(value), CacheEntry(value))),
         );
       allValues = CacheEntry(null);
     }
 
-    return UnmodifiableListView(
-      cache.values.map(
-        (entry) => entry.data,
-      ),
-    );
+    return UnmodifiableListView(cache.values.map((entry) => entry.data));
   }
 }
 

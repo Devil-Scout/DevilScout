@@ -16,57 +16,18 @@ const _displayFontFamily = 'Montserrat';
 const _bodyFontFamily = 'Noto Sans';
 
 const _textTheme = TextTheme(
-  displayLarge: TextStyle(
-    fontFamily: _displayFontFamily,
-    fontSize: 32,
-  ),
-  displayMedium: TextStyle(
-    fontFamily: _displayFontFamily,
-    fontSize: 28,
-  ),
-  displaySmall: TextStyle(
-    fontFamily: _displayFontFamily,
-    fontSize: 24,
-  ),
-  titleLarge: TextStyle(
-    fontFamily: _displayFontFamily,
-    fontSize: 22,
-  ),
-  titleMedium: TextStyle(
-    fontFamily: _displayFontFamily,
-    fontSize: 18,
-  ),
-  titleSmall: TextStyle(
-    fontFamily: _displayFontFamily,
-    fontSize: 16,
-  ),
-  labelLarge: TextStyle(
-    fontFamily: _bodyFontFamily,
-    fontSize: 18,
-  ),
-  labelMedium: TextStyle(
-    fontFamily: _bodyFontFamily,
-    fontSize: 14,
-  ),
-  labelSmall: TextStyle(
-    fontFamily: _bodyFontFamily,
-    fontSize: 12,
-  ),
-  bodyLarge: TextStyle(
-    fontFamily: _bodyFontFamily,
-    fontSize: 16,
-    height: 1.5,
-  ),
-  bodyMedium: TextStyle(
-    fontFamily: _bodyFontFamily,
-    fontSize: 14,
-    height: 1.5,
-  ),
-  bodySmall: TextStyle(
-    fontFamily: _bodyFontFamily,
-    fontSize: 12,
-    height: 1.5,
-  ),
+  displayLarge: TextStyle(fontFamily: _displayFontFamily, fontSize: 32),
+  displayMedium: TextStyle(fontFamily: _displayFontFamily, fontSize: 28),
+  displaySmall: TextStyle(fontFamily: _displayFontFamily, fontSize: 24),
+  titleLarge: TextStyle(fontFamily: _displayFontFamily, fontSize: 22),
+  titleMedium: TextStyle(fontFamily: _displayFontFamily, fontSize: 18),
+  titleSmall: TextStyle(fontFamily: _displayFontFamily, fontSize: 16),
+  labelLarge: TextStyle(fontFamily: _bodyFontFamily, fontSize: 18),
+  labelMedium: TextStyle(fontFamily: _bodyFontFamily, fontSize: 14),
+  labelSmall: TextStyle(fontFamily: _bodyFontFamily, fontSize: 12),
+  bodyLarge: TextStyle(fontFamily: _bodyFontFamily, fontSize: 16, height: 1.5),
+  bodyMedium: TextStyle(fontFamily: _bodyFontFamily, fontSize: 14, height: 1.5),
+  bodySmall: TextStyle(fontFamily: _bodyFontFamily, fontSize: 12, height: 1.5),
 );
 
 final ThemeData lightTheme = ThemeData(
@@ -118,10 +79,7 @@ final ThemeData lightTheme = ThemeData(
       foregroundColor: _onSurfaceColorLight,
       iconColor: _onSurfaceColorLight,
       iconSize: 22,
-      side: const BorderSide(
-        color: _outlineBorderColorLight,
-        width: 1.07,
-      ),
+      side: const BorderSide(color: _outlineBorderColorLight, width: 1.07),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(10.7)),
       ),
@@ -131,9 +89,7 @@ final ThemeData lightTheme = ThemeData(
   ),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
-      textStyle: _textTheme.bodyLarge!.copyWith(
-        fontWeight: FontWeight.bold,
-      ),
+      textStyle: _textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
       backgroundColor: _primaryColor,
       foregroundColor: _onPrimaryColor,
       overlayColor: _secondaryColorLight.withValues(alpha: 0.1),

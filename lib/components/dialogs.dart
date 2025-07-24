@@ -24,18 +24,12 @@ class ActionDialog extends StatelessWidget {
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.7)),
       icon: icon,
-      title: Text(
-        title,
-        style: Theme.of(context).textTheme.titleLarge,
-      ),
+      title: Text(title, style: Theme.of(context).textTheme.titleLarge),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           content,
-          const Padding(
-            padding: EdgeInsets.all(8),
-            child: Divider(),
-          ),
+          const Padding(padding: EdgeInsets.all(8), child: Divider()),
           FullWidth(child: actionButton),
           if (canCancel)
             Padding(

@@ -17,10 +17,9 @@ class NavBarWrapper extends StatelessWidget {
           color: Theme.of(context).colorScheme.surface,
           boxShadow: [
             BoxShadow(
-              color: Theme.of(context)
-                  .colorScheme
-                  .onSurface
-                  .withValues(alpha: 0.08),
+              color: Theme.of(
+                context,
+              ).colorScheme.onSurface.withValues(alpha: 0.08),
               blurRadius: 6,
               offset: const Offset(0, -3),
             ),
@@ -61,14 +60,13 @@ class NavBarWrapper extends StatelessWidget {
     required Icon icon,
     required Icon inactiveIcon,
     required String title,
-  }) =>
-      PersistentRouterTabConfig(
-        item: ItemConfig(
-          icon: icon,
-          inactiveIcon: inactiveIcon,
-          title: title,
-          activeForegroundColor: Theme.of(context).primaryColor,
-          textStyle: Theme.of(context).textTheme.labelSmall!,
-        ),
-      );
+  }) => PersistentRouterTabConfig(
+    item: ItemConfig(
+      icon: icon,
+      inactiveIcon: inactiveIcon,
+      title: title,
+      activeForegroundColor: Theme.of(context).primaryColor,
+      textStyle: Theme.of(context).textTheme.labelSmall!,
+    ),
+  );
 }

@@ -5,8 +5,6 @@ class AnalyzeHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Analyze Page'),
-    );
+    return const Center(child: Text('Analyze Page'));
   }
 }
