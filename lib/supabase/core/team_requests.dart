@@ -10,7 +10,7 @@ part 'team_requests.g.dart';
 @immutable
 @freezed
 @JsonSerializable()
-final class TeamRequest with _$TeamRequest {
+class TeamRequest with _$TeamRequest {
   @override
   final Uuid userId;
   @override

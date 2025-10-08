@@ -9,7 +9,7 @@ part 'seasons.g.dart';
 @immutable
 @freezed
 @JsonSerializable()
-final class FrcSeason with _$FrcSeason {
+class FrcSeason with _$FrcSeason {
   @override
   final int year;
   @override

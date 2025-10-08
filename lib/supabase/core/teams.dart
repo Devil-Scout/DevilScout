@@ -9,7 +9,7 @@ part 'teams.g.dart';
 @immutable
 @freezed
 @JsonSerializable()
-final class Team with _$Team {
+class Team with _$Team {
   @override
   final int number;
   @override
@@ -40,7 +40,7 @@ final class Team with _$Team {
 @immutable
 @freezed
 @JsonSerializable()
-final class TeamRegistration with _$TeamRegistration {
+class TeamRegistration with _$TeamRegistration {
   @override
   final int number;
   @override

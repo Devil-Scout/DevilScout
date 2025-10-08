@@ -53,7 +53,18 @@ class AuthRepository {
 class AuthService {
   final SupabaseClient _supabase;
 
-  AuthService(this._supabase);
+  // from https://console.cloud.google.com/apis/credentials
+  static const googleWebClientId =
+      '609606147453-l9aepfbrr7bc3c8qgf3sp6mjlrguo6un.apps.googleusercontent.com';
+  static const googleIosClientId =
+      '609606147453-at5j8nhgv2j52ogh7rn1nfij7vpn8h2v.apps.googleusercontent.com';
+
+  AuthService(this._supabase) {
+    GoogleSignIn.instance.initialize(
+      clientId: googleIosClientId,
+      serverClientId: googleWebClientId,
+    );
+  }
 
   bool get isSignedIn => _supabase.auth.currentSession != null;
 
@@ -105,35 +116,39 @@ class AuthService {
   }
 
   Future<void> _signInWithGoogle() async {
-    // from https://console.cloud.google.com/apis/credentials
-    const webClientId =
-        '609606147453-l9aepfbrr7bc3c8qgf3sp6mjlrguo6un.apps.googleusercontent.com';
-    const iosClientId =
-        '609606147453-at5j8nhgv2j52ogh7rn1nfij7vpn8h2v.apps.googleusercontent.com';
-
-    final googleSignIn = GoogleSignIn(
-      clientId: iosClientId,
-      serverClientId: webClientId,
-    );
-
-    final googleUser = await googleSignIn.signIn();
-    if (googleUser == null) {
-      // aborted
+    if (!GoogleSignIn.instance.supportsAuthenticate()) {
       return;
     }
 
-    final googleAuth = await googleUser.authentication;
-    final accessToken = googleAuth.accessToken;
-    final idToken = googleAuth.idToken;
+    final GoogleSignInAccount googleAccount;
+    try {
+      googleAccount = await GoogleSignIn.instance.authenticate();
+    } on GoogleSignInException {
+      return;
+    }
 
-    if (accessToken == null || idToken == null) {
+    const scopes = ['email', 'profile'];
+
+    final GoogleSignInClientAuthorization authorization;
+    try {
+      authorization =
+          await googleAccount.authorizationClient.authorizationForScopes(
+            scopes,
+          ) ??
+          await googleAccount.authorizationClient.authorizeScopes(scopes);
+    } on Exception {
+      return;
+    }
+
+    final idToken = googleAccount.authentication.idToken;
+    if (idToken == null) {
       throw 'Error';
     }
 
     await _supabase.auth.signInWithIdToken(
       provider: OAuthProvider.google,
       idToken: idToken,
-      accessToken: accessToken,
+      accessToken: authorization.accessToken,
     );
   }
 

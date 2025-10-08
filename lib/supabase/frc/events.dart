@@ -12,7 +12,7 @@ part 'events.g.dart';
 @immutable
 @freezed
 @JsonSerializable()
-final class FrcEventType with _$FrcEventType {
+class FrcEventType with _$FrcEventType {
   @override
   final int id;
   @override
@@ -45,7 +45,7 @@ final class FrcEventType with _$FrcEventType {
 @immutable
 @freezed
 @JsonSerializable()
-final class FrcEvent with _$FrcEvent {
+class FrcEvent with _$FrcEvent {
   @override
   final int season;
   @override

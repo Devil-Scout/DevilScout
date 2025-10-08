@@ -9,7 +9,7 @@ part 'districts.g.dart';
 @immutable
 @freezed
 @JsonSerializable()
-final class FrcDistrict with _$FrcDistrict {
+class FrcDistrict with _$FrcDistrict {
   @override
   final int season;
   @override

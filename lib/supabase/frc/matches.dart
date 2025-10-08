@@ -10,7 +10,7 @@ part 'matches.g.dart';
 @immutable
 @freezed
 @JsonSerializable()
-final class FrcMatch with _$FrcMatch {
+class FrcMatch with _$FrcMatch {
   @override
   final int number;
   @override
@@ -51,7 +51,7 @@ final class FrcMatch with _$FrcMatch {
 @immutable
 @freezed
 @JsonSerializable()
-final class FrcMatchTeam with _$FrcMatchTeam {
+class FrcMatchTeam with _$FrcMatchTeam {
   @override
   final int teamNum;
   @override
@@ -81,7 +81,7 @@ final class FrcMatchTeam with _$FrcMatchTeam {
 @immutable
 @freezed
 @JsonSerializable()
-final class FrcMatchResult with _$FrcMatchResult {
+class FrcMatchResult with _$FrcMatchResult {
   @override
   final int redScore;
   @override

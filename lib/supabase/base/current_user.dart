@@ -13,7 +13,7 @@ part 'current_user.g.dart';
 @immutable
 @freezed
 @JsonSerializable()
-final class UserProfile with _$UserProfile {
+class UserProfile with _$UserProfile {
   @override
   final Uuid userId;
   @override

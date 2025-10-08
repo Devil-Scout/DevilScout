@@ -11,7 +11,7 @@ part 'team_users.g.dart';
 @immutable
 @freezed
 @JsonSerializable()
-final class TeamUser with _$TeamUser {
+class TeamUser with _$TeamUser {
   @override
   final Uuid userId;
   @override
@@ -40,7 +40,7 @@ final class TeamUser with _$TeamUser {
 @immutable
 @freezed
 @JsonSerializable()
-final class UserPermission with _$UserPermission {
+class UserPermission with _$UserPermission {
   @override
   final Uuid userId;
   @override
