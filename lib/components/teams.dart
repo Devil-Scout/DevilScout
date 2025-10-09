@@ -22,10 +22,7 @@ class TeamAvatarImage extends StatelessWidget {
       'https://www.thebluealliance.com/avatar/$year/frc$teamNum.png',
       width: size,
       height: size,
-      errorBuilder: (_, __, ___) => Icon(
-        Icons.groups,
-        size: size,
-      ),
+      errorBuilder: (_, __, ___) => Icon(Icons.groups, size: size),
     );
   }
 }
@@ -49,9 +46,7 @@ class TeamCard extends StatelessWidget {
     ].nonNulls.join(', ');
     return Card.filled(
       color: Theme.of(context).colorScheme.surfaceContainer,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.7),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.7)),
       margin: EdgeInsets.zero,
       child: ListTile(
         leading: TeamAvatarImage(
@@ -70,11 +65,11 @@ class TeamCard extends StatelessWidget {
         subtitleTextStyle: Theme.of(context).textTheme.bodySmall,
         trailing: showTrailingIcon
             ? (team.registration == null
-                ? const Icon(Icons.add)
-                : Icon(
-                    Icons.person_add_alt,
-                    color: Theme.of(context).colorScheme.primary,
-                  ))
+                  ? const Icon(Icons.add)
+                  : Icon(
+                      Icons.person_add_alt,
+                      color: Theme.of(context).colorScheme.primary,
+                    ))
             : null,
       ),
     );

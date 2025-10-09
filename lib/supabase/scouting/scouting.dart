@@ -10,8 +10,9 @@ enum ScoutingCategory {
   @override
   String toString() => value;
 
-  static final _jsonMap =
-      Map.fromEntries(ScoutingCategory.values.map((e) => MapEntry(e.value, e)));
+  static final _jsonMap = Map.fromEntries(
+    ScoutingCategory.values.map((e) => MapEntry(e.value, e)),
+  );
   factory ScoutingCategory.fromJson(String json) => _jsonMap[json]!;
 }
 
@@ -28,7 +29,8 @@ enum DataType {
   @override
   String toString() => value;
 
-  static final _jsonMap =
-      Map.fromEntries(DataType.values.map((e) => MapEntry(e.value, e)));
+  static final _jsonMap = Map.fromEntries(
+    DataType.values.map((e) => MapEntry(e.value, e)),
+  );
   factory DataType.fromJson(String json) => _jsonMap[json]!;
 }

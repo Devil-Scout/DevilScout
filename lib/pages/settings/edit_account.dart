@@ -33,18 +33,14 @@ class _EditAccountPageState extends State<EditAccountPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Edit Account'),
-      ),
+      appBar: AppBar(title: const Text('Edit Account')),
       body: SafeArea(
         minimum: const EdgeInsets.all(16),
         child: LayoutBuilder(
           builder: (context, constraints) {
             return SingleChildScrollView(
               child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight: constraints.maxHeight,
-                ),
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
                 child: IntrinsicHeight(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -92,9 +88,11 @@ class _EditAccountPageState extends State<EditAccountPage> {
                             if (_isSaving.value) {
                               child =
                                   LoadingAnimationWidget.horizontalRotatingDots(
-                                color: Theme.of(context).colorScheme.onSurface,
-                                size: 50,
-                              );
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onSurface,
+                                    size: 50,
+                                  );
                             } else {
                               child = const Text('Save Changes');
                             }

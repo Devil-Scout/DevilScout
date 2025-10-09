@@ -56,10 +56,7 @@ class _BuildVersion extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: (
-        PackageInfo.fromPlatform(),
-        _gitInfo(),
-      ).wait,
+      future: (PackageInfo.fromPlatform(), _gitInfo()).wait,
       builder: (context, state) {
         if (!state.hasData) {
           return const Text('Checking version...');
@@ -223,10 +220,7 @@ class _UserCardState extends State<_UserCard> {
       children: [
         Row(
           children: [
-            const Icon(
-              Icons.badge_outlined,
-              size: 60,
-            ),
+            const Icon(Icons.badge_outlined, size: 60),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
@@ -284,10 +278,7 @@ class _JoinTeamPlaceholder extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const Icon(
-          Icons.info_outline,
-          size: 40,
-        ),
+        const Icon(Icons.info_outline, size: 40),
         const SizedBox(height: 12),
         const Text(
           'Join a team to unlock the full functionality of DevilScout.',
@@ -318,10 +309,7 @@ class _TeamInfo extends StatelessWidget {
       children: [
         Row(
           children: [
-            Text(
-              'Your Team',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
+            Text('Your Team', style: Theme.of(context).textTheme.titleMedium),
             const Spacer(),
             if (!isMember)
               DecoratedBox(
@@ -330,14 +318,16 @@ class _TeamInfo extends StatelessWidget {
                   borderRadius: BorderRadius.circular(100),
                 ),
                 child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 2,
+                  ),
                   child: Text(
                     'Request Pending',
                     style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                          color: Theme.of(context).colorScheme.onPrimary,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      color: Theme.of(context).colorScheme.onPrimary,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
@@ -362,9 +352,7 @@ class _TeamInfo extends StatelessWidget {
             icon: isMember
                 ? const Icon(Icons.logout)
                 : const Icon(Icons.cancel_outlined),
-            label: Text(
-              isMember ? 'Leave Team' : 'Cancel Request',
-            ),
+            label: Text(isMember ? 'Leave Team' : 'Cancel Request'),
           ),
         ),
       ],
@@ -388,8 +376,9 @@ class _LeaveTeamDialog extends StatelessWidget {
       actionButton: ElevatedButton(
         onPressed: () async {
           try {
-            await context.database.teamUsers
-                .removeUser(context.database.currentUser.id);
+            await context.database.teamUsers.removeUser(
+              context.database.currentUser.id,
+            );
           } on PostgrestException {
             if (!context.mounted) return;
             await showDialog(
@@ -428,8 +417,9 @@ class _CancelRequestDialog extends StatelessWidget {
       actionButton: ElevatedButton(
         onPressed: () async {
           try {
-            await context.database.teamRequests
-                .deleteRequest(userId: context.database.currentUser.id);
+            await context.database.teamRequests.deleteRequest(
+              userId: context.database.currentUser.id,
+            );
           } on PostgrestException {
             if (!context.mounted) return;
             await showDialog(

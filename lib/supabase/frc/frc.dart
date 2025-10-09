@@ -12,8 +12,9 @@ enum FrcMatchLevel {
   @override
   String toString() => value;
 
-  static final _jsonMap =
-      Map.fromEntries(FrcMatchLevel.values.map((e) => MapEntry(e.value, e)));
+  static final _jsonMap = Map.fromEntries(
+    FrcMatchLevel.values.map((e) => MapEntry(e.value, e)),
+  );
   factory FrcMatchLevel.fromJson(String json) => _jsonMap[json]!;
 }
 

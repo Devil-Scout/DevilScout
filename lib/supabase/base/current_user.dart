@@ -12,12 +12,20 @@ part 'current_user.g.dart';
 
 @immutable
 @freezed
+@JsonSerializable()
 class UserProfile with _$UserProfile {
-  const factory UserProfile({
-    required Uuid userId,
-    required String name,
-    required DateTime createdAt,
-  }) = _UserProfile;
+  @override
+  final Uuid userId;
+  @override
+  final String name;
+  @override
+  final DateTime createdAt;
+
+  const UserProfile({
+    required this.userId,
+    required this.name,
+    required this.createdAt,
+  });
 
   factory UserProfile.fromJson(JsonObject json) => _$UserProfileFromJson(json);
 }
@@ -28,7 +36,7 @@ class CurrentUserRepository {
   CurrentUserRepository(this._service);
 
   CurrentUserRepository.supabase(SupabaseClient supabase)
-      : this(CurrentUserService(supabase));
+    : this(CurrentUserService(supabase));
 
   Future<void> refresh() => _service.refresh();
 
@@ -53,11 +61,7 @@ class CurrentUserRepository {
     String? email,
     String? password,
   }) =>
-      _service.updateUserDetails(
-        name: name,
-        email: email,
-        password: password,
-      );
+      _service.updateUserDetails(name: name, email: email, password: password);
 }
 
 class CurrentUserService {

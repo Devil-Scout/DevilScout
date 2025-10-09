@@ -8,22 +8,13 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 enum SsoProvider {
-  apple(
-    name: 'Apple',
-    iconPath: 'assets/images/logos/apple-logo.svg',
-  ),
-  google(
-    name: 'Google',
-    iconPath: 'assets/images/logos/g-logo.svg',
-  );
+  apple(name: 'Apple', iconPath: 'assets/images/logos/apple-logo.svg'),
+  google(name: 'Google', iconPath: 'assets/images/logos/g-logo.svg');
 
   final String name;
   final String iconPath;
 
-  const SsoProvider({
-    required this.name,
-    required this.iconPath,
-  });
+  const SsoProvider({required this.name, required this.iconPath});
 }
 
 class AuthRepository {
@@ -34,12 +25,11 @@ class AuthRepository {
   bool get isSignedIn => _service.isSignedIn;
 
   AuthRepository.supabase(SupabaseClient supabase)
-      : this(AuthService(supabase));
+    : this(AuthService(supabase));
 
   StreamSubscription<AuthState> subscribe(
     void Function(AuthState data) onData,
-  ) =>
-      _service.addListener(onData);
+  ) => _service.addListener(onData);
 
   Future<void> signOut() => _service.signOut();
 
@@ -47,14 +37,12 @@ class AuthRepository {
     required String name,
     required String email,
     required String password,
-  }) =>
-      _service.signUpWithEmail(name: name, email: email, password: password);
+  }) => _service.signUpWithEmail(name: name, email: email, password: password);
 
   Future<void> signInWithEmail({
     required String email,
     required String password,
-  }) =>
-      _service.signInWithEmail(email: email, password: password);
+  }) => _service.signInWithEmail(email: email, password: password);
 
   Future<void> signInWithSso(SsoProvider provider) =>
       _service.signInWithSso(provider);
@@ -65,14 +53,24 @@ class AuthRepository {
 class AuthService {
   final SupabaseClient _supabase;
 
-  AuthService(this._supabase);
+  // from https://console.cloud.google.com/apis/credentials
+  static const googleWebClientId =
+      '609606147453-l9aepfbrr7bc3c8qgf3sp6mjlrguo6un.apps.googleusercontent.com';
+  static const googleIosClientId =
+      '609606147453-at5j8nhgv2j52ogh7rn1nfij7vpn8h2v.apps.googleusercontent.com';
+
+  AuthService(this._supabase) {
+    GoogleSignIn.instance.initialize(
+      clientId: googleIosClientId,
+      serverClientId: googleWebClientId,
+    );
+  }
 
   bool get isSignedIn => _supabase.auth.currentSession != null;
 
   StreamSubscription<AuthState> addListener(
     void Function(AuthState data) onData,
-  ) =>
-      _supabase.auth.onAuthStateChange.listen(onData);
+  ) => _supabase.auth.onAuthStateChange.listen(onData);
 
   Future<void> signOut() => _supabase.auth.signOut();
 
@@ -85,9 +83,7 @@ class AuthService {
       await _supabase.auth.signUp(
         email: email,
         password: password,
-        data: {
-          'full_name': name,
-        },
+        data: {'full_name': name},
       );
     } on AuthException catch (e) {
       throw e.message;
@@ -99,10 +95,7 @@ class AuthService {
     required String password,
   }) async {
     try {
-      await _supabase.auth.signInWithPassword(
-        email: email,
-        password: password,
-      );
+      await _supabase.auth.signInWithPassword(email: email, password: password);
     } on AuthException catch (e) {
       throw e.message;
     }
@@ -123,35 +116,39 @@ class AuthService {
   }
 
   Future<void> _signInWithGoogle() async {
-    // from https://console.cloud.google.com/apis/credentials
-    const webClientId =
-        '609606147453-l9aepfbrr7bc3c8qgf3sp6mjlrguo6un.apps.googleusercontent.com';
-    const iosClientId =
-        '609606147453-at5j8nhgv2j52ogh7rn1nfij7vpn8h2v.apps.googleusercontent.com';
-
-    final googleSignIn = GoogleSignIn(
-      clientId: iosClientId,
-      serverClientId: webClientId,
-    );
-
-    final googleUser = await googleSignIn.signIn();
-    if (googleUser == null) {
-      // aborted
+    if (!GoogleSignIn.instance.supportsAuthenticate()) {
       return;
     }
 
-    final googleAuth = await googleUser.authentication;
-    final accessToken = googleAuth.accessToken;
-    final idToken = googleAuth.idToken;
+    final GoogleSignInAccount googleAccount;
+    try {
+      googleAccount = await GoogleSignIn.instance.authenticate();
+    } on GoogleSignInException {
+      return;
+    }
 
-    if (accessToken == null || idToken == null) {
+    const scopes = ['email', 'profile'];
+
+    final GoogleSignInClientAuthorization authorization;
+    try {
+      authorization =
+          await googleAccount.authorizationClient.authorizationForScopes(
+            scopes,
+          ) ??
+          await googleAccount.authorizationClient.authorizeScopes(scopes);
+    } on Exception {
+      return;
+    }
+
+    final idToken = googleAccount.authentication.idToken;
+    if (idToken == null) {
       throw 'Error';
     }
 
     await _supabase.auth.signInWithIdToken(
       provider: OAuthProvider.google,
       idToken: idToken,
-      accessToken: accessToken,
+      accessToken: authorization.accessToken,
     );
   }
 
@@ -190,11 +187,7 @@ class AuthService {
     if (name != null) {
       // native Apple doesn't return name for some reason
       await _supabase.auth.updateUser(
-        UserAttributes(
-          data: {
-            'full_name': name,
-          },
-        ),
+        UserAttributes(data: {'full_name': name}),
       );
     }
   }

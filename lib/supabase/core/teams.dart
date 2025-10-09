@@ -8,17 +8,29 @@ part 'teams.g.dart';
 
 @immutable
 @freezed
+@JsonSerializable()
 class Team with _$Team {
-  const Team._();
+  @override
+  final int number;
+  @override
+  final String name;
+  @override
+  final String? country;
+  @override
+  final String? province;
+  @override
+  final String? city;
+  @override
+  final TeamRegistration? registration;
 
-  const factory Team({
-    required int number,
-    required String name,
-    String? country,
-    String? province,
-    String? city,
-    TeamRegistration? registration,
-  }) = _Team;
+  const Team({
+    required this.number,
+    required this.name,
+    this.country,
+    this.province,
+    this.city,
+    this.registration,
+  });
 
   factory Team.fromJson(JsonObject json) => _$TeamFromJson(json);
 
@@ -27,13 +39,23 @@ class Team with _$Team {
 
 @immutable
 @freezed
+@JsonSerializable()
 class TeamRegistration with _$TeamRegistration {
-  const factory TeamRegistration({
-    required int number,
-    required bool verified,
-    required DateTime createdAt,
-    required String name,
-  }) = _TeamRegistration;
+  @override
+  final int number;
+  @override
+  final bool verified;
+  @override
+  final DateTime createdAt;
+  @override
+  final String name;
+
+  const TeamRegistration({
+    required this.number,
+    required this.verified,
+    required this.createdAt,
+    required this.name,
+  });
 
   factory TeamRegistration.fromJson(JsonObject json) =>
       _$TeamRegistrationFromJson(json);
@@ -44,47 +66,34 @@ class TeamsRepository {
   final Cache<int, Team> _teamsCache;
 
   TeamsRepository.supabase(SupabaseClient supabase)
-      : this(TeamsService(supabase));
+    : this(TeamsService(supabase));
 
   TeamsRepository(this._service)
-      : _teamsCache = Cache(
-          expiration: const Duration(minutes: 30),
-          origin: _service.getTeam,
-          originMultiple: _service.getTeams,
-          key: (team) => team.number,
-        );
+    : _teamsCache = Cache(
+        expiration: const Duration(minutes: 30),
+        origin: _service.getTeam,
+        originMultiple: _service.getTeams,
+        key: (team) => team.number,
+      );
 
-  Future<Team?> getTeam({
-    required int teamNum,
-    bool forceOrigin = false,
-  }) =>
+  Future<Team?> getTeam({required int teamNum, bool forceOrigin = false}) =>
       _teamsCache.get(key: teamNum, forceOrigin: forceOrigin);
 
   Future<List<Team>> getTeams({
     required Iterable<int> teamNums,
     bool forceOrigin = false,
-  }) =>
-      _teamsCache.getMultiple(keys: teamNums, forceOrigin: forceOrigin);
+  }) => _teamsCache.getMultiple(keys: teamNums, forceOrigin: forceOrigin);
 
-  Future<List<int>> searchTeams({
-    required String query,
-    int limit = 20,
-  }) =>
+  Future<List<int>> searchTeams({required String query, int limit = 20}) =>
       _service.searchTeams(query: query, limit: limit);
 
-  Future<void> createTeam({
-    required int teamNum,
-    required String name,
-  }) =>
+  Future<void> createTeam({required int teamNum, required String name}) =>
       _service.createTeam(teamNum: teamNum, name: name);
 
   Future<void> deleteTeam({required int teamNum}) =>
       _service.deleteTeam(teamNum);
 
-  Future<void> updateTeamName({
-    required int teamNum,
-    required String name,
-  }) =>
+  Future<void> updateTeamName({required int teamNum, required String name}) =>
       _service.updateTeamName(teamNum: teamNum, name: name);
 }
 
@@ -115,27 +124,19 @@ class TeamsService {
     required int limit,
   }) async {
     final data = await _supabase
-        .rpc('frc_teams_search', params: {'query': query}).limit(limit);
+        .rpc('frc_teams_search', params: {'query': query})
+        .limit(limit);
     return List.castFrom(data as List<dynamic>);
   }
 
-  Future<void> createTeam({
-    required int teamNum,
-    required String name,
-  }) async {
-    await _supabase.from('teams').insert({
-      'number': teamNum,
-      'name': name,
-    });
+  Future<void> createTeam({required int teamNum, required String name}) async {
+    await _supabase.from('teams').insert({'number': teamNum, 'name': name});
     await _supabase.auth.refreshSession();
   }
 
   Future<void> deleteTeam(int teamNum) =>
       _supabase.from('teams').delete().eq('number', teamNum);
 
-  Future<void> updateTeamName({
-    required int teamNum,
-    required String name,
-  }) =>
+  Future<void> updateTeamName({required int teamNum, required String name}) =>
       _supabase.from('teams').update({'name': name}).eq('team_num', teamNum);
 }

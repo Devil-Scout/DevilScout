@@ -8,17 +8,35 @@ part 'teams.g.dart';
 
 @immutable
 @freezed
+@JsonSerializable()
 class FrcTeam with _$FrcTeam {
-  const factory FrcTeam({
-    required int number,
-    int? rookieSeason,
-    required String name,
-    String? country,
-    String? province,
-    String? city,
-    String? postalCode,
-    String? website,
-  }) = _FrcTeam;
+  @override
+  final int number;
+  @override
+  final int? rookieSeason;
+  @override
+  final String name;
+  @override
+  final String? country;
+  @override
+  final String? province;
+  @override
+  final String? city;
+  @override
+  final String? postalCode;
+  @override
+  final String? website;
+
+  const FrcTeam({
+    required this.number,
+    this.rookieSeason,
+    required this.name,
+    this.country,
+    this.province,
+    this.city,
+    this.postalCode,
+    this.website,
+  });
 
   factory FrcTeam.fromJson(JsonObject json) => _$FrcTeamFromJson(json);
 }
@@ -28,29 +46,25 @@ class FrcTeamsRepository {
   final Cache<String, List<FrcTeam>> _eventTeamsCache;
 
   FrcTeamsRepository.supabase(SupabaseClient supabase)
-      : this(FrcTeamsService(supabase));
+    : this(FrcTeamsService(supabase));
 
   FrcTeamsRepository(FrcTeamsService service)
-      : _teamsCache = Cache(
-          expiration: const Duration(minutes: 30),
-          origin: service.getTeam,
-        ),
-        _eventTeamsCache = Cache(
-          expiration: const Duration(minutes: 30),
-          origin: service.getTeamsAtEvent,
-        );
+    : _teamsCache = Cache(
+        expiration: const Duration(minutes: 30),
+        origin: service.getTeam,
+      ),
+      _eventTeamsCache = Cache(
+        expiration: const Duration(minutes: 30),
+        origin: service.getTeamsAtEvent,
+      );
 
-  Future<FrcTeam?> getTeam({
-    required int teamNum,
-    bool forceOrigin = false,
-  }) =>
+  Future<FrcTeam?> getTeam({required int teamNum, bool forceOrigin = false}) =>
       _teamsCache.get(key: teamNum, forceOrigin: forceOrigin);
 
   Future<List<FrcTeam>?> getTeamsAtEvent({
     required String eventKey,
     bool forceOrigin = false,
-  }) =>
-      _eventTeamsCache.get(key: eventKey, forceOrigin: forceOrigin);
+  }) => _eventTeamsCache.get(key: eventKey, forceOrigin: forceOrigin);
 }
 
 class FrcTeamsService {

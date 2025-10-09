@@ -24,10 +24,7 @@ class LabeledTextField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
+        Text(label, style: Theme.of(context).textTheme.bodyLarge),
         const SizedBox(height: 8),
         TextField(
           autocorrect: autocorrect,
@@ -63,8 +60,8 @@ class SearchableTextField extends StatelessWidget {
         prefixIcon: const Icon(Icons.search, size: 18),
         hintText: hintText,
         hintStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
+          color: Theme.of(context).colorScheme.onSurfaceVariant,
+        ),
         suffixIcon: ValueListenableBuilder(
           valueListenable: controller,
           builder: (_, value, child) =>

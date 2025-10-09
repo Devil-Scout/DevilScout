@@ -41,7 +41,7 @@ sealed class QuestionNode with _$QuestionNode {
 
 @immutable
 @freezed
-class QuestionDetails with _$QuestionDetails {
+sealed class QuestionDetails with _$QuestionDetails {
   const factory QuestionDetails({
     required Uuid questionId,
     required String markdown,
@@ -55,60 +55,56 @@ class QuestionsRepository {
   final Map<int, CacheAll<Uuid, QuestionDetails>> _detailsCaches;
 
   QuestionsRepository.supabase(SupabaseClient supabase)
-      : this(QuestionsService(supabase));
+    : this(QuestionsService(supabase));
 
   QuestionsRepository(this._service)
-      : _questionsCaches = {},
-        _detailsCaches = {};
+    : _questionsCaches = {},
+      _detailsCaches = {};
 
   CacheAll<Uuid, QuestionNode> _questionsCache(int season) => CacheAll(
-        expiration: const Duration(minutes: 30),
-        origin: _service.getQuestion,
-        originAll: () async => _service.getSeasonQuestions(season),
-        key: (node) => node.id,
-      );
+    expiration: const Duration(minutes: 30),
+    origin: _service.getQuestion,
+    originAll: () async => _service.getSeasonQuestions(season),
+    key: (node) => node.id,
+  );
 
   CacheAll<Uuid, QuestionDetails> _detailsCache(int season) => CacheAll(
-        expiration: const Duration(minutes: 30),
-        origin: (questionId) async =>
-            _service.getDetails(season: season, questionId: questionId),
-        originAll: () async => _service.getSeasonDetails(season),
-        key: (details) => details.questionId,
-      );
+    expiration: const Duration(minutes: 30),
+    origin: (questionId) async =>
+        _service.getDetails(season: season, questionId: questionId),
+    originAll: () async => _service.getSeasonDetails(season),
+    key: (details) => details.questionId,
+  );
 
   Future<QuestionNode?> getQuestion({
     required int season,
     required Uuid questionId,
     bool forceOrigin = false,
-  }) =>
-      _questionsCaches
-          .putIfAbsent(season, () => _questionsCache(season))
-          .get(key: questionId, forceOrigin: forceOrigin);
+  }) => _questionsCaches
+      .putIfAbsent(season, () => _questionsCache(season))
+      .get(key: questionId, forceOrigin: forceOrigin);
 
   Future<List<QuestionNode>> getSeasonQuestions({
     required int season,
     bool forceOrigin = false,
-  }) =>
-      _questionsCaches
-          .putIfAbsent(season, () => _questionsCache(season))
-          .getAll(forceOrigin: forceOrigin);
+  }) => _questionsCaches
+      .putIfAbsent(season, () => _questionsCache(season))
+      .getAll(forceOrigin: forceOrigin);
 
   Future<QuestionDetails?> getDetails({
     required int season,
     required Uuid questionId,
     bool forceOrigin = false,
-  }) =>
-      _detailsCaches
-          .putIfAbsent(season, () => _detailsCache(season))
-          .get(key: questionId, forceOrigin: forceOrigin);
+  }) => _detailsCaches
+      .putIfAbsent(season, () => _detailsCache(season))
+      .get(key: questionId, forceOrigin: forceOrigin);
 
   Future<List<QuestionDetails>> getSeasonDetails({
     required int season,
     bool forceOrigin = false,
-  }) =>
-      _detailsCaches
-          .putIfAbsent(season, () => _detailsCache(season))
-          .getAll(forceOrigin: forceOrigin);
+  }) => _detailsCaches
+      .putIfAbsent(season, () => _detailsCache(season))
+      .getAll(forceOrigin: forceOrigin);
 }
 
 class QuestionsService {
@@ -126,8 +122,10 @@ class QuestionsService {
   }
 
   Future<List<QuestionNode>> getSeasonQuestions(int season) async {
-    final data =
-        await _supabase.from('questions').select().eq('season', season);
+    final data = await _supabase
+        .from('questions')
+        .select()
+        .eq('season', season);
     return data.parse(QuestionNode.fromJson);
   }
 
@@ -150,8 +148,9 @@ class QuestionsService {
   }
 
   Future<List<QuestionDetails>> getSeasonDetails(int season) async {
-    final files =
-        await _supabase.storage.from('question-info').list(path: '$season');
+    final files = await _supabase.storage
+        .from('question-info')
+        .list(path: '$season');
     final questionIds = files.map((file) => file.name);
 
     final data = await Future.wait(
@@ -163,8 +162,7 @@ class QuestionsService {
       ),
     );
 
-    return Map.fromIterables(questionIds, data)
-        .entries
+    return Map.fromIterables(questionIds, data).entries
         .map(
           (entry) =>
               QuestionDetails(questionId: entry.key, markdown: entry.value),

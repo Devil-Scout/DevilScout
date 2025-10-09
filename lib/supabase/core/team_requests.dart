@@ -9,13 +9,23 @@ part 'team_requests.g.dart';
 
 @immutable
 @freezed
+@JsonSerializable()
 class TeamRequest with _$TeamRequest {
-  const factory TeamRequest({
-    required Uuid userId,
-    required DateTime requestedAt,
-    required int teamNum,
-    required UserProfile profile,
-  }) = _TeamRequest;
+  @override
+  final Uuid userId;
+  @override
+  final DateTime requestedAt;
+  @override
+  final int teamNum;
+  @override
+  final UserProfile profile;
+
+  const TeamRequest({
+    required this.userId,
+    required this.requestedAt,
+    required this.teamNum,
+    required this.profile,
+  });
 
   factory TeamRequest.fromJson(JsonObject json) => _$TeamRequestFromJson(json);
 }
@@ -25,35 +35,28 @@ class TeamRequestsRepository {
   final CacheAll<Uuid, TeamRequest> _requestsCache;
 
   TeamRequestsRepository.supabase(SupabaseClient supabase)
-      : this(TeamRequestsService(supabase));
+    : this(TeamRequestsService(supabase));
 
   TeamRequestsRepository(this._service)
-      : _requestsCache = CacheAll(
-          expiration: const Duration(minutes: 30),
-          origin: _service.getRequest,
-          originAll: _service.getAllRequests,
-          key: (request) => request.userId,
-        );
+    : _requestsCache = CacheAll(
+        expiration: const Duration(minutes: 30),
+        origin: _service.getRequest,
+        originAll: _service.getAllRequests,
+        key: (request) => request.userId,
+      );
 
   Future<TeamRequest?> getRequest({
     required String userId,
     bool forceOrigin = false,
-  }) =>
-      _requestsCache.get(key: userId, forceOrigin: forceOrigin);
+  }) => _requestsCache.get(key: userId, forceOrigin: forceOrigin);
 
-  Future<List<TeamRequest>> getAllRequests({
-    bool forceOrigin = false,
-  }) =>
+  Future<List<TeamRequest>> getAllRequests({bool forceOrigin = false}) =>
       _requestsCache.getAll(forceOrigin: forceOrigin);
 
-  Future<void> requestToJoin({
-    required int teamNum,
-  }) =>
+  Future<void> requestToJoin({required int teamNum}) =>
       _service.requestToJoin(teamNum);
 
-  Future<void> deleteRequest({
-    required Uuid userId,
-  }) =>
+  Future<void> deleteRequest({required Uuid userId}) =>
       _service.deleteRequest(userId);
 }
 
@@ -72,8 +75,9 @@ class TeamRequestsService {
   }
 
   Future<List<TeamRequest>> getAllRequests() async {
-    final data =
-        await _supabase.from('team_requests').select('*, profile:profiles(*)');
+    final data = await _supabase
+        .from('team_requests')
+        .select('*, profile:profiles(*)');
     return data.parse(TeamRequest.fromJson);
   }
 
