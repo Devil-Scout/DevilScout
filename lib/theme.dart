@@ -47,7 +47,7 @@ final ThemeData lightTheme = ThemeData(
     surfaceTint: Colors.transparent,
   ),
   appBarTheme: AppBarTheme(
-    color: _surfaceColorLight,
+    backgroundColor: _surfaceColorLight,
     elevation: 0,
     iconTheme: const IconThemeData(color: _onSurfaceColorLight),
     titleTextStyle: _textTheme.titleLarge!.copyWith(
