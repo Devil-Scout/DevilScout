@@ -48,11 +48,16 @@ final ThemeData lightTheme = ThemeData(
   ),
   appBarTheme: AppBarTheme(
     backgroundColor: _surfaceColorLight,
-    elevation: 0,
+    shadowColor: Colors.transparent,
+    elevation: 1,
+    shape: const Border(
+      bottom: BorderSide(color: _outlineBorderColorLight, width: 1.5),
+    ),
     iconTheme: const IconThemeData(color: _onSurfaceColorLight),
     titleTextStyle: _textTheme.titleLarge!.copyWith(
       color: _onSurfaceColorLight,
     ),
+    actionsPadding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
   ),
   navigationBarTheme: NavigationBarThemeData(
     height: 70,
@@ -101,6 +106,7 @@ final ThemeData lightTheme = ThemeData(
       ),
       minimumSize: const Size.square(50),
       alignment: Alignment.center,
+      padding: EdgeInsets.zero,
       elevation: 0,
     ),
   ),
