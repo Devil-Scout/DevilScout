@@ -15,15 +15,10 @@ class NavBarWrapper extends StatelessWidget {
         navBarConfig: config,
         navBarDecoration: NavBarDecoration(
           color: Theme.of(context).colorScheme.surface,
-          boxShadow: [
-            BoxShadow(
-              color: Theme.of(
-                context,
-              ).colorScheme.onSurface.withValues(alpha: 0.08),
-              blurRadius: 6,
-              offset: const Offset(0, -3),
-            ),
-          ],
+          border: const Border(
+            top: BorderSide(color: Color.fromARGB(25, 0, 0, 0), width: 1.5),
+          ),
+          padding: const EdgeInsets.only(top: 8),
         ),
       ),
       tabs: [
