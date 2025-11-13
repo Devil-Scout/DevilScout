@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:marquee/marquee.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatelessWidget {
@@ -24,43 +25,79 @@ class HomePage extends StatelessWidget {
           children: [
             Row(
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  spacing: 4,
-                  children: [
-                    Text(
-                      'Finger Lakes Regional',
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                    Text(
-                      'March 13, 2025 - March 15, 2025',
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                    Row(
-                      spacing: 4,
-                      children: [
-                        const Icon(Icons.location_pin, size: 18),
-                        Text(
-                          'Rochester, NY, USA',
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                const Spacer(),
-                ElevatedButton(
-                  onPressed: _openTwitch,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF9146FF),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: 4,
+                    children: [
+                      LayoutBuilder(
+                        builder: (context, constraints) {
+                          final painter = TextPainter(
+                            text: TextSpan(
+                              text: 'Finger Lakes Regional',
+                              style: Theme.of(context).textTheme.titleLarge,
+                            ),
+                            maxLines: 1,
+                            textDirection: TextDirection.ltr,
+                          )..layout(maxWidth: constraints.maxWidth);
+
+                          if (!painter.didExceedMaxLines) {
+                            return Text(
+                              'Finger Lakes Regional',
+                              style: Theme.of(context).textTheme.titleLarge,
+                            );
+                          } else {
+                            return SizedBox(
+                              height: painter.size.height,
+                              child: Marquee(
+                                text: 'Finger Lakes Regional',
+                                style: Theme.of(context).textTheme.titleLarge,
+                                fadingEdgeStartFraction: 0.02,
+                                fadingEdgeEndFraction: 0.1,
+                                pauseAfterRound: const Duration(seconds: 2),
+                                blankSpace: 50,
+                                showFadingOnlyWhenScrolling: false,
+                                velocity: 80,
+                                accelerationCurve: Curves.linear,
+                                accelerationDuration: const Duration(
+                                  seconds: 1,
+                                ),
+                                decelerationCurve: Curves.easeOut,
+                                decelerationDuration: const Duration(
+                                  seconds: 1,
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                      Text(
+                        'March 13, 2025 - March 15, 2025',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      Row(
+                        spacing: 4,
+                        children: [
+                          const Icon(Icons.location_pin, size: 18),
+                          Text(
+                            'Rochester, NY, USA',
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                  child: SvgPicture.asset(
-                    'assets/images/logos/glitch_flat_white.svg',
-                    width: 24,
-                    height: 28,
-                    colorFilter: const ColorFilter.mode(
-                      Colors.white,
-                      BlendMode.srcIn,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 16),
+                  child: ElevatedButton(
+                    onPressed: _openTwitch,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF9146FF),
+                    ),
+                    child: SvgPicture.asset(
+                      'assets/images/logos/glitch_flat_black-ops.svg',
+                      width: 22,
                     ),
                   ),
                 ),

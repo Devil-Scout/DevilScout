@@ -18,7 +18,7 @@ class NavBarWrapper extends StatelessWidget {
           border: const Border(
             top: BorderSide(color: Color.fromARGB(25, 0, 0, 0), width: 1.5),
           ),
-          padding: const EdgeInsets.only(top: 8),
+          padding: const EdgeInsets.only(top: 10),
         ),
       ),
       tabs: [
@@ -61,7 +61,7 @@ class NavBarWrapper extends StatelessWidget {
       inactiveIcon: inactiveIcon,
       title: title,
       activeForegroundColor: Theme.of(context).primaryColor,
-      textStyle: Theme.of(context).textTheme.labelSmall!,
+      textStyle: Theme.of(context).textTheme.labelMedium!,
     ),
   );
 }
