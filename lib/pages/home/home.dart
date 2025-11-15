@@ -10,7 +10,26 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('DevilScout'),
+        title: Row(
+          spacing: 8,
+          children: [
+            const Text('DevilScout'),
+            Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.onSurface,
+                borderRadius: BorderRadius.circular(5),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+              child: Text(
+                'BETA',
+                style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                  color: Theme.of(context).colorScheme.surface,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
+        ),
         centerTitle: false,
         titleSpacing: 0,
         leading: Padding(
@@ -22,6 +41,7 @@ class HomePage extends StatelessWidget {
       body: SafeArea(
         minimum: const EdgeInsets.all(16),
         child: Column(
+          spacing: 12,
           children: [
             Row(
               children: [
@@ -102,6 +122,42 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+            OutlinedButton(
+              style: OutlinedButton.styleFrom(
+                backgroundColor: Theme.of(
+                  context,
+                ).colorScheme.primary.withAlpha(75),
+                foregroundColor: Theme.of(context).colorScheme.primary,
+                iconColor: Theme.of(context).colorScheme.primary,
+                side: BorderSide(
+                  color: Theme.of(context).colorScheme.primary,
+                  width: 1.5,
+                ),
+              ),
+              onPressed: () {},
+              child: const Row(
+                spacing: 8,
+                children: [
+                  Icon(Icons.leaderboard),
+                  Text('Current Ranking: 10/45'),
+                  Spacer(),
+                  Icon(Icons.open_in_new),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 150,
+              child: CarouselView(
+                itemExtent: MediaQuery.of(context).size.width,
+                itemSnapping: true,
+                children: [
+                  Container(color: Colors.red),
+                  Container(color: Colors.green),
+                  Container(color: Colors.blue),
+                  Container(color: Colors.yellow),
+                ],
+              ),
             ),
           ],
         ),
