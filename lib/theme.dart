@@ -10,6 +10,7 @@ const _onErrorColorLight = Colors.white;
 const _surfaceColorLight = Colors.white;
 const _onSurfaceColorLight = Colors.black;
 var _onSurfaceColorLightVariant = Colors.grey[500];
+var _surfaceContainerLight = Colors.grey[200];
 const _outlineBorderColorLight = Color.fromARGB(25, 0, 0, 0);
 
 const _displayFontFamily = 'Montserrat';
@@ -19,7 +20,7 @@ const _textTheme = TextTheme(
   displayLarge: TextStyle(fontFamily: _displayFontFamily, fontSize: 32),
   displayMedium: TextStyle(fontFamily: _displayFontFamily, fontSize: 28),
   displaySmall: TextStyle(fontFamily: _displayFontFamily, fontSize: 24),
-  titleLarge: TextStyle(fontFamily: _displayFontFamily, fontSize: 22),
+  titleLarge: TextStyle(fontFamily: _displayFontFamily, fontSize: 20),
   titleMedium: TextStyle(fontFamily: _displayFontFamily, fontSize: 18),
   titleSmall: TextStyle(fontFamily: _displayFontFamily, fontSize: 16),
   labelLarge: TextStyle(fontFamily: _bodyFontFamily, fontSize: 18),
@@ -43,7 +44,7 @@ final ThemeData lightTheme = ThemeData(
     surface: _surfaceColorLight,
     onSurface: _onSurfaceColorLight,
     onSurfaceVariant: _onSurfaceColorLightVariant,
-    surfaceContainer: Colors.grey[200],
+    surfaceContainer: _surfaceContainerLight,
     surfaceTint: Colors.transparent,
   ),
   appBarTheme: AppBarTheme(
@@ -139,5 +140,10 @@ final ThemeData lightTheme = ThemeData(
   dividerTheme: const DividerThemeData(
     color: _outlineBorderColorLight,
     thickness: 1.5,
+  ),
+  cardTheme: CardThemeData(
+    color: _surfaceContainerLight,
+    elevation: 0,
+    margin: EdgeInsets.zero,
   ),
 );
