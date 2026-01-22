@@ -6,25 +6,26 @@ class MatchCard extends StatelessWidget {
   static const double _cellPadding = 8;
   static const double _cellSpacing = 3;
   static const double _borderRadius = 10.7;
+  static const double _cardPadding = 16;
 
-  final String matchNumber;
+  final int matchNumber;
+  final String headerOverride;
   final List<int> blueTeams;
   final List<int> redTeams;
-  final double? height;
 
   const MatchCard({
     super.key,
     required this.matchNumber,
+    this.headerOverride = '',
     required this.blueTeams,
     required this.redTeams,
-    this.height,
   });
 
   @override
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(_cardPadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -39,10 +40,13 @@ class MatchCard extends StatelessWidget {
 
   Widget _buildHeader(BuildContext context) {
     return Row(
-      spacing: 8,
       children: [
-        Text('Now Playing', style: Theme.of(context).textTheme.titleLarge),
-        const Icon(Icons.gamepad),
+        Text(
+          headerOverride.isEmpty
+              ? 'Qualification $matchNumber'
+              : headerOverride,
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
         const Spacer(),
         _buildMatchNumberBadge(context),
       ],
@@ -50,19 +54,22 @@ class MatchCard extends StatelessWidget {
   }
 
   Widget _buildMatchNumberBadge(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textStyle = Theme.of(context).textTheme.bodyMedium!.copyWith(
+      color: colorScheme.surface,
+      fontWeight: FontWeight.bold,
+    );
+
     return DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(100),
-        color: Theme.of(context).colorScheme.onSurfaceVariant,
+        color: colorScheme.onSurfaceVariant,
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 12),
         child: Text(
-          matchNumber,
-          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-            color: Theme.of(context).colorScheme.surface,
-            fontWeight: FontWeight.bold,
-          ),
+          headerOverride.isNotEmpty ? 'Q$matchNumber' : '12:00 PM',
+          style: textStyle,
         ),
       ),
     );
@@ -113,6 +120,12 @@ class MatchCard extends StatelessWidget {
     required bool isLast,
     bool topSpacing = false,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textStyle = Theme.of(context).textTheme.bodyMedium!.copyWith(
+      color: colorScheme.surface,
+      fontWeight: FontWeight.bold,
+    );
+
     return Padding(
       padding: EdgeInsets.only(
         right: isLast ? 0 : _cellSpacing,
@@ -125,10 +138,7 @@ class MatchCard extends StatelessWidget {
           child: Text(
             teamNumber.toString(),
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-              color: Theme.of(context).colorScheme.surface,
-              fontWeight: FontWeight.bold,
-            ),
+            style: textStyle,
           ),
         ),
       ),
