@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:marquee/marquee.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -352,7 +353,7 @@ class _HomePageState extends State<HomePage> {
       } else {
         await launchUrl(twitchWebUri, mode: LaunchMode.externalApplication);
       }
-    } catch (e) {
+    } on PlatformException catch (e) {
       debugPrint('Failed to open Twitch: $e');
     }
   }

@@ -156,7 +156,7 @@ class MatchCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(_borderRadius),
       child: Table(
         columnWidths: {
-          for (int i = 0; i < columns; i++) i: const FlexColumnWidth(1),
+          for (int i = 0; i < columns; i++) i: const FlexColumnWidth(),
         },
         children: [
           TableRow(
