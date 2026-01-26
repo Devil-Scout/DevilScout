@@ -119,13 +119,12 @@ class _HomePageState extends State<HomePage> {
       spacing: 12,
       children: List.generate(assignedMatches.length, (index) {
         final match = assignedMatches[index];
-        return SizedBox(
-          height: 145,
-          child: MatchCard(
-            matchNumber: match['matchNumber'] as int,
-            blueTeams: List<int>.from(match['blueTeams'] as List),
-            redTeams: List<int>.from(match['redTeams'] as List),
-          ),
+        return MatchCard.compact(
+          matchNumber: match['matchNumber']! as int,
+          blueTeams: List<int>.from(match['blueTeams']! as List),
+          redTeams: List<int>.from(match['redTeams']! as List),
+          // You can provide the team index you want the card to display here
+          // otherwise, it defaults to index 0
         );
       }),
     );
